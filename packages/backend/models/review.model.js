@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 
-// one review for one book made by one user.
+//one review for one book made by one user.
+//this schema will not prevent you from writing invalid data to mongodb directly using the shell.
+
 const reviewSchema = new mongoose.Schema(
   {
     user: {

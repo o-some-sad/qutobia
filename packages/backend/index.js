@@ -18,8 +18,14 @@ const connectDB = async () => {
   }
 };
 
-app.get('/', (req, res) => {
-  res.end(`<div style="text-align: center;"><h1>Welcome to Kotobia WebSite</h1></div>`);
+app.get("/", (req, res) => {
+  res.end("hello world");
+});
+
+app.get("/api/hello", (req, res) => {
+  res.json({
+    ok: true
+  });
 });
 
 app.use(express.json());
