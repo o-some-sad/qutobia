@@ -18,7 +18,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/hello", (req, res) => {
-  res.json({});
+  res.json({
+    ok: true
+  });
 });
 
 app.use(express.json());
