@@ -11,6 +11,8 @@
     "packages/**"
   ],
   "dependencies": {
+    "express": "^4.21.2",
+    "kotobia": "file:",
     "shared": "workspace:*"
   },
   "keywords": [],

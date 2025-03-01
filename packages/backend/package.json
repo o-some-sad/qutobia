@@ -13,10 +13,12 @@
   "license": "ISC",
   "packageManager": "pnpm@10.5.2",
   "dependencies": {
+    "backend": "file:",
     "express": "^4.21.2",
     "mongoose": "^8.11.0"
   },
   "devDependencies": {
+    "eslint": "^9.21.0",
     "nodemon": "^3.1.9"
   }
 }
