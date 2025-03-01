@@ -2,36 +2,49 @@ import express from 'express';
 import multer from 'multer';
 import { addBook } from '../controllers/book.controller.js';
 
-const upload = multer({ dest: 'uploadedImgs/' }); // to store ALL uploads
+// const upload = multer({ dest: 'uploadedImgs/' }); // to store ALL uploads
 const router = express.Router();
 
+// diskStorage for storage on disk NOT memory
+const storage = multer.diskStorage({
+    filename: function (req, file, cb) {
+      // cb to return the processed fileName
+      // Date.now() --> to ensure every fileName is unique
+      cb(null, Date.now() + "--" + file.originalname);
+    },
+    // where the uploads folder is
+    destination: function (req, file, cb) {
+      cb(null, "./uploads");
+    },
+  });
 
-// for the images in uploads to be saved correctly in their own format
-// var storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, './uploads/')
-//     },
-//     filename: function (req, file, cb) {
-//       crypto.pseudoRandomBytes(16, function (err, raw) {
-//         cb(null, raw.toString('hex') + Date.now() + '.' + mime.extension(file.mimetype));
-//       });
-//     }
-//   });
-//   var upload = multer({ storage: storage });
+  const upload = multer({
+    storage: storage,
+  });
 
 
 // using multer (middleware)
-router.post('/books', upload.single('image'), async(req, res, next) => {
-    let body = req.body;
-    let image = req.file;
-    const data = await addBook(body, image);
-    if(!image){
-        return res.status(400).send('Please upload an image !');
+// **** Do I've to make 2 fields one for imageURL and one for imageFILE ?????????
+  router.post('/books', upload.single('image'), async (req, res) => {
+    let formData = req.body;
+    if (req.file === undefined) {
+        return res.status(400).json({ msg: "Please upload an image!" }); // if NO uploaded img
     }
-    res.status(200).json({
-        message: "Book added successfully !",
-        data: data
-    });})
+
+    const imageUrl = req.protocol + "://" + req.get("host") + "/uploads/" + req.file.filename; 
+    // we do this to be able to fetch the img path correctly when we want it
+    // to sth to be able to use it as there's NO 'file' datatype
+    const bookData = { ...formData, image: imageUrl };  // spread operator to concat image with body
+
+    try {
+        const newBook = await addBook(bookData);
+        res.status(200).json({ message: "Book added successfully !", data: newBook });
+    } catch (error) {
+        console.log("ERROR: ", error);
+        res.status(400).json({ message: "Failed to add a book !" });
+    }
+});
+
 
 export default router
 
