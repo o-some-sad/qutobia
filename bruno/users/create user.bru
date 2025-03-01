@@ -1,0 +1,20 @@
+meta {
+  name: create user
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{KOTOBIA_URL}}/api/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "name": "A7med zaki",
+      "email": "sayed@test.com",
+      "password": "12345678",
+      "role": "user"
+  }
+}

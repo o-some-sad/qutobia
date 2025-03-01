@@ -1,0 +1,20 @@
+meta {
+  name: update user
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{KOTOBIA_URL}}/api/users/67c2ddbc036f7cae384d9894
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      // "name": "Moshen"
+      // "email": "sayed@test.com"
+      "password": "12345678"
+      // "role": "user"
+  }
+}
