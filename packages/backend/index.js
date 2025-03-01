@@ -6,7 +6,6 @@ import appRouter from './routes/index.js';
 
 dotenv.config();
 const app = express();
-app.use('/uploads', express.static('uploads')); // multer
 
 const connectDB = async () => {
   try {
@@ -19,7 +18,7 @@ const connectDB = async () => {
 };
 
 app.get("/", (req, res) => {
-  res.end("hello world");
+  res.end(`<div style="text-align: center;"><h1>Welcome to Kotobia WebSite</h1></div>`);
 });
 
 app.get("/api/hello", (req, res) => {

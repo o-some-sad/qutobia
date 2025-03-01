@@ -46,7 +46,7 @@ userSchema.pre('findOneAndUpdate', async function (next) {
 });
 
 userSchema.set('toJSON', {
-  transform: (doc, {_id, name, email, role}) => ({_id, name, email, role})
+  transform: (doc, {_id, name, email, role, image}) => ({_id, name, email, role, image})
 });
 
 const User = mongoose.model('User', userSchema);

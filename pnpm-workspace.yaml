@@ -1,4 +1,11 @@
 packages:
-  - 'packages/**'
-  # exclude packages that are inside test directories
+  - packages/**
   - '!**/src/test/**'
+ignoredBuiltDependencies:
+  - '@parcel/watcher'
+  - bcrypt
+  - esbuild
+  - lmdb
+  - msgpackr-extract
+onlyBuiltDependencies:
+  - bcrypt

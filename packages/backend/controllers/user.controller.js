@@ -29,3 +29,18 @@ export const updateUser = async (req, res) => {
     }
   }
 };
+
+export const updateUserImage = async (req, res) => {
+  const id = req.params.id;
+  try {
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ status: 'fail', message: 'No image uploaded' });
+    }
+
+    const user = await User.findByIdAndUpdate(id, { image: req.file.path }, {new: true});
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.status(200).json({ status: 'success', data: user });
+  } catch (error) {
+    res.status(500).json({ status: 'fail', error: error.message });
+  }
+};

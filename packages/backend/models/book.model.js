@@ -41,5 +41,9 @@ const bookSchema = new mongoose.Schema({
   }
 }, {timestamps: true});
 
+bookSchema.set('toJSON', {
+  transform: (doc, {_id, title, author, price, description, stock, image}) => ({_id, title, author, price, description, stock, image})
+});
+
 const Book = mongoose.model('Book', bookSchema);
 export default Book;
