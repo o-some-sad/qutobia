@@ -1,36 +1,36 @@
-// import * as shared from "shared";
-import express from "express";
-import router from "./routes/index.js";
-import mongoose from "mongoose";
-import process from "process";
+import process from 'node:process';
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+import appRouter from './routes/index.js';
+
+dotenv.config();
 const app = express();
+app.use('/uploads', express.static('uploads')); // multer
 
-mongoose.connect("mongodb://127.0.0.1:27017/kotobia");
-mongoose.connection.on("error", (err) => {
-  console.error("MongoDB connection error: ", err);
-  process.exit(1);
-});
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URL);
+    console.log('Mongoose connection successfully established');
+  } catch (err) {
+    console.error(`Mongoose connection error:${err}`);
+    process.exit(1);
+  }
+};
 
-app.use("/uploads", express.static("uploads")); // multer
-
-app.get("/", (req, res) => {
-  res.end("hello world");
-});
-
-app.get("/api/hello", (req, res) => {
-  res.json({});
+app.get('/', (req, res) => {
+  res.end(`<div style="text-align: center;"><h1>Welcome to Kotobia WebSite</h1></div>`);
 });
 
 app.use(express.json());
-
-app.use(router);
+app.use('/api', appRouter);
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({
-    message: err.message,
+    message: err.message
   });
 });
 
-const PORT = process.env.PORT || 3000; // ** add .env file
-app.listen(PORT, () => {
-  console.log("Server running on port: 3000");
+app.listen(process.env.PORT, async () => {
+  await connectDB();
+  console.log(`Server running on http://localhost:${process.env.PORT}`);
 });
