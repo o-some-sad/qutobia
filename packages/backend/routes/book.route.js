@@ -1,7 +1,6 @@
 import express from 'express';
 import {addBook, updateBookImage} from '../controllers/book.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
-import {catchError} from "../utilities/catchError.js";
 
 const router = express.Router();
 
@@ -16,13 +15,13 @@ router.post('/', handleImageUpload('book'), async (req, res) => {
   }
 });
 
-router.patch('/:id/image', handleImageUpload('book'), async (req, res) => {
+router.patch('/:id/image', handleImageUpload('book'), async (req, res, next) => {
   const id = req.params.id;
   try {
     const book = await updateBookImage(id, req.file.path);
     res.status(200).json({ status: 'success', data: book });
   } catch (err) {
-    catchError(err, res);
+    next(err);
   }
 });
 

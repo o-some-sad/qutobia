@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import appRouter from "./routes/index.js";
+import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
 
 dotenv.config();
 const app = express();
@@ -31,12 +32,7 @@ app.get("/api/hello", (req, res) => {
 
 app.use(express.json());
 app.use("/api", appRouter);
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    message: err.message,
-  });
-});
-
+app.use(handleErrorMiddleware);
 
 app.listen(process.env.PORT, async () => {
   await connectDB();
