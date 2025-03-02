@@ -7,7 +7,7 @@
             <input [(ngModel)]="searchValue" (focus)="searchFocused.set(true)" (blur)="searchFocused.set(false)"  type="search" required placeholder="Search"/>
           </label>
         @if(searchFocused() && searchResults().length){
-            <ul class="absolute w-full bg-base shadow-2xl border border-primary mt-3 p-1 rounded-[inherit]">
+            <ul class="absolute w-full bg-base-100 shadow-2xl border border-primary mt-3 p-1 rounded-[inherit] z-10">
                 @for (result of searchResults(); track $index) {
                     <li class="hover:bg-primary hover:text-primary-content p-1 rounded-[inherit]">{{result}}</li>
                 } 
