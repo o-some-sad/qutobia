@@ -1,6 +1,19 @@
 <div class="navbar bg-base-100 shadow-sm">
     <div class="flex-1">
       <a class="btn btn-ghost text-xl">daisyUI</a>
+      <div class="inline-block relative">
+        <label class="input">
+            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
+            <input [(ngModel)]="searchValue" (focus)="searchFocused.set(true)" (blur)="searchFocused.set(false)"  type="search" required placeholder="Search"/>
+          </label>
+        @if(searchFocused() && searchResults().length){
+            <ul class="absolute w-full bg-base shadow-2xl border border-primary mt-3 p-1 rounded-[inherit]">
+                @for (result of searchResults(); track $index) {
+                    <li class="hover:bg-primary hover:text-primary-content p-1 rounded-[inherit]">{{result}}</li>
+                } 
+            </ul>
+        }
+      </div>
     </div>
     <div class="flex-none">
       <div class="dropdown dropdown-end">
@@ -32,7 +45,7 @@
         </div>
         <ul
           tabindex="0"
-          class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+          class="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
           <li>
             <a class="justify-between">
               Profile
