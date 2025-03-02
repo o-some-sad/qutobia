@@ -37,6 +37,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+
 app.listen(process.env.PORT, async () => {
   await connectDB();
   console.log(`Server running on http://localhost:${process.env.PORT}`);
