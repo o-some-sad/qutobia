@@ -1,11 +1,14 @@
-import process from "node:process";
+import process, { cwd } from "node:process";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import appRouter from "./routes/index.js";
 import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
+import path from "node:path";
 
-dotenv.config();
+dotenv.config({
+  path: path.join(cwd(), ".env"),
+});
 const app = express();
 
 const connectDB = async () => {
@@ -18,21 +21,25 @@ const connectDB = async () => {
   }
 };
 
-app.get("/", (req, res) => {
-  res.end(
-    `<div style="text-align: center;"><h1>Welcome to Kotobia WebSite</h1></div>`
-  );
-});
-
 app.get("/api/hello", (req, res) => {
   res.json({
     ok: true,
   });
 });
 
+const public_dir = path.join(cwd(), "_PUBLIC_");
+
+app.use(express.static(public_dir));
+
 app.use(express.json());
 app.use("/api", appRouter);
 app.use(handleErrorMiddleware);
+
+app.get('*', (req, res
+) => {
+  res.sendFile(path.join(public_dir, 'index.html'));
+})
+
 
 app.listen(process.env.PORT, async () => {
   await connectDB();
