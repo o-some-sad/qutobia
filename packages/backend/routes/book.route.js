@@ -1,21 +1,27 @@
 import express from 'express';
-import {addBook} from '../controllers/book.controller.js';
-import {uploadBookImage} from "../utilities/cloudinaryConfig.js";
+import {addBook, updateBookImage} from '../controllers/book.controller.js';
+import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
 
 const router = express.Router();
 
-router.post('/', uploadBookImage.single('image'), async (req, res) => {
+router.post('/', handleImageUpload('book'), async (req, res) => {
   const formData = req.body;
-  if (!req.file || !req.file.path) {
-    return res.status(400).json({msg: 'Please upload an image!'});
-  }
-
   const bookData = {...formData, image: req.file.path};
   try {
     const newBook = await addBook(bookData);
     res.status(201).json({status: 'success', data: newBook});
   } catch (err) {
     res.status(400).json({status: 'fail', message: err.message});
+  }
+});
+
+router.patch('/:id/image', handleImageUpload('book'), async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const book = await updateBookImage(id, req.file.path);
+    res.status(200).json({ status: 'success', data: book });
+  } catch (err) {
+    next(err);
   }
 });
 

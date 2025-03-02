@@ -1,46 +1,43 @@
-import {createUserValidation, updateUserValidation} from 'shared';
-import User from '../models/user.model.js';
+import {userPasswordValidator, userValidator} from 'shared';
+import User from "../models/user.model.js";
 
-export const createUser = async (req, res) => { // for test until we have register
+export const createUser = async (userData) => { // for test until we have register
   try {
-    await createUserValidation.parseAsync(req.body);
-    const user = await User.create(req.body);
-    res.status(201).json({status: 'success', data: user});
+    await userValidator.parseAsync(userData);
+    return await User.create(userData);
   } catch (err) {
-    if (err.code === 11000 && err.keyPattern && err.keyPattern.email === 1) {
-      res.status(409).json({status: 'fail', message: 'Email already exists'});
-    } else {
-      res.status(422).json({status: 'fail', message: err.errors || err.message});
-    }
+    throw err;
   }
 };
 
-export const updateUser = async (req, res) => {
-  const id = req.params.id;
+export const updateUser = async (id, userData) => {
   try {
-    await updateUserValidation.parseAsync(req.body);
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {new: true});
-    res.status(200).json({status: 'success', data: updatedUser});
+    delete userData.password;
+    await userValidator.partial().parseAsync(userData);
+    return await User.findByIdAndUpdate(id, userData, {new: true});
   } catch (err) {
-    if (err.code === 11000 && err.keyPattern && err.keyPattern.email === 1) {
-      res.status(409).json({status: 'fail', message: 'Email already exists'});
-    } else {
-      res.status(422).json({status: 'fail', message: err.errors || err.message});
-    }
+    throw err;
   }
 };
 
-export const updateUserImage = async (req, res) => {
-  const id = req.params.id;
+export const updateUserPassword = async (id, userData) => {
   try {
-    if (!req.file || !req.file.path) {
-      return res.status(400).json({ status: 'fail', message: 'No image uploaded' });
-    }
+    await userPasswordValidator.parseAsync(userData);
+    const user = await User.findById(id);
+    if (!user) throw new Error('User not found');
+    if (!await user.comparePassword(userData.oldPassword)) throw new Error('Old password is incorrect');
+    user.password = userData.newPassword;
+    await user.save();
+    return user;
+  } catch (err) {
+    throw err;
+  }
+}
 
-    const user = await User.findByIdAndUpdate(id, { image: req.file.path }, {new: true});
-    if (!user) return res.status(404).json({ message: 'User not found' });
-    res.status(200).json({ status: 'success', data: user });
-  } catch (error) {
-    res.status(500).json({ status: 'fail', error: error.message });
+export const updateUserImage = async (id, filePath) => {
+  try {
+    return await User.findByIdAndUpdate(id, { image: filePath }, {new: true});
+  } catch (err) {
+    throw err;
   }
 };

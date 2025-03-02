@@ -10,4 +10,12 @@ const addBook = async (formData) => {
   }
 };
 
-export {addBook};
+const updateBookImage = async (id, filePath) => {
+  try {
+    return await Book.findByIdAndUpdate(id, { image: filePath }, {new: true});
+  } catch (err) {
+    throw err;
+  }
+};
+
+export {addBook, updateBookImage};

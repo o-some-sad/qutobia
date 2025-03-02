@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, +process.env.SALT);
   next();
 });
@@ -44,6 +45,10 @@ userSchema.pre('findOneAndUpdate', async function (next) {
   this.setUpdate(updatedData);
   next();
 });
+
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 userSchema.set('toJSON', {
   transform: (doc, {_id, name, email, role, image}) => ({_id, name, email, role, image})
