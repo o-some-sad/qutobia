@@ -16,7 +16,6 @@ const userStorage = new CloudinaryStorage({
   params: {
     folder: 'kotobia/users',
     allowed_formats: ['jpg', 'png', 'jpeg'],
-    public_id: (req) => `user_${req.params.id}`,
     overwrite: true
   }
 });
