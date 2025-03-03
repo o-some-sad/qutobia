@@ -1,5 +1,5 @@
 import express from 'express';
-import {addBook, updateBookImage, listBooks, filterBooks, getBookByid} from '../controllers/book.controller.js';
+import {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook} from '../controllers/book.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
 
 const router = express.Router();
@@ -41,6 +41,12 @@ router.patch('/:id/image', handleImageUpload('book'), async (req, res, next) => 
     next(err);
   }
 });
+
+router.delete('/:id', async(req, res, next) => {
+  let id = req.params.id;
+  const removeBook = await deleteBook(id);
+  res.status(200).json(removeBook);
+}); // delete a book
 
 export default router;
 

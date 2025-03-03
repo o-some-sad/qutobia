@@ -49,4 +49,15 @@ const updateBookImage = async (id, filePath) => {
   }
 };
 
-export {addBook, updateBookImage, listBooks, filterBooks, getBookByid};
+const deleteBook = async(id) => {
+  try{
+    const bookDeleted = await Book.findByIdAndDelete(id).exec();
+    return "Book deleted successfully !";
+  }
+  catch (err) {
+    throw new Error('Failed to delete book !')
+  }
+}
+
+
+export {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook};
