@@ -1,16 +1,11 @@
 import express from 'express';
-import Order from '../models/order.model.js';
-import { createOrder, getById, updateOrder } from '../controllers/order.controller.js';
+import { createOrder, getById, updateOrder, getAllOrder } from '../controllers/order.controller.js';
 
 
 const router = express.Router();
 
 router.route('/')
-    .get((req, res) => {
-
-        //const user ={isAdmin:true,}
-        res.json({ message: "orders" })
-    })
+    .get(getAllOrder)
     .post(createOrder);
 
 router.route('/:id')

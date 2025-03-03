@@ -21,7 +21,7 @@ export const getById = async (req, res) => {
             res.status(400).json({ error: "not valid ID" });
             return;
         }
-        res.status(200).json({
+        res.status(201).json({
             message: "Success",
             order
         })
@@ -46,3 +46,14 @@ export const updateOrder = async (req, res) => {
         res.status(400).json({ error: error.errors });
     }
 }
+
+export const getAllOrder=async(req, res) => {
+        const isAdmin=true;
+        if (isAdmin) {
+            const userOrder=await Order.find({user:"67c2ddbc036f7cae384d9895"});
+            res.json({ userOrder })
+            return;
+        }
+        const adminOrder=await Order.find();
+        res.json({ adminOrder })
+    }
