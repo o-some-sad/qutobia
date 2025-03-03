@@ -20,7 +20,8 @@
     "express": "^4.21.2",
     "mongoose": "^8.11.0",
     "multer": "1.4.5-lts.1",
-    "multer-storage-cloudinary": "^4.0.0"
+    "multer-storage-cloudinary": "^4.0.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "eslint": "^9.21.0",

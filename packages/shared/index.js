@@ -22,3 +22,5 @@ export const userPasswordValidator = z.object({
     path: ['confirmPassword'],
   }
 );
+
+export * from './cart.validator.js'
