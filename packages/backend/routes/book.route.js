@@ -1,5 +1,5 @@
 import express from 'express';
-import {addBook, updateBookImage, listBooks, filterBooks} from '../controllers/book.controller.js';
+import {addBook, updateBookImage, listBooks, filterBooks, getBookByid} from '../controllers/book.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
 
 const router = express.Router();
@@ -25,6 +25,12 @@ router.get('/', async(req, res) => { // get ALL or get by filters
     res.status(200).json(filteredBooks);
   }  
 });
+
+router.get('/:id', async(req, res, next) => {
+  let id = req.params.id;
+  const specificBook = await getBookByid(id);
+  res.status(200).json(specificBook)
+}); // get by ID
 
 router.patch('/:id/image', handleImageUpload('book'), async (req, res, next) => {
   const id = req.params.id;
