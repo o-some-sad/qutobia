@@ -1,3 +1,4 @@
+//@ts-check
 import Review from "../models/review.model.js";
 export const addReview = async (req, res, next) => {
   try {
@@ -5,9 +6,15 @@ export const addReview = async (req, res, next) => {
     const review = await Review.create(reviewData);
     return res.status(200).json(review);
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({
+        message: "You can only write one review per book.",
+      });
+    }
     next(err);
   }
 };
+
 export const getAllReviewsByBookId = async (req, res, next) => {
   try {
     const bookId = req.params.id;
