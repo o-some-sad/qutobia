@@ -1,0 +1,16 @@
+{
+    "folder-color.pathColors": [
+        {
+            "folderPath": "kotobia-latest/packages/frontend/",
+            "badge": "FE"
+        },
+        {
+            "folderPath": "kotobia-latest/packages/backend/",
+            "badge": "BE"
+        },
+        {
+            "folderPath": "kotobia-latest/packages/shared/",
+            "badge": "SH"
+        }
+    ]
+}
