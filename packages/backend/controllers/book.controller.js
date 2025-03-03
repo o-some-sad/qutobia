@@ -10,6 +10,27 @@ const addBook = async (formData) => {
   }
 };
 
+const listBooks = async() => {
+  try{
+    const book = await Book.find({}).exec();
+    // .exec() returns a promise
+    return book;
+  }
+  catch (err) {
+    throw new Error('Failed to list books !')
+  }
+}
+
+const filterBooks = async(rest,skip, limit) => {
+  try{
+    const book = await Book.find(rest).skip(skip).limit(limit).exec();
+    return book;
+  }
+  catch (err) {
+    throw new Error('Failed to list books !')
+  }
+}
+
 const updateBookImage = async (id, filePath) => {
   try {
     return await Book.findByIdAndUpdate(id, { image: filePath }, {new: true});
@@ -18,4 +39,4 @@ const updateBookImage = async (id, filePath) => {
   }
 };
 
-export {addBook, updateBookImage};
+export {addBook, updateBookImage, listBooks, filterBooks};

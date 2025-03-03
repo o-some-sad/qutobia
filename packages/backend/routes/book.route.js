@@ -1,5 +1,5 @@
 import express from 'express';
-import {addBook, updateBookImage} from '../controllers/book.controller.js';
+import {addBook, updateBookImage, listBooks, filterBooks} from '../controllers/book.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
 
 const router = express.Router();
@@ -13,6 +13,17 @@ router.post('/', handleImageUpload('book'), async (req, res) => {
   } catch (err) {
     res.status(400).json({status: 'fail', message: err.message});
   }
+});
+
+router.get('/', async(req, res) => { // get ALL or get by filters
+  if(Object.keys(req.query).length === 0){
+      const booksStored = await listBooks();
+      res.json(booksStored);
+  }else{ // query params (skip - limit - filters)
+    const {skip, limit, ...rest} = req.query;
+    const filteredBooks = await filterBooks(rest, skip, limit);
+    res.status(200).json(filteredBooks);
+  }  
 });
 
 router.patch('/:id/image', handleImageUpload('book'), async (req, res, next) => {

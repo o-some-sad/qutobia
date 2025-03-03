@@ -23,7 +23,6 @@
     "multer-storage-cloudinary": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^9.21.0",
     "nodemon": "^3.1.9"
   }
 }
