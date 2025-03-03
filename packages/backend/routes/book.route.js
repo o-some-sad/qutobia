@@ -1,5 +1,5 @@
 import express from 'express';
-import {addBook, updateBookImage} from '../controllers/book.controller.js';
+import {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook} from '../controllers/book.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
 
 const router = express.Router();
@@ -15,6 +15,23 @@ router.post('/', handleImageUpload('book'), async (req, res) => {
   }
 });
 
+router.get('/', async(req, res) => { // get ALL or get by filters
+  if(Object.keys(req.query).length === 0){
+      const booksStored = await listBooks();
+      res.json(booksStored);
+  }else{ // query params (skip - limit - filters)
+    const {skip, limit, ...rest} = req.query;
+    const filteredBooks = await filterBooks(rest, skip, limit);
+    res.status(200).json(filteredBooks);
+  }  
+});
+
+router.get('/:id', async(req, res, next) => {
+  let id = req.params.id;
+  const specificBook = await getBookByid(id);
+  res.status(200).json(specificBook)
+}); // get by ID
+
 router.patch('/:id/image', handleImageUpload('book'), async (req, res, next) => {
   const id = req.params.id;
   try {
@@ -24,6 +41,12 @@ router.patch('/:id/image', handleImageUpload('book'), async (req, res, next) => 
     next(err);
   }
 });
+
+router.delete('/:id', async(req, res, next) => {
+  let id = req.params.id;
+  const removeBook = await deleteBook(id);
+  res.status(200).json(removeBook);
+}); // delete a book
 
 export default router;
 
