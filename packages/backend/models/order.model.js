@@ -8,20 +8,20 @@ const orderSchema = new mongoose.Schema(
             required: true,
         },
         books: {
-            type:[{
-                book:{
+            type: [{
+                book: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'Book',
                     required: true,
                 },
-                quantity:{
-                    type:Number,
+                quantity: {
+                    type: Number,
                     required: true,
-                    min:0
+                    min: 0
                 },
-                price:{
-                    type:Number,
-                    required:true,
+                price: {
+                    type: Number,
+                    required: true,
                 }
             }],
             required: true,
@@ -36,8 +36,7 @@ const orderSchema = new mongoose.Schema(
             enum: ['pending', 'completed', 'canceled'],
             default: 'pending',
         }
-    },
-    { timestamps: true }
+    }
 );
 const Order = mongoose.model('Order', orderSchema);
 export default Order;
