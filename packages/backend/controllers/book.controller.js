@@ -11,14 +11,15 @@ const addBook = async (formData) => {
 };
 
 const listBooks = async() => {
-    const book = await Book.find({deletedAt: null}).exec();
-    // .exec() returns a promise
-    if(book.length === 0){
+    const books = await Book.find({deletedAt: null}).exec();
+    const bookCount = await Book.find({deletedAt: null}).countDocuments().exec();
+      // exec() --> the query will run even if await is NOT there (returns a promise)
+    if(books.length === 0){
       const err = new Error("No books found to list !");
       err.status = 400;
       throw err;
     }
-    return book;
+    return {Total_Books: bookCount, Books: books};
 }
 
 const filterBooks = async(rest,skip, limit,) => {
@@ -63,13 +64,12 @@ const deleteBook = async(id) => { // shadow delete
     return "Book deleted successfully !";
 }
 
-const updateBookDetails = async(id, body) => {
-  const bookUpdated = await Book.findByIdAndUpdate(id,{$set:body},{new: true}).exec();
-  console.log("BODYYY: ",body);
+const updateBookDetails = async(id, rest) => {
+  const bookUpdated = await Book.findByIdAndUpdate(id,{$set:rest},{new: true, runValidators: true,}).exec();
+  console.log("BODYYY: ",rest);
   console.log("UPDATEDDD: ", bookUpdated);
   // IF THE ID IS UNAVAILABLE --> ID UNAVAILABLE - DONE
-  // SHOULD I disable modifying deletedAt ?????
-  // when adding a field that does NOT exist, it changes ONLY the ones existing - SHOULD I THROW AN ERR ?
+  // SHOULD I disable modifying deletedAt ????? KHALY MAYENFA3SH YGHAYARHA !!
   if(bookUpdated === null || bookUpdated.deletedAt != null){
     const err = new Error("No books found to update !");
     err.status = 400;
