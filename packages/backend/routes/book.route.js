@@ -24,7 +24,7 @@ router.get('/', async(req, res, next) => { // get ALL or get by filters
   try{
     if(Object.keys(req.query).length === 0){
         const booksStored = await listBooks();
-        res.status(201).json({data: booksStored});
+        res.status(201).json(booksStored);
       }else{ // query params (skip - limit - filters)
       const {skip, limit, ...rest} = req.query;
       const filteredBooks = await filterBooks(rest, skip, limit);
@@ -80,8 +80,10 @@ router.patch('/:id', upload.none(), async(req, res, next) => {
   // upload.none() --> for handling text-fields ONLY (won't update img)
   const id = req.params.id;
   const body = req.body;
+  // deletedAt shouldn't be updated here - avoid updating it SO destructure it
+  const {deletedAt, ...rest} = body;
   try{
-  const updatedBook = await updateBookDetails(id, body);
+  const updatedBook = await updateBookDetails(id, rest);
   res.status(200).json(updatedBook);
 }
   catch(err){
