@@ -20,8 +20,13 @@ export const CartPopulatedValidator = CartValidator.omit({ books: true }).extend
         book: z.object({
             _id: ZodObjectId,
             title: z.string(),
-            price: z.number()
+            price: z.number(),
+            author: z.string().array(),
+            image: z.string()
         }),
         quantity: z.number()
     }).array().default([])
 })
+
+
+export const CartPropsValidator = z.enum(['title', 'author', 'price', "image"]).array()

@@ -1,9 +1,9 @@
 //@ts-check
 import Cart from "../models/cart.model.js";
-import { CartItemValidator, CartPopulatedValidator, CartValidator } from 'shared'
+import { CartItemValidator, CartPopulatedValidator, CartPropsValidator, CartValidator } from 'shared'
 import mongoose from 'mongoose'
 import Book from "../models/book.model.js";
-
+import { z } from "zod";
 /**
  * 
  * @param {Zod.infer<typeof CartItemValidator>} payload 
@@ -24,16 +24,16 @@ export const addCartItem = async (payload, user) => {
     if (!book) throw new Error("Book not found")
 
     const cartItemRef = cart.books.find(item => item.book.toString() === payload.book.toString())
-    console.log(cart);
     
     if (cartItemRef) {
         cartItemRef.quantity += payload.quantity;
-        if (cartItemRef.quantity > book.stock) throw new Error("No enough stock of this book");
+        if (cartItemRef.quantity > book.stock) throw new Error("No enough stock of this book");        
         await cart.updateOne({
             $set: {
                 books: cart.books
             }
         })
+        return;
     } else {
         if (payload.quantity > book.stock) throw new Error("No enough stock of this book")
         await cart.updateOne({
@@ -44,6 +44,7 @@ export const addCartItem = async (payload, user) => {
                 }
             }
         })
+        return;
     }
 };
 
@@ -51,11 +52,14 @@ export const addCartItem = async (payload, user) => {
 /**
  * 
  * @param {string} user 
+ * @param {z.infer<typeof CartPropsValidator>} props
  */
-export const getByUserId = async (user)=>{
+export const getByUserId = async (user, props = ["price", "title"])=>{
+
+        
     const cart = await Cart.findOne({
         user
-    }).populate("books.book", "price title")
-    .then(cart=>CartPopulatedValidator.parse(cart || { user }))
+    }).populate("books.book", props.join(" "))
+    // .then(cart=>CartPopulatedValidator.parse(cart || { user }))    
     return cart
 }

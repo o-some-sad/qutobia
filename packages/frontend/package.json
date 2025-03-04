@@ -19,6 +19,7 @@
     "@angular/router": "^19.2.0",
     "@tailwindcss/postcss": "^4.0.9",
     "frontend": "file:",
+    "ngx-sonner": "^3.0.0",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.0.9",

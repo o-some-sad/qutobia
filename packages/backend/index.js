@@ -29,7 +29,6 @@ app.get("/api/hello", (req, res) => {
     ok: true,
   });
 });
-
 app.use(express.json());
 app.use("/api", appRouter);
 app.use(handleErrorMiddleware);

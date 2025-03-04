@@ -7,3 +7,8 @@ declare module 'express-serve-static-core' {
     user: InferSchemaType<typeof userSchema> & {_id: string | Types.ObjectId};
   }
 }
+declare module 'express' {
+  interface Request {
+    user: InferSchemaType<typeof userSchema> & {_id: string | Types.ObjectId};
+  }
+}

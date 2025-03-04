@@ -1,8 +1,16 @@
-@if(loading){
+@if(loading && !cart && !error){
 ...
 }@else if (error) {
 <h1>{{error}}</h1>
-}@else if (cart) {
+}@else if(cart && cart.books.length === 0){
+    <div class="p-3 flex flex-col items-center justify-center gap-3">
+        <h1 class="text-2xl">
+            Your cart is still empty
+        </h1>
+        <a routerLink="/" class="btn btn-primary btn-soft btn-lg">Find Your next read</a>
+    </div>
+}
+@else if (cart) {
 <div class="overflow-x-auto">
     <table class="table">
         <!-- head -->
@@ -13,14 +21,14 @@
                         <input type="checkbox" class="checkbox" />
                     </label>
                 </th>
-                <th>Title</th>
                 <th>Details</th>
+                <th>Amount</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             <!-- row 1 -->
-            @for (item of cart?.books; track item.book._id) {
+            @for (item of cart.books; track item.book._id) {
             <tr>
                 <th>
                     <label>
@@ -31,14 +39,14 @@
                     <div class="flex items-center gap-3">
                         <div class="avatar">
                             <div class="mask mask-squircle h-12 w-12">
-                                <img src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                                <img [src]="item.book.image"
                                     alt="Avatar Tailwind CSS Component" />
                             </div>
                         </div>
                         <div>
                             <div class="font-bold">{{item.book.title}}</div>
                             <!-- TODO: populate the authors -->
-                            <div class="text-sm opacity-50">{{item.book.price}}</div>
+                            <div class="text-sm opacity-50">{{item.book.author.join(", ")}}</div>
                         </div>
                     </div>
                 </td>
@@ -48,25 +56,37 @@
                     {{ item.book.price * item.quantity | currency }}
                 </td>
                 <th>
-                    <button class="btn btn-ghost btn-xs">details</button>
+                    <div class="flex gap-3 flex-wrap items-center">
+                        <button [disabled]="loading" class="btn btn-ghost">details</button>
+                        <div class="join items-stretch">
+                            <button [disabled]="loading" class="btn join-item">-</button>
+                            <div class="px-4 bg-neutral text-neutral-content join-item inline-flex items-center justify-center">{{item.quantity}}</div>
+                            <button [disabled]="loading" class="btn join-item" (click)="increaseBookQuantity(item.book._id)">+</button>
+                        </div>
+                    </div>
                 </th>
             </tr>
             }
             <tr>
                 <td></td>
-                <td class="border-l border-t border-b text-right border-accent font-bold rounded-tl-2xl">Subtotal</td>
-                <td class="border-t border-b border-r border-accent font-bold">{{totalAmount | currency }}</td>
+                <td class="text-right border-neutral font-bold rounded-tl-2xl">
+                        Subtotal
+                </td>
+                <td class="border border-neutral font-bold">{{totalAmount | currency }}</td>
             </tr>
         </tbody>
         <!-- foot -->
-        <tfoot>
-            <tr>
-                <th></th>
-                <th>Title</th>
-                <th>Details</th>
-                <th></th>
-            </tr>
-        </tfoot>
+        @if(cart.books.length > 10){
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th>Details</th>
+                    <th>Amount</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        }
     </table>
 </div>
+<!-- <div class="fixed top-0 left-0 bg-neutral/30 backdrop-blur-none w-full h-full z-50 transition-all opacity-0 pointer-events-none" [class.backdrop-blur-sm]="loading" [class.opacity-100]="loading"></div> -->
 }
