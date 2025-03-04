@@ -60,7 +60,7 @@ reviewSchema.pre("save", async function (next) {
 reviewSchema.pre("save", async function (next) {
   const ownBook = await mongoose
     .model("Order")
-    .findOne({ user: this.user, "books.book": this.book });
+    .findOne({ user: this.user, "books.book": this.book, status: "completed" });
   if (!ownBook) {
     return next(new Error("User doesn't own the book to review it"));
   }
