@@ -10,6 +10,16 @@ export const createUser = async (userData) => { // for test until we have regist
   }
 };
 
+export const getAllUsers = async (filters, page, limit) => {
+  try {
+    const count = await User.countDocuments(filters);
+    const users = await User.find(filters).skip((page - 1) * limit).limit(limit).exec();
+    return {totalPages: Math.ceil(count / limit), data: users};
+  } catch (err) {
+    throw err;
+  }
+};
+
 export const updateUser = async (id, userData) => {
   try {
     delete userData.password;

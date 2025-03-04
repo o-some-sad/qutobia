@@ -1,5 +1,5 @@
 import express from 'express';
-import {createUser, updateUser, updateUserImage, updateUserPassword} from '../controllers/user.controller.js';
+import {createUser, getAllUsers, updateUser, updateUserImage, updateUserPassword} from '../controllers/user.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
 
 const Router = express.Router();
@@ -9,6 +9,20 @@ Router.post('/', async (req, res, next) => { // for test until we have register
   try {
     const user = await createUser(userData);
     res.status(201).json({status: 'success', data: user});
+  } catch (err) {
+    next(err);
+  }
+});
+
+Router.get('/', async (req, res, next) => {
+  const filters = {};
+  const page = +req.query.page || 1;
+  const limit = +req.query.limit || 10;
+  try {
+    if(req.query.role) filters.role = req.query.role;
+    if(req.query.name) filters.name = { $regex: req.query.name, $options: 'i' };
+    const users = await getAllUsers(filters, page, limit);
+    res.status(200).json({totalPages: users.totalPages, data: users.data});
   } catch (err) {
     next(err);
   }
