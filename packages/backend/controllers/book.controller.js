@@ -66,10 +66,6 @@ const deleteBook = async(id) => { // shadow delete
 
 const updateBookDetails = async(id, rest) => {
   const bookUpdated = await Book.findByIdAndUpdate(id,{$set:rest},{new: true, runValidators: true,}).exec();
-  console.log("BODYYY: ",rest);
-  console.log("UPDATEDDD: ", bookUpdated);
-  // IF THE ID IS UNAVAILABLE --> ID UNAVAILABLE - DONE
-  // SHOULD I disable modifying deletedAt ????? KHALY MAYENFA3SH YGHAYARHA !!
   if(bookUpdated === null || bookUpdated.deletedAt != null){
     const err = new Error("No books found to update !");
     err.status = 400;
