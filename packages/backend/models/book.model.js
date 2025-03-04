@@ -38,11 +38,15 @@ const bookSchema = new mongoose.Schema({
       },
       message: 'Image must be a valid URL or filename ending in .png, .jpg, .jpeg, .gif, or .svg.'
     }
+  },
+  deletedAt: {
+    type: Date,
+    default: null
   }
 }, {timestamps: true});
 
 bookSchema.set('toJSON', {
-  transform: (doc, {_id, title, author, price, description, stock, image}) => ({_id, title, author, price, description, stock, image})
+  transform: (doc, {_id, title, author, price, description, stock, image, deletedAt}) => ({_id, title, author, price, description, stock, image, deletedAt})
 });
 
 const Book = mongoose.model('Book', bookSchema);
