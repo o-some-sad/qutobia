@@ -1,4 +1,5 @@
 import Book from '../models/book.model.js';
+import mongoose from 'mongoose';
 
 const addBook = async (formData) => {
   try {
@@ -6,39 +7,45 @@ const addBook = async (formData) => {
     const book = await Book.create(formData);
     return book;
   } catch (error) {
+    console.log("ERROR: ",error);
     throw new Error('Failed to add Book !');
   }
 };
 
 const listBooks = async() => {
-  try{
-    const book = await Book.find({}).exec();
+    const book = await Book.find({deletedAt: null}).exec();
     // .exec() returns a promise
+    if(book.length === 0){
+      const err = new Error("No books found !");
+      err.status = 400;
+      throw err;
+    }
     return book;
-  }
-  catch (err) {
-    throw new Error('Failed to list books !')
-  }
 }
 
-const filterBooks = async(rest,skip, limit) => {
-  try{
-    const book = await Book.find(rest).skip(skip).limit(limit).exec();
+const filterBooks = async(rest,skip, limit,) => {
+    const filter = { ...rest, deletedAt: null }; // to ensure that we get ONLY the books w/ deletedAt: null
+    // as if I'm adding deletedAt: null in the params
+    const book = await Book.find(filter).skip(skip).limit(limit).exec();
+    if(book.length === 0){
+      const err = new Error("No books found !");
+      err.status = 400;
+      console.log("ERROR: ", err);
+      throw err;
+    }
     return book;
-  }
-  catch (err) {
-    throw new Error('Failed to list books !')
-  }
 }
 
 const getBookByid = async(id) => {
-  try{
-    const bookByid = await Book.findById(id).exec();
+    // 67c70a37e5660061b49db3f7 - tfios 
+    const bookByid = await Book.findOne({ _id: id, deletedAt:null}).exec();
+    console.log("thisss: ",bookByid);
+    if(bookByid === null){
+      const err = new Error("No books found !");
+      err.status = 400;
+      throw err;
+    }
     return bookByid;
-  }
-  catch (err) {
-    throw new Error('Failed to list book !')
-  }
 }
 
 const updateBookImage = async (id, filePath) => {
@@ -49,15 +56,26 @@ const updateBookImage = async (id, filePath) => {
   }
 };
 
-const deleteBook = async(id) => {
-  try{
-    const bookDeleted = await Book.findByIdAndDelete(id).exec();
+const deleteBook = async(id) => { // shadow delete
+    const bookDeleted = await Book.findByIdAndUpdate(id,{deletedAt: Date.now()}).exec();
+    // check if the book is already deleted THEN --> No books found
+    if(bookDeleted === null || bookDeleted.deletedAt != null){
+      const err = new Error("No books found !");
+      err.status = 400;
+      throw err;
+    }
     return "Book deleted successfully !";
-  }
-  catch (err) {
-    throw new Error('Failed to delete book !')
-  }
 }
 
-
-export {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook};
+const updateBookDetails = async(id, body) => {
+  const bookUpdated = await Book.findByIdAndUpdate(id,{$set:body},{new: true}).exec();
+  console.log("BODYYY: ",body);
+  console.log("UPDATEDDD: ", bookUpdated);
+  // if(bookUpdated === null || bookUpdated.deletedAt != null){
+  //   const err = new Error("No books found !");
+  //   err.status = 400;
+  //   throw err;
+  // }
+  return "Book updated successfully !";
+}
+export {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook, updateBookDetails};
