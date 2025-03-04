@@ -1,9 +1,7 @@
 import Book from '../models/book.model.js';
-import mongoose from 'mongoose';
 
 const addBook = async (formData) => {
   try {
-    console.log(formData);
     const book = await Book.create(formData);
     return book;
   } catch (error) {
@@ -16,7 +14,7 @@ const listBooks = async() => {
     const book = await Book.find({deletedAt: null}).exec();
     // .exec() returns a promise
     if(book.length === 0){
-      const err = new Error("No books found !");
+      const err = new Error("No books found to list !");
       err.status = 400;
       throw err;
     }
@@ -28,20 +26,18 @@ const filterBooks = async(rest,skip, limit,) => {
     // as if I'm adding deletedAt: null in the params
     const book = await Book.find(filter).skip(skip).limit(limit).exec();
     if(book.length === 0){
-      const err = new Error("No books found !");
+      const err = new Error("No books found to list !");
       err.status = 400;
-      console.log("ERROR: ", err);
       throw err;
     }
     return book;
 }
 
 const getBookByid = async(id) => {
-    // 67c70a37e5660061b49db3f7 - tfios 
+    // 67c70a37e5660061b49db3f7 - tfios --> deletedAt = null
     const bookByid = await Book.findOne({ _id: id, deletedAt:null}).exec();
-    console.log("thisss: ",bookByid);
     if(bookByid === null){
-      const err = new Error("No books found !");
+      const err = new Error("No books found to list !");
       err.status = 400;
       throw err;
     }
@@ -60,7 +56,7 @@ const deleteBook = async(id) => { // shadow delete
     const bookDeleted = await Book.findByIdAndUpdate(id,{deletedAt: Date.now()}).exec();
     // check if the book is already deleted THEN --> No books found
     if(bookDeleted === null || bookDeleted.deletedAt != null){
-      const err = new Error("No books found !");
+      const err = new Error("No books found to delete !");
       err.status = 400;
       throw err;
     }
@@ -71,11 +67,14 @@ const updateBookDetails = async(id, body) => {
   const bookUpdated = await Book.findByIdAndUpdate(id,{$set:body},{new: true}).exec();
   console.log("BODYYY: ",body);
   console.log("UPDATEDDD: ", bookUpdated);
-  // if(bookUpdated === null || bookUpdated.deletedAt != null){
-  //   const err = new Error("No books found !");
-  //   err.status = 400;
-  //   throw err;
-  // }
-  return "Book updated successfully !";
+  // IF THE ID IS UNAVAILABLE --> ID UNAVAILABLE - DONE
+  // SHOULD I disable modifying deletedAt ?????
+  // when adding a field that does NOT exist, it changes ONLY the ones existing - SHOULD I THROW AN ERR ?
+  if(bookUpdated === null || bookUpdated.deletedAt != null){
+    const err = new Error("No books found to update !");
+    err.status = 400;
+    throw err;
+  }
+  return { message: "Book updated successfully!", bookUpdated };
 }
 export {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook, updateBookDetails};

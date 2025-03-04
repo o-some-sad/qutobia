@@ -2,9 +2,12 @@ import express from 'express';
 import {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook, updateBookDetails} from '../controllers/book.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
 import mongoose from 'mongoose';
+import multer from 'multer'
+import Book from '../models/book.model.js';
 // AUTHENTICATION IS STILL NEEDED
 
 const router = express.Router();
+const upload = multer();
 
 router.post('/', handleImageUpload('book'), async (req, res) => {
   const formData = req.body;
@@ -73,13 +76,13 @@ router.delete('/:id', async(req, res, next) => {
 
 
 // update a book's details
-router.patch('/:id', async(req, res, next) => {
+router.patch('/:id', upload.none(), async(req, res, next) => {
+  // upload.none() --> for handling text-fields ONLY (won't update img)
   const id = req.params.id;
   const body = req.body;
-  console.log("BODYY: ", body);
   try{
-  const updateBook = await updateBookDetails(id, body);
-  res.status(200).json({data: updateBook });
+  const updatedBook = await updateBookDetails(id, body);
+  res.status(200).json(updatedBook);
 }
   catch(err){
     if(!mongoose.Types.ObjectId.isValid(id)){
