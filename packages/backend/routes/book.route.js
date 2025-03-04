@@ -95,7 +95,5 @@ router.patch('/:id', upload.none(), async(req, res, next) => {
 });
 
 
-// UPDATEEEEE - findByIdAndUpdate
-
 
 export default router;

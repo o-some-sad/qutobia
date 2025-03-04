@@ -13,25 +13,30 @@ const addBook = async (formData) => {
 const listBooks = async() => {
     const books = await Book.find({deletedAt: null}).exec();
     const bookCount = await Book.find({deletedAt: null}).countDocuments().exec();
-      // exec() --> the query will run even if await is NOT there (returns a promise)
+    // exec() --> the query will run even if await is NOT there (returns a promise)
+    // totalPages = totalBooks(bookCount) / booksPerPage(10)
+    // totalPages = Math.ceil(bookCount / 10)
+    const totalPages = Math.ceil(bookCount / 10);
     if(books.length === 0){
       const err = new Error("No books found to list !");
       err.status = 400;
       throw err;
     }
-    return {Total_Books: bookCount, Books: books};
+    return {Total_Pages: totalPages, Books: books};
 }
 
 const filterBooks = async(rest,skip, limit,) => {
     const filter = { ...rest, deletedAt: null }; // to ensure that we get ONLY the books w/ deletedAt: null
     // as if I'm adding deletedAt: null in the params
-    const book = await Book.find(filter).skip(skip).limit(limit).exec();
-    if(book.length === 0){
+    const books = await Book.find(filter).skip(skip).limit(limit).exec();
+    const filteredBookCount = await Book.find(filter).skip(skip).limit(limit).countDocuments().exec();
+    const filterTotalPages = Math.ceil(filteredBookCount/10);
+    if(books.length === 0){
       const err = new Error("No books found to list !");
       err.status = 400;
       throw err;
     }
-    return book;
+    return ({Total_Pages: filterTotalPages, Books: books});
 }
 
 const getBookByid = async(id) => {
