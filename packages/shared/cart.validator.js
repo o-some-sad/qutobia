@@ -23,5 +23,5 @@ export const CartPopulatedValidator = CartValidator.omit({ books: true }).extend
             price: z.number()
         }),
         quantity: z.number()
-    }).array()
+    }).array().default([])
 })

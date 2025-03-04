@@ -93,6 +93,9 @@ importers:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
       zone.js:
         specifier: ~0.15.0
         version: 0.15.0

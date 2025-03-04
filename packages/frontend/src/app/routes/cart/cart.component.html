@@ -1,0 +1,72 @@
+@if(loading){
+...
+}@else if (error) {
+<h1>{{error}}</h1>
+}@else if (cart) {
+<div class="overflow-x-auto">
+    <table class="table">
+        <!-- head -->
+        <thead>
+            <tr>
+                <th>
+                    <label>
+                        <input type="checkbox" class="checkbox" />
+                    </label>
+                </th>
+                <th>Title</th>
+                <th>Details</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- row 1 -->
+            @for (item of cart?.books; track item.book._id) {
+            <tr>
+                <th>
+                    <label>
+                        <input type="checkbox" class="checkbox" />
+                    </label>
+                </th>
+                <td>
+                    <div class="flex items-center gap-3">
+                        <div class="avatar">
+                            <div class="mask mask-squircle h-12 w-12">
+                                <img src="https://img.daisyui.com/images/profile/demo/2@94.webp"
+                                    alt="Avatar Tailwind CSS Component" />
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold">{{item.book.title}}</div>
+                            <!-- TODO: populate the authors -->
+                            <div class="text-sm opacity-50">{{item.book.price}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    {{item.book.price | currency}} x {{item.quantity}}PCs
+                    <hr class="w-1/2 text-base-300" />
+                    {{ item.book.price * item.quantity | currency }}
+                </td>
+                <th>
+                    <button class="btn btn-ghost btn-xs">details</button>
+                </th>
+            </tr>
+            }
+            <tr>
+                <td></td>
+                <td class="border-l border-t border-b text-right border-accent font-bold rounded-tl-2xl">Subtotal</td>
+                <td class="border-t border-b border-r border-accent font-bold">{{totalAmount | currency }}</td>
+            </tr>
+        </tbody>
+        <!-- foot -->
+        <tfoot>
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Details</th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+}

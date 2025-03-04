@@ -12,28 +12,30 @@ import Book from "../models/book.model.js";
 export const addCartItem = async (payload, user) => {
     let cart = await Cart.findOne({
         user
-    })
-    if (!cart) {
+    })    
+    if (!cart) {        
         cart = await Cart.create({
             user,
             books: []
         })
-    }
+    }    
 
     const book = await Book.findById(payload.book)
     if (!book) throw new Error("Book not found")
 
     const cartItemRef = cart.books.find(item => item.book.toString() === payload.book.toString())
+    console.log(cart);
+    
     if (cartItemRef) {
         cartItemRef.quantity += payload.quantity;
-        if (cartItemRef.quantity > book.stock) throw new Error("Not enough stock of this book");
+        if (cartItemRef.quantity > book.stock) throw new Error("No enough stock of this book");
         await cart.updateOne({
             $set: {
                 books: cart.books
             }
         })
     } else {
-        if (payload.quantity > book.stock) throw new Error("Not enough stock of this book")
+        if (payload.quantity > book.stock) throw new Error("No enough stock of this book")
         await cart.updateOne({
             $push: {
                 books: {
@@ -54,6 +56,6 @@ export const getByUserId = async (user)=>{
     const cart = await Cart.findOne({
         user
     }).populate("books.book", "price title")
-    .then(cart=>CartPopulatedValidator.parse(cart || {}))
+    .then(cart=>CartPopulatedValidator.parse(cart || { user }))
     return cart
 }

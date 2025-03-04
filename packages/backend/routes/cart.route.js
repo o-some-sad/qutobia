@@ -4,43 +4,41 @@ import mongoose from 'mongoose';
 import * as cartController from '../controllers/cart.controller.js'
 import validateSchema from '../middlewares/zodValidator.middleware.js';
 import { CartItemValidator, CartValidator } from 'shared';
+import { authMiddleware } from '../middlewares/auth.middleware.js'
 const cartRouter = express.Router();
 
-// mocking user object
-const user = {
-    id: new mongoose.Types.ObjectId("67c383ec399b432beab55cd6"),
-    role: "user"
-}
 
-cartRouter.get("/", async (req, res, next)=>{
-    try{
-        const cart = await cartController.getByUserId(user.id.toString())
-        res.json(cart)
-    }catch(error){
-        next(error)
-    }
+cartRouter.get("/", authMiddleware(), async (req, res, next) => {
+        try {
+            const cart = await cartController.getByUserId(req.user._id.toString())
+            res.json(cart)
+        } catch (error) {
+            next(error)
+        }
 
-})
+    })
 
 // add a book to the cart 
-cartRouter.post("/", validateSchema(CartItemValidator), async (req, res, next)=>{
-    try{
-        const result = await cartController.addCartItem(req.body, user.id)    
+cartRouter.post("/", authMiddleware(), validateSchema(CartItemValidator), async (req, res, next) => {
+    try {
+        if (req.user.role !== 'user') throw new Error("only users can use cart");
+        const result = await cartController.addCartItem(req.body, req.user._id.toString())
+        console.log(result);
         res.json({})
-    }catch(error){
+    } catch (error) {
         next(error)
     }
 })
 
 // remove a book from the cart by book id
-cartRouter.delete("/:id", (req, res)=>{
+cartRouter.delete("/:id", (req, res) => {
     console.log(req.body);
-    
+
     res.status(500).json("not implemented yet")
 })
 
 // clear all items from the cart
-cartRouter.delete("/", (req, res)=>{
+cartRouter.delete("/", (req, res) => {
     res.status(500).json("not implemented yet")
 })
 
