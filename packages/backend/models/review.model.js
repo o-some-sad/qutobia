@@ -56,5 +56,16 @@ reviewSchema.pre("save", async function (next) {
 
   next();
 });
+
+reviewSchema.pre("save", async function (next) {
+  const ownBook = await mongoose
+    .model("Order")
+    .findOne({ user: this.user, "books.book": this.book });
+  if (!ownBook) {
+    return next(new Error("User doesn't own the book to review it"));
+  }
+  next();
+});
+
 const Review = mongoose.model("Review", reviewSchema);
 export default Review;
