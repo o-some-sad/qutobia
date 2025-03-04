@@ -2,43 +2,52 @@ import Book from '../models/book.model.js';
 
 const addBook = async (formData) => {
   try {
-    console.log(formData);
     const book = await Book.create(formData);
     return book;
   } catch (error) {
+    console.log("ERROR: ",error);
     throw new Error('Failed to add Book !');
   }
 };
 
 const listBooks = async() => {
-  try{
-    const book = await Book.find({}).exec();
-    // .exec() returns a promise
-    return book;
-  }
-  catch (err) {
-    throw new Error('Failed to list books !')
-  }
+    const books = await Book.find({deletedAt: null}).exec();
+    const bookCount = await Book.find({deletedAt: null}).countDocuments().exec();
+    // exec() --> the query will run even if await is NOT there (returns a promise)
+    // totalPages = totalBooks(bookCount) / booksPerPage(10)
+    // totalPages = Math.ceil(bookCount / 10)
+    const totalPages = Math.ceil(bookCount / 10);
+    if(books.length === 0){
+      const err = new Error("No books found to list !");
+      err.status = 400;
+      throw err;
+    }
+    return {Total_Pages: totalPages, Books: books};
 }
 
-const filterBooks = async(rest,skip, limit) => {
-  try{
-    const book = await Book.find(rest).skip(skip).limit(limit).exec();
-    return book;
-  }
-  catch (err) {
-    throw new Error('Failed to list books !')
-  }
+const filterBooks = async(rest,skip, limit,) => {
+    const filter = { ...rest, deletedAt: null }; // to ensure that we get ONLY the books w/ deletedAt: null
+    // as if I'm adding deletedAt: null in the params
+    const books = await Book.find(filter).skip(skip).limit(limit).exec();
+    const filteredBookCount = await Book.find(filter).skip(skip).limit(limit).countDocuments().exec();
+    const filterTotalPages = Math.ceil(filteredBookCount/10);
+    if(books.length === 0){
+      const err = new Error("No books found to list !");
+      err.status = 400;
+      throw err;
+    }
+    return ({Total_Pages: filterTotalPages, Books: books});
 }
 
 const getBookByid = async(id) => {
-  try{
-    const bookByid = await Book.findById(id).exec();
+    // 67c70a37e5660061b49db3f7 - tfios --> deletedAt = null
+    const bookByid = await Book.findOne({ _id: id, deletedAt:null}).exec();
+    if(bookByid === null){
+      const err = new Error("No books found to list !");
+      err.status = 400;
+      throw err;
+    }
     return bookByid;
-  }
-  catch (err) {
-    throw new Error('Failed to list book !')
-  }
 }
 
 const updateBookImage = async (id, filePath) => {
@@ -49,15 +58,24 @@ const updateBookImage = async (id, filePath) => {
   }
 };
 
-const deleteBook = async(id) => {
-  try{
-    const bookDeleted = await Book.findByIdAndDelete(id).exec();
+const deleteBook = async(id) => { // shadow delete
+    const bookDeleted = await Book.findByIdAndUpdate(id,{deletedAt: Date.now()}).exec();
+    // check if the book is already deleted THEN --> No books found
+    if(bookDeleted === null || bookDeleted.deletedAt != null){
+      const err = new Error("No books found to delete !");
+      err.status = 400;
+      throw err;
+    }
     return "Book deleted successfully !";
-  }
-  catch (err) {
-    throw new Error('Failed to delete book !')
-  }
 }
 
-
-export {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook};
+const updateBookDetails = async(id, rest) => {
+  const bookUpdated = await Book.findByIdAndUpdate(id,{$set:rest},{new: true, runValidators: true,}).exec();
+  if(bookUpdated === null || bookUpdated.deletedAt != null){
+    const err = new Error("No books found to update !");
+    err.status = 400;
+    throw err;
+  }
+  return { message: "Book updated successfully!", bookUpdated };
+}
+export {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook, updateBookDetails};
