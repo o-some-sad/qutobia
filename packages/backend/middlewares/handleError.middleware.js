@@ -1,5 +1,5 @@
 import { ZodError } from "shared";
-import ApiError from "../utilities/ApiErrors";
+import ApiError from "../utilities/ApiErrors.js";
 
 export const handleErrorMiddleware = (err, req, res, next) => {
   if (err instanceof ApiError) {
