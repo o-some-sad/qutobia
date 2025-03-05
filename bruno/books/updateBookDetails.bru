@@ -1,0 +1,19 @@
+meta {
+  name: updateBookDetails
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{KOTOBIA_URL}}/api/books/67c85fccb144911426e3ec2c
+  body: multipartForm
+  auth: none
+}
+
+params:query {
+  : 
+}
+
+body:multipart-form {
+  description: Divergent is a dystopian novel by Veronica Roth set in a society divided into five factions, where a teenage girl discovers she doesn't fit into just one, making her a target in a dangerous struggle for power.
+}

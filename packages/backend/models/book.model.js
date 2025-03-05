@@ -48,7 +48,7 @@ const bookSchema = new mongoose.Schema({
 
 bookSchema.set('toJSON', {
   transform: (doc, {_id, title, author, price, description, stock, image, deletedAt}) => ({_id, title, author, price, description, stock, image, deletedAt})
-});
+}); // DISPLAY THESE FIELDS ONLY
 
 const Book = mongoose.model('Book', bookSchema);
 export default Book;

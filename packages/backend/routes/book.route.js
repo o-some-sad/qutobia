@@ -95,5 +95,8 @@ router.patch('/:id', upload.none(), async(req, res, next) => {
 });
 
 
-
 export default router;
+
+
+
+// ROUTE FOR REGISTER //
