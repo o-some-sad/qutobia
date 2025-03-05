@@ -5,7 +5,7 @@ import {BehaviorSubject} from 'rxjs';
   providedIn: 'root'
 })
 export class SearchService {
-  private searchValueSubject = new BehaviorSubject<string>(''); // متغير لتخزين قيمة البحث
+  private searchValueSubject = new BehaviorSubject<string>('');
   searchValue$ = this.searchValueSubject.asObservable();
 
   constructor() { }

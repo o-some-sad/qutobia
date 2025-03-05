@@ -1,4 +1,4 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {SearchService} from '../../services/search.service';
 
