@@ -7,6 +7,7 @@ const transporter = nodemailer.createTransport(
       port: 465,
       auth: {
         user: 'janahazem87@gmail.com',
+        //TODO: use external mail service
         pass:'jkosawjetmiyrwzl' 
       }
     }

@@ -1,0 +1,19 @@
+meta {
+  name: Register user
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{KOTOBIA_URL}}/api/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Mohammed",
+    "email": "next.mohammed.amr@gmail.com",
+    "password": "123456789"
+  }
+}

@@ -15,7 +15,7 @@ export const handleLogin = async (email, password) => {
     err.status = 404;
     throw err;
   }
-  const isValidPass = await user.comparePassowrd(password);
+  const isValidPass = await user.comparePassword(password);
   if (!isValidPass) {
     const err = new Error("email or password are invalid");
     err.status = 400;
@@ -42,9 +42,12 @@ export const handleRegister = async(body, userEmail, username, password) => {
   // CHECK if ALL fields are full
   const isEmailRegistered = await User.exists({email: userEmail});
   const isUsernameRegistered = await User.exists({name: username});
+  //TODO: don't check if username already exist (just use it as human name)
+  //TODO: figure out how to check if email is a valid email
   // CHECK if the username is taken
   if(username === undefined || userEmail === undefined || password === undefined){
-    const err = new Error("All fields are required !");
+    //TODO: use schema validator
+    const err = new Error("username, email and password are required");
     err.status = 400;
     throw err;
   }

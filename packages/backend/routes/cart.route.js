@@ -5,11 +5,11 @@ import mongoose from 'mongoose';
 import * as cartController from '../controllers/cart.controller.js'
 import validateSchema from '../middlewares/zodValidator.middleware.js';
 import { CartItemValidator, CartPropsValidator, CartValidator } from 'shared';
-import { authMiddleware } from '../middlewares/auth.middleware.js'
+import { authenticateToken } from '../middlewares/authenticateToken.js';
 const cartRouter = express.Router();
 
 
-cartRouter.get("/", authMiddleware(), async (req, res, next) => {
+cartRouter.get("/", authenticateToken, async (req, res, next) => {
     try {
         const { pick = [] } = req.query
 
@@ -23,7 +23,7 @@ cartRouter.get("/", authMiddleware(), async (req, res, next) => {
 })
 
 // add a book to the cart 
-cartRouter.post("/", authMiddleware(), validateSchema(CartItemValidator), async (req, res, next) => {
+cartRouter.post("/", authenticateToken, validateSchema(CartItemValidator), async (req, res, next) => {
     try {
         if (req.user.role !== 'user') throw new Error("only users can use cart");
         console.log("!!!", req.body);
@@ -36,7 +36,7 @@ cartRouter.post("/", authMiddleware(), validateSchema(CartItemValidator), async 
 })
 
 // remove a book from the cart by book id
-cartRouter.delete("/:id", authMiddleware(), async (req, res, next) => {
+cartRouter.delete("/:id", authenticateToken, async (req, res, next) => {
     try {
         if (req.user.role !== 'user') throw new Error("only users can use cart");
         const result = await cartController.removeCartItem(req.params.id, req.user._id.toString())
