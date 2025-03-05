@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config({
+  path: "../.env",
+});
 const whiteList = [`http://localhost:${process.env.PORT || 3000}`]; //frontend to be added
 export const corsOptions = {
   origin: (originWeb, callback) => {
