@@ -1,4 +1,5 @@
 import process from "node:process";
+import cors from 'cors';
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
@@ -7,6 +8,7 @@ import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
 
 dotenv.config();
 const app = express();
+const corsOption = {origin: 'http://localhost:4200'};
 
 const connectDB = async () => {
   try {
@@ -31,6 +33,7 @@ app.get("/api/hello", (req, res) => {
 });
 
 app.use(express.json());
+app.use(cors(corsOption));
 app.use("/api", appRouter);
 app.use(handleErrorMiddleware);
 
