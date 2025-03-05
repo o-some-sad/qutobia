@@ -8,7 +8,7 @@ import {ToastComponent} from './components/toast/toast.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, ToastComponent],
+  imports: [RouterOutlet, HeaderComponent, ToastComponent, NgxSonnerToaster],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

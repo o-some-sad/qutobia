@@ -7,6 +7,7 @@ import {UsersComponent} from './admin/users/users.component';
 import {BooksComponent} from './admin/books/books.component';
 import {OrdersComponent} from './admin/orders/orders.component';
 import {HomePageComponent} from './home-page/home-page.component';
+import { CartComponent } from './routes/cart/cart.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, title: "Home Page" },
@@ -14,6 +15,9 @@ export const routes: Routes = [
   { path: 'users', component: UsersComponent, title: "Users" },
   { path: 'books', component: BooksComponent, title: "Books" },
   { path: 'orders', component: OrdersComponent, title: "Orders" },
+  {
+    path: "cart", component: CartComponent
+  },
   { path: '**', component: NotFoundComponent, title: 'Not Found Page' },
 ];
 
