@@ -1,0 +1,91 @@
+<div class="container mx-auto p-4" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+     xmlns="http://www.w3.org/1999/html">
+
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">User List</h1>
+    <div class="flex items-center gap-4">
+      <label class="flex items-center gap-2">
+        <input type="radio" name="role" class="radio radio-success" value="all" [(ngModel)]="selectedRole" (ngModelChange)="onRoleChange()" />
+        <span>All</span>
+      </label>
+      <label class="flex items-center gap-2">
+        <input type="radio" name="role" class="radio radio-success" value="admin" [(ngModel)]="selectedRole" (ngModelChange)="onRoleChange()" />
+        <span>Admin</span>
+      </label>
+      <label class="flex items-center gap-2">
+        <input type="radio" name="role" class="radio radio-success" value="user" [(ngModel)]="selectedRole" (ngModelChange)="onRoleChange()" />
+        <span>User</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>E-mail</th>
+        <th>Role</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (user of data; track user._id) {
+          <tr>
+            <td>
+              @if (user.image) {
+                <div class="avatar">
+                  <div class="w-13 rounded-full">
+                    <img [src]="user.image" alt="User Image" />
+                  </div>
+                </div>
+              } @else {
+                <div class="avatar">
+                  <div class="w-13 rounded-full">
+                    <img src="https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3383.jpg?w=900" alt="User Image" />
+                  </div>
+                </div>
+              }
+            </td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <label class="flex cursor-pointer gap-2">
+                <span class="label-text">Admin</span>
+                <input
+                  type="checkbox"
+                  class="toggle theme-controller"
+                  [checked]="user.role !== 'admin'"
+                  (change)="changeRole(user)"
+                  [ngClass]="{ 'bg-yellow-500': user.role === 'admin' }"
+                  [disabled]="loadingMap[user._id]"
+                />
+                <span class="label-text">User</span>
+              </label>
+              @if (loadingMap[user._id]) {
+                <span class="loading loading-spinner text-success"></span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center mt-4">
+    <div class="btn-group">
+      <button class="btn" (click)="goToPage(currPage - 1)" [disabled]="currPage === 1">prev</button>
+      @for (page of [].constructor(totalPages); track page; let i = $index) {
+        <button
+          class="btn"
+          [class.btn-active]="currPage === i + 1"
+          (click)="goToPage(i + 1)"
+        >
+          {{ i + 1 }}
+        </button>
+      }
+      <button class="btn" (click)="goToPage(currPage + 1)" [disabled]="currPage === totalPages">next</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="container mx-auto p-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    @for (item of data; track item.type) {
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title">{{ item.type | titlecase }}</h2>
+          <p class="text-2xl font-bold">{{ item.count }}</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-outline btn-warning" (click)="navigateToPage(item.type)">
+              View {{ item.type }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
