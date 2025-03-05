@@ -1,6 +1,7 @@
 import express from 'express';
 import {createUser, getAllUsers, updateUser, updateUserImage, updateUserPassword} from '../controllers/user.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
+import mongoose from 'mongoose';
 
 const Router = express.Router();
 

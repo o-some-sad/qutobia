@@ -1,3 +1,4 @@
+//@ts-check
 import Book from '../models/book.model.js';
 
 const addBook = async (formData) => {
@@ -19,6 +20,7 @@ const listBooks = async() => {
     const totalPages = Math.ceil(bookCount / 10);
     if(books.length === 0){
       const err = new Error("No books found to list !");
+      // @ts-ignore
       err.status = 400;
       throw err;
     }
@@ -33,6 +35,7 @@ const filterBooks = async(rest,skip, limit,) => {
     const filterTotalPages = Math.ceil(filteredBookCount/10);
     if(books.length === 0){
       const err = new Error("No books found to list !");
+      // @ts-ignore
       err.status = 400;
       throw err;
     }
@@ -44,6 +47,7 @@ const getBookByid = async(id) => {
     const bookByid = await Book.findOne({ _id: id, deletedAt:null}).exec();
     if(bookByid === null){
       const err = new Error("No books found to list !");
+      // @ts-ignore
       err.status = 400;
       throw err;
     }
@@ -63,6 +67,7 @@ const deleteBook = async(id) => { // shadow delete
     // check if the book is already deleted THEN --> No books found
     if(bookDeleted === null || bookDeleted.deletedAt != null){
       const err = new Error("No books found to delete !");
+      // @ts-ignore
       err.status = 400;
       throw err;
     }
@@ -73,9 +78,13 @@ const updateBookDetails = async(id, rest) => {
   const bookUpdated = await Book.findByIdAndUpdate(id,{$set:rest},{new: true, runValidators: true,}).exec();
   if(bookUpdated === null || bookUpdated.deletedAt != null){
     const err = new Error("No books found to update !");
+    // @ts-ignore
     err.status = 400;
     throw err;
   }
   return { message: "Book updated successfully!", bookUpdated };
 }
+
+
+
 export {addBook, updateBookImage, listBooks, filterBooks, getBookByid, deleteBook, updateBookDetails};
