@@ -1,5 +1,5 @@
 import express from 'express';
-import {createUser, getAllUsers, updateUser, updateUserImage, updateUserPassword} from '../controllers/user.controller.js';
+import {createUser, getAllUsers, updateUser, updateUserImage, updateUserPassword, userRegister} from '../controllers/user.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
 import mongoose from 'mongoose';
 
@@ -59,5 +59,23 @@ Router.patch('/:id/image', handleImageUpload('user'), async (req, res, next) => 
     next(err);
   }
 });
+
+Router.post('/register', async(req, res, next) => {
+  let body = req.body;
+  let userEmail = req.body.email;
+  let username = req.body.name;
+  let password = req.body.password;
+  try{
+    const registeredUser = await userRegister(body, userEmail, username, password);
+    return res.status(200).json({data: registeredUser });
+  }
+  catch(err){
+    if(err instanceof mongoose.Error.ValidationError){
+      return res.status(400).json({status: 'fail', message: "Validation Error !"});
+    }
+      next(err);
+  }
+});
+
 
 export default Router;

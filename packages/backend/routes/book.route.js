@@ -14,9 +14,9 @@ router.post('/', handleImageUpload('book'), async (req, res) => {
   const bookData = {...formData, image: req.file.path};
   try {
     const newBook = await addBook(bookData);
-    res.status(201).json({data: newBook});
+    return res.status(201).json({data: newBook});
   } catch (err) {
-    res.status(400).json({status: 'fail', message: err.message});
+    return res.status(400).json({status: 'fail', message: err.message});
   }
 });
 
@@ -24,11 +24,11 @@ router.get('/', async(req, res, next) => { // get ALL or get by filters
   try{
     if(Object.keys(req.query).length === 0){
         const booksStored = await listBooks();
-        res.status(201).json(booksStored);
+        return res.status(201).json(booksStored);
       }else{ // query params (skip - limit - filters)
       const {skip, limit, ...rest} = req.query;
       const filteredBooks = await filterBooks(rest, skip, limit);
-      res.status(200).json(filteredBooks);
+      return res.status(200).json(filteredBooks);
     } 
   }
   catch(err){
@@ -40,7 +40,7 @@ router.get('/:id', async(req, res, next) => {
   const id = req.params.id;
   try{
     const specificBook = await getBookByid(id);
-    res.status(201).json({data: specificBook});
+    return res.status(201).json({data: specificBook});
   }
   catch(err){
     if(!mongoose.Types.ObjectId.isValid(id)){
@@ -54,7 +54,7 @@ router.patch('/:id/image', handleImageUpload('book'), async (req, res, next) => 
   const id = req.params.id;
   try {
     const book = await updateBookImage(id, req.file.path);
-    res.status(200).json({data: book });
+    return res.status(200).json({data: book });
   } catch (err) {
     next(err);
   }
@@ -64,7 +64,7 @@ router.delete('/:id', async(req, res, next) => {
   const id = req.params.id;
   try{
     const removeBook = await deleteBook(id);
-    res.status(200).json({data: removeBook });
+    return res.status(200).json({data: removeBook });
 }
   catch(err){
     if(!mongoose.Types.ObjectId.isValid(id)){
@@ -83,15 +83,15 @@ router.patch('/:id', upload.none(), async(req, res, next) => {
   // deletedAt shouldn't be updated here - avoid updating it SO destructure it
   const {deletedAt, ...rest} = body;
   try{
-  const updatedBook = await updateBookDetails(id, rest);
-  res.status(200).json(updatedBook);
-}
+    const updatedBook = await updateBookDetails(id, rest);
+    return res.status(200).json(updatedBook);
+  }
   catch(err){
     if(!mongoose.Types.ObjectId.isValid(id)){
-      res.status(400).json({status: 'fail', message: "Invalid ID format. Must be a 24-character hex string."});
+      return res.status(400).json({status: 'fail', message: "Invalid ID format. Must be a 24-character hex string."});
     }
     next(err);
-}
+  }
 });
 
 
