@@ -48,3 +48,6 @@ export const updateOrderValidator = z.object({
   totalPrice: z.number().min(0, "Total price must be a positive number").optional(),
   status: z.enum(["pending", "completed", "canceled"]).optional()
 });
+
+export * from './cart.validator.js'
+export * from './error.validator.js'

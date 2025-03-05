@@ -2,7 +2,7 @@ import process from 'node:process';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
-const userSchema = new mongoose.Schema({
+export const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
