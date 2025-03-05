@@ -50,3 +50,4 @@ export const updateOrderValidator = z.object({
 });
 
 export * from './cart.validator.js'
+export * from './error.validator.js'
