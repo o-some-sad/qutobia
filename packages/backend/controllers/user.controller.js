@@ -51,3 +51,4 @@ export const updateUserImage = async (id, filePath) => {
     throw err;
   }
 };
+    
