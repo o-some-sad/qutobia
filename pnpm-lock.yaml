@@ -29,6 +29,9 @@ importers:
       cloudinary:
         specifier: ^2.5.1
         version: 2.5.1
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.5
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
