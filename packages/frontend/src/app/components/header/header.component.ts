@@ -1,5 +1,6 @@
 import { Component, effect, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {SearchService} from '../../services/search.service';
 
 @Component({
   selector: 'app-header',
@@ -8,23 +9,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  searchValue = signal('')
-  searchFocused = signal(false)
-  searchResults = signal<string[]>([])
+  searchValue: string = '';
+  constructor(private searchService: SearchService) {}
 
-  constructor() {
-    let ival: number | undefined = undefined;
-    effect(() => {
-      clearTimeout(ival)
-      if (!this.searchFocused()) return;
-      if (!this.searchValue()) {
-        this.searchResults.set([])
-        return
-      }
-      ival = setTimeout(() => {
-        console.log(`The current count is: ${this.searchValue()}`);
-        this.searchResults.set(Array.from({ length: 5 }).map(() => Math.random().toString()))
-      }, 1000);
-    });
+  onSearchChange(): void {
+    this.searchService.setSearchValue(this.searchValue);
   }
 }
