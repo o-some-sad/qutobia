@@ -1,8 +1,6 @@
 import {userPasswordValidator, userValidator} from 'shared';
 import User from "../models/user.model.js";
-import nodemailer from 'nodemailer';
-import fs from 'fs';
-import { sendMail } from './mail.controller.js';
+
 
 
 export const createUser = async (userData) => { // for test until we have register
@@ -53,36 +51,6 @@ export const updateUserImage = async (id, filePath) => {
     return await User.findByIdAndUpdate(id, { image: filePath }, {new: true});
   } catch (err) {
     throw err;
-  }
-};
-
-
-export const userRegister = async(body, userEmail, username, password) => {
-  // CHECK if ALL fields are full
-  const isEmailRegistered = await User.exists({email: userEmail});
-  const isUsernameRegistered = await User.exists({name: username});
-  // CHECK if the username is taken
-  if(username === undefined || userEmail === undefined || password === undefined){
-    const err = new Error("All fields are required !");
-    err.status = 400;
-    throw err;
-  }
-  else if(isUsernameRegistered !== null){
-    const err = new Error("This username is already taken. Please choose a different one.");
-    err.status = 400;
-    throw err;
-  }
-  // CHECK if the user's email is taken
-  else if (isEmailRegistered !== null){
-    const err = new Error("This email is already in use. Please use a different email or log in.");
-    err.status = 400;
-    throw err;
-  }
-  else{  // If the user's email/username is unavailable --> create user
-    // call node-mailer
-    const msg = fs.readFileSync('public/mailBody.html', 'utf-8');
-    sendMail(userEmail, "Email Verification", msg);
-    return await User.create(body);
   }
 };
 

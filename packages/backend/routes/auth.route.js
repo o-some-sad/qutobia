@@ -1,10 +1,12 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import mongoose from "mongoose";
 import {
   handleLogin,
   handleLogout,
   handleMe,
+  handleRegister
 } from "../controllers/auth.controller.js";
 const Router = express.Router();
 
@@ -32,6 +34,23 @@ Router.get("/me", async (req, res, next) => {
     }
     res.status(200).json(user);
   } catch (err) {
+    next(err);
+  }
+});
+
+Router.post('/register', async(req, res, next) => {
+  let body = req.body;
+  let userEmail = req.body.email;
+  let username = req.body.name;
+  let password = req.body.password;
+  try{
+    const registeredUser = await handleRegister(body, userEmail, username, password);
+    return res.status(200).json({data: registeredUser });
+  }
+  catch(err){
+    if(err instanceof mongoose.Error.ValidationError){
+      return res.status(400).json({status: 'fail', message: "Validation Error !"});
+    }
     next(err);
   }
 });
