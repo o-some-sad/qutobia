@@ -39,6 +39,7 @@ export class CartComponent implements OnInit {
     url.searchParams.append("pick", "author")
     url.searchParams.append("pick", "price")
     url.searchParams.append("pick", "image")
+    url.searchParams.append("pick", "stock")
     this.loading = true
     await fetch(url.toString()).then(c => c.json())
       // .then(unsure=>CartPopulatedValidator.parse(unsure))
@@ -75,5 +76,17 @@ export class CartComponent implements OnInit {
 
       .catch(e => this.error = e).finally(() => this.loading = false)
 
+  }
+
+  async decreaseBookQuantity(id: string){
+      this.loading = true;
+      await fetch(`/api/cart/${id}`, {
+        method: "DELETE"
+      })
+      .then(console.log)
+      .then(this.fetchCart.bind(this))
+      .catch(reason=>this.error = reason)
+      .finally(()=>this.loading = false)
+      
   }
 }

@@ -59,9 +59,9 @@
                     <div class="flex gap-3 flex-wrap items-center">
                         <button [disabled]="loading" class="btn btn-ghost">details</button>
                         <div class="join items-stretch">
-                            <button [disabled]="loading" class="btn join-item">-</button>
+                            <button [disabled]="loading" class="btn join-item" (click)="decreaseBookQuantity(item.book._id)">-</button>
                             <div class="px-4 bg-neutral text-neutral-content join-item inline-flex items-center justify-center">{{item.quantity}}</div>
-                            <button [disabled]="loading" class="btn join-item" (click)="increaseBookQuantity(item.book._id)">+</button>
+                            <button [disabled]="loading || item.quantity >= item.book.stock" class="btn join-item" (click)="increaseBookQuantity(item.book._id)">+</button>
                         </div>
                     </div>
                 </th>

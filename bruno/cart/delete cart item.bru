@@ -4,14 +4,8 @@ meta {
   seq: 3
 }
 
-get {
-  url: http://localhost:3000/api/cart
-  body: json
+delete {
+  url: http://localhost:3000/api/cart/67c45566a485bdb52f0c5cbc
+  body: none
   auth: none
-}
-
-body:json {
-  {
-    "book": "67c383ec399b432beab55cd3"
-  }
 }

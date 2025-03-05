@@ -1,5 +1,5 @@
 //@ts-check
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 const cartItemSchema = new mongoose.Schema({
     book: {
@@ -30,6 +30,18 @@ const cartSchema = new mongoose.Schema({
     }
 })
 
+cartSchema.post('findOneAndUpdate', 
+    /**
+     * 
+     * @param {Document} document 
+     * @param {*} next 
+     */
+    async function (document, next) {
+        const updatedDocument = await this.model.findOne(this.getFilter())
+        updatedDocument.books = updatedDocument.books.filter(book => book.quantity > 0)
+        await updatedDocument.save()        
+    next()
+})
 
 const Cart = mongoose.model('Cart', cartSchema);
 export default Cart;
