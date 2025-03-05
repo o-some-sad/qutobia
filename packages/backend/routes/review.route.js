@@ -10,7 +10,7 @@ import {
   deleteReviewById,
 } from "../controllers/review.controller.js";
 const Router = express.Router();
-Router.post("/", authenticateToken, isAdmin, async (req, res, next) => {
+Router.post("/", authenticateToken, async (req, res, next) => {
   try {
     const review = await addReview(req.body);
     return res.status(200).json(review);

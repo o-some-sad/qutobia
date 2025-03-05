@@ -1,29 +1,24 @@
 import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
 import { PreviewComponent } from './routes/preview/preview.component';
-import { DashboardComponent } from './admin/dashboard/dashboard.component';
-import {NotFoundComponent} from './components/not-found/not-found.component';
-import {UsersComponent} from './admin/users/users.component';
-import {BooksComponent} from './admin/books/books.component';
-import {OrdersComponent} from './admin/orders/orders.component';
-import {HomePageComponent} from './home-page/home-page.component';
-import { CartComponent } from './routes/cart/cart.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, title: "Home Page" },
-  { path: 'dashboard', component: DashboardComponent, title: "Dashboard" },
-  { path: 'users', component: UsersComponent, title: "Users" },
-  { path: 'books', component: BooksComponent, title: "Books" },
-  { path: 'orders', component: OrdersComponent, title: "Orders" },
+  { path: 'dashboard', loadComponent: ()=>import("./routes/admin/dashboard/dashboard.component").then(c=>c.DashboardComponent), title: "Dashboard" },
+  { path: 'dashboard/users', loadComponent: ()=>import("./routes/admin/users/users.component").then(c=>c.UsersComponent), title: "Users" },
+  { path: 'dashboard/books', loadComponent: ()=>import("./routes/admin/books/books.component").then(c=>c.BooksComponent), title: "Books" },
+  { path: 'dashboard/orders', loadComponent: ()=>import("./routes/admin/orders/orders.component").then(c=>c.OrdersComponent), title: "Orders" },
   {
-    path: "cart", component: CartComponent
+    path: "cart", loadComponent: ()=>import("./routes/cart/cart.component").then(c=>c.CartComponent), title: "Cart"
   },
-  { path: '**', component: NotFoundComponent, title: 'Not Found Page' },
+  // { path: '**', component: NotFoundComponent, title: 'Not Found Page' },
 ];
 
 if (isDevMode()) {
-    routes.push({
-        path: 'preview',
-        component: PreviewComponent
-    })
+  routes.push({
+    path: 'preview',
+    component: PreviewComponent
+  })
 }

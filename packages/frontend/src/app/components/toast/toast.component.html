@@ -1,7 +1,0 @@
-@if (toastService.showToastFlag) {
-  <div class="toast toast-bottom toast-center">
-    <div [ngClass]="toastService.toastType === 'success' ? 'alert-success' : 'alert-error'" class="alert">
-      <span>{{ toastService.toastMessage }}</span>
-    </div>
-  </div>
-}
