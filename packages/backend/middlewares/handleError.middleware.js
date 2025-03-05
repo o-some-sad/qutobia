@@ -1,8 +1,10 @@
 import { ZodError } from "shared";
 
 export const handleErrorMiddleware = (err, req, res, next) => {
+  console.log(err);
+  
   if (err.code === 11000 || err.message.includes('duplicate key')) {
-    res.status(409).json({status: 'fail', message: 'Email already exists'});
+    res.status(409).json({status: 'fail', message: err.message});
   } else if (err instanceof ZodError) {
     res.status(422).json({status: 'fail', message: JSON.parse(err.message)});
   } else {

@@ -1,20 +1,33 @@
 <div class="navbar bg-base-100 shadow-sm">
+  <div class="navbar bg-base-100 shadow-sm">
     <div class="flex-1">
-      <a class="btn btn-ghost text-xl">daisyUI</a>
+      <a class="btn btn-ghost text-xl">Kotobia</a>
       <div class="inline-block relative">
         <label class="input">
-            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
-            <input [(ngModel)]="searchValue" (focus)="searchFocused.set(true)" (blur)="searchFocused.set(false)"  type="search" required placeholder="Search"/>
-          </label>
-        @if(searchFocused() && searchResults().length){
-            <ul class="absolute w-full bg-base-100 shadow-2xl border border-primary mt-3 p-1 rounded-[inherit] z-10">
-                @for (result of searchResults(); track $index) {
-                    <li class="hover:bg-primary hover:text-primary-content p-1 rounded-[inherit]">{{result}}</li>
-                } 
-            </ul>
-        }
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+          <input
+            [(ngModel)]="searchValue"
+            (input)="onSearchChange()"
+          type="search"
+          required
+          placeholder="Search"
+          />
+        </label>
       </div>
     </div>
+  </div>
+<!-- change theme -->
+  <label class="toggle text-base-content">
+    <input type="checkbox" value="synthwave" class="theme-controller">
+    <svg aria-label="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></g></svg>
+    <svg aria-label="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></g></svg>
+  </label>
+<!-- change theme -->
     <div class="flex-none">
       <div class="dropdown dropdown-end">
         <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
@@ -30,7 +43,7 @@
             <span class="text-lg font-bold">8 Items</span>
             <span class="text-info">Subtotal: $999</span>
             <div class="card-actions">
-              <button class="btn btn-primary btn-block">View cart</button>
+              <a class="btn btn-primary btn-block" [routerLink]="'/cart'">View cart</a>
             </div>
           </div>
         </div>
