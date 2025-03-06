@@ -1,21 +1,11 @@
 import express from 'express';
-import {createUser, getAllUsers, updateUser, updateUserImage, updateUserPassword} from '../controllers/user.controller.js';
+import {getAllUsers, updateUser, updateUserImage, updateUserPassword} from '../controllers/user.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
-import mongoose from 'mongoose';
+import { authenticateToken } from '../middlewares/authenticateToken.js';
 
 const Router = express.Router();
 
-Router.post('/', async (req, res, next) => { // for test until we have register
-  const userData = req.body;
-  try {
-    const user = await createUser(userData);
-    res.status(201).json({status: 'success', data: user});
-  } catch (err) {
-    next(err);
-  }
-});
-
-Router.get('/', async (req, res, next) => {
+Router.get('/', authenticateToken, async (req, res, next) => {
   const filters = {};
   const page = +req.query.page || 1;
   const limit = +req.query.limit || 10;
@@ -62,3 +52,5 @@ Router.patch('/:id/image', handleImageUpload('user'), async (req, res, next) => 
 
 
 export default Router;
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M3YmJhYmU5ZjlkZmNiYjUwN2YxM2MiLCJlbWFpbCI6Im1vaHNlbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDEyNjQ3MDUsImV4cCI6MTc0MTI2ODMwNX0.tpJUiG-dAuRYabYU9OVHMol6G6Of01cBmLU3q6TnhQI

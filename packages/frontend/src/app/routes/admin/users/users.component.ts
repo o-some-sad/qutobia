@@ -3,14 +3,19 @@ import {User} from '../../../interfaces/user.interface';
 import {UserService} from '../../../services/user.service';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
-import {ToastService} from '../../../services/toast.service';
-import {SearchService} from '../../../services/search.service';
+import { toast } from 'ngx-sonner';
+import {SearchComponent} from '../../../components/search/search.component';
+import {RadioButtonComponent} from '../../../components/radio-button/radio-button.component';
+import {PaginationComponent} from '../../../components/pagination/pagination.component';
 
 @Component({
   selector: 'app-users',
   imports: [
     FormsModule,
-    NgClass
+    NgClass,
+    SearchComponent,
+    RadioButtonComponent,
+    PaginationComponent
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
@@ -23,28 +28,23 @@ export class UsersComponent implements OnInit {
   selectedRole: string = 'all';
   loadingMap: { [key: string]: boolean } = {};
 
-  constructor(private userService: UserService, private toastService: ToastService, private searchService: SearchService) {
+  constructor(private userService: UserService) {
     this.data = [];
   }
   ngOnInit(): void {
     this.loadUsers(this.currPage);
-    this.searchService.searchValue$.subscribe(value => {
-      this.searchValue = value.trim();
-      this.userService.getUsers(1, this.selectedRole, this.searchValue).subscribe(res => {
-        this.data = res.users;
-        this.totalPages = res.totalPages;
-      });
-    });
   }
   goToPage(page: number) {
     this.currPage = page;
     this.loadUsers(page);
   }
-  loadUsers(page: number) {
-    this.userService.getUsers(page, this.selectedRole, this.searchValue).subscribe(res => {
-      this.data = res.users;
-      this.totalPages = res.totalPages;
-    });
+  onValueChange(role: string) {
+    this.selectedRole = role;
+    this.loadUsers(1);
+  }
+  onSearchChange(searchValue: string): void {
+    this.searchValue = searchValue.trim();
+    this.loadUsers(1);
   }
   changeRole(user: User) {
     const originalRole = user.role;
@@ -53,18 +53,19 @@ export class UsersComponent implements OnInit {
     this.userService.updateUser(user).subscribe({
       next: (res) => {
         this.loadingMap[user._id] = false;
-        this.toastService.showToast('Role updated successfully', 'success');
+        toast.success('Role updated successfully');
+        this.data.find(u => u._id === user._id)!['role'] = user.role;
         this.loadUsers(this.currPage);
       },
       error: (err) => {
         this.loadingMap[user._id] = false;
         user.role = originalRole;
-        this.toastService.showToast('Failed to update role', 'error');
+        toast.error('Failed to update role');
       }
     });
   }
-  onRoleChange() {
-    this.userService.getUsers(1, this.selectedRole, this.searchValue).subscribe(res => {
+  loadUsers(page: number) {
+    this.userService.getUsers(page, this.selectedRole, this.searchValue).subscribe(res => {
       this.data = res.users;
       this.totalPages = res.totalPages;
     });

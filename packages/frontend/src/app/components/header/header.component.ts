@@ -1,19 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import {SearchService} from '../../services/search.service';
+import {SearchComponent} from '../search/search.component';
 
 @Component({
   selector: 'app-header',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, SearchComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  searchValue: string = '';
-  constructor(private searchService: SearchService) {}
-
-  onSearchChange(): void {
-    this.searchService.setSearchValue(this.searchValue);
-  }
+  onSearchChange(search: string) {}
 }
