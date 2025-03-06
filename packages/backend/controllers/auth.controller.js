@@ -28,18 +28,13 @@ export const handleLogin = async (email, password) => {
   );
   return {
     token,
-    user: {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      image: user.image,
-    },
+    user
   };
 };
 
-export const handleRegister = async(body, userEmail, username, password) => {
+export const handleRegister = async(body) => {
   // CHECK if ALL fields are full
+  const{userEmail,username,password}=body;
   const isEmailRegistered = await User.exists({email: userEmail});
   const isUsernameRegistered = await User.exists({name: username});
   //TODO: don't check if username already exist (just use it as human name)
@@ -70,5 +65,4 @@ export const handleRegister = async(body, userEmail, username, password) => {
   }
 };
 
-export const handleLogout = async () => {}; //not needed, logic should be handled in the client side.
 export const handleMe = async () => {}; //not needed, logic handled entirely in the router.

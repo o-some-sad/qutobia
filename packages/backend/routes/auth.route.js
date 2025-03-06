@@ -4,7 +4,6 @@ import User from "../models/user.model.js";
 import mongoose from "mongoose";
 import {
   handleLogin,
-  handleLogout,
   handleMe,
   handleRegister
 } from "../controllers/auth.controller.js";
@@ -14,8 +13,8 @@ Router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const result = await handleLogin(email, password);
-    res.cookie('token', result.token, { httpOnly: true, secure: false });
-    res.status(200).json(result);
+    res.cookie('token', result.token, { httpOnly: true, secure: false});
+    res.status(200).json(result.user);
   } catch (err) {
     next(err);
   }
@@ -42,12 +41,8 @@ Router.get("/me", async (req, res, next) => {
 });
 
 Router.post('/register', async(req, res, next) => {
-  let body = req.body;
-  let userEmail = req.body.email;
-  let username = req.body.name;
-  let password = req.body.password;
   try{
-    const registeredUser = await handleRegister(body, userEmail, username, password);
+    const registeredUser = await handleRegister(req.body);
     return res.status(200).json({data: registeredUser });
   }
   catch(err){
