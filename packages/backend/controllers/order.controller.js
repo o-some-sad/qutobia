@@ -29,10 +29,11 @@ export const updateOrder = async (data, id) => {
     }
 }
 
-export const getAllOrder = async (isAdmin) => {
+export const getAllOrder = async (user) => {
+    const isAdmin = user.role === 'admin'
     if (isAdmin) {
         return await Order.find();
     }
-    return await Order.find({ user: "67c2ddbc036f7cae384d9895" });
+    return await Order.find({ user: user._id });
 }
 
