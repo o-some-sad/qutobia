@@ -5,7 +5,14 @@ meta {
 }
 
 post {
-  url: http://localhost:3000/api/users/login
-  body: none
+  url: http://localhost:3000/api/auth/login
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "email": "next.mohammed.amr@gmail.com",
+    "password": "123456789"
+  }
 }
