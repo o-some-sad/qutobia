@@ -1,8 +1,9 @@
 //@ts-check
 import Review from "../models/review.model.js";
 import ApiError from "../utilities/ApiErrors.js";
-export const addReview = async (reviewData) => {
+export const addReview = async (userId, reviewData) => {
   const reviewDataObj = { ...reviewData };
+  reviewDataObj.user = userId;
   //validate the object before adding it, not needed so far
   const review = await Review.create(reviewDataObj);
   return review;

@@ -6,6 +6,14 @@ meta {
 
 post {
   url: {{KOTOBIA_URL}}/api/reviews
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "book": "67c359755a8a772646358df1",
+    "rating": 10,
+    "review": "awesomeee!" 
+  }
 }
