@@ -4,7 +4,6 @@ import ApiError from "../utilities/ApiErrors.js";
 export const authenticateToken = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
-
     if (!token) throw new ApiError("Access denied, invalid token", 401);
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified; //send decoded payload to the next middleware

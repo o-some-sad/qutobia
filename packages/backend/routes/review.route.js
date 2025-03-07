@@ -11,9 +11,6 @@ import {
 } from "../controllers/review.controller.js";
 import ApiError from "../utilities/ApiErrors.js";
 
-// login --> token (user information) -->post review {user: _id (from payload), book: id}
-//already logged in
-// I have to own the book .. order(user, )
 const Router = express.Router();
 Router.post("/", authenticateToken, async (req, res, next) => {
   try {
