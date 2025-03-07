@@ -7,5 +7,5 @@
 #
 # To enable this hook, rename this file to "pre-commit".
 
-echo LOL
+echo LOLv1.1
 exit 1
