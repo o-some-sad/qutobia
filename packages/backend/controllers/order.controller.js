@@ -1,7 +1,7 @@
 import Order from "../models/order.model.js";
 import { orderValidator, updateOrderValidator } from "../../shared/index.js";
 
-export const createOrder = async (order) => {
+/* export const createOrder = async (order) => {
   try {
     const totalPrice = order.books.reduce(
       (total, book) => total + book.price * book.quantity,
@@ -13,10 +13,12 @@ export const createOrder = async (order) => {
   } catch (err) {
     throw err;
   }
-};
+}; */
 
 export const getById = async (Id) => {
-  return await Order.find({ _id: Id });
+  return await Order.find({ _id: Id }).populate("user", "name")
+  .populate("books.book", "title")
+  .exec();
 };
 
 export const updateOrder = async (data, id) => {
@@ -38,5 +40,7 @@ export const getAllOrder = async (user) => {
   if (isAdmin) {
     return await Order.find();
   }
-  return await Order.find({ user: user._id });
+  return await Order.find({ user: user._id }).populate("user", "name")
+  .populate("books.book", "title")
+  .exec();
 };
