@@ -1,0 +1,17 @@
+meta {
+  name: create payment intent
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{KOTOBIA_URL}}/api/payment
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "payment_method": ""
+  }
+}
