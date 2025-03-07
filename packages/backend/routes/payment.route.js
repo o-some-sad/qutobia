@@ -13,7 +13,7 @@ export const paymentRouter = express.Router()
 paymentRouter.post("/create", async (req, res, next) => {
   try {
     // if (req.user.role !== 'user') throw new ApiError("Unauthorized", 401);
-    const userId = "67c38059cacfc69180d9c66d"
+    const userId = "67c8dca6a873b682bd760235"
 
     const url = await PaymentController.createPaymentFromUserId(userId)
     

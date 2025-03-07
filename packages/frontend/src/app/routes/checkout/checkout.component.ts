@@ -20,7 +20,11 @@ export class CheckoutComponent {
     }).then(async d=>{
       if(d.ok)return d.json()
       return Promise.reject({status: d.status, data: await d.json()})
-    }).catch(e=>{
+    })
+    .then(d=>{
+      window.location.href = d.url
+    })
+    .catch(e=>{
       toast.error(e.data.message)
       
     })
