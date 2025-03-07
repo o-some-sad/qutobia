@@ -28,8 +28,8 @@ Router.get("/me",authenticateToken, async (req, res, next) => {
   //authenticateToken should be called as a middleware
   //returns object of currently logged-in the user
   try {
-    // const { userId } = req.body;
-    const userId=req.user._id
+    const { userId } = req.body;
+    // const userId=req.user._id
     const user = await User.findOne({ _id: userId }, { password: 0 });
     if (!user) {
       const err = new Error("user not found");
