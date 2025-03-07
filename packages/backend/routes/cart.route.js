@@ -10,6 +10,8 @@ const cartRouter = express.Router();
 
 
 cartRouter.get("/", authenticateToken, async (req, res, next) => {
+    console.log(req.user);
+    
     try {
         const { pick = [] } = req.query
 
