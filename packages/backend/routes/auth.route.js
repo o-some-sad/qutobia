@@ -24,7 +24,7 @@ Router.post("/logout", async(req, res) => {
   res.clearCookie("token",{ httpOnly: true, secure: true});
   res.json({ message: "Logged out successfully!" });
 });
-Router.get("/me",authenticateToken, async (req, res, next) => {
+Router.get("/me", async (req, res, next) => {
   //authenticateToken should be called as a middleware
   //returns object of currently logged-in the user
   try {
