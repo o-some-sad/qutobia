@@ -5,20 +5,17 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   selector: 'app-register',
   imports: [ReactiveFormsModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
 })
 export class RegisterComponent {
-user:FormGroup=new FormGroup({
-name:new FormControl(null),
-email:new FormControl(null),
-password:new FormControl(null),
-role:new FormControl('user'),
-
-});
+  isLoading: boolean = false;
+  errMessage: string = '';
+  handleRegister: FormGroup = new FormGroup({
+    name: new FormControl(null),
+    email: new FormControl(null),
+    password: new FormControl(null),
+    repassword: new FormControl(null),
+    role: new FormControl('user'),
+  });
+  register() {}
 }
-
-
- /* name: z.string().min(2),
-  email: z.string().email(),
-  password: z.string().min(8),
-  role: z.enum(['admin', 'user']), */
