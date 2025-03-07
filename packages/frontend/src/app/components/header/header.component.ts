@@ -22,8 +22,9 @@ const THEMES = {
 })
 export class HeaderComponent implements OnInit {
   user: User | null = null;
-  constructor(private authService: AuthService, private sharedService: SharedService) {}
-
+  constructor(private authService: AuthService, private sharedService: SharedService){
+    this.applyTheme()    
+  }
   ngOnInit(): void {
     this.authService.me().subscribe({
       next: (res) => {
@@ -40,19 +41,11 @@ export class HeaderComponent implements OnInit {
   onSearchChange(search: string) {}
 
   currentTheme!: keyof typeof THEMES;
-  constructor(){
-    this.applyTheme()    
-  }
-
-
-
   setTheme(theme: keyof typeof THEMES){
     window.localStorage.setItem("theme", theme)
     this.applyTheme()
   }
   
-  
-
   private applyTheme(){
     let currentTheme = localStorage.getItem("theme") || "system"
     if(!(currentTheme in THEMES))currentTheme = "system";
