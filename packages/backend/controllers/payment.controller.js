@@ -24,8 +24,7 @@ const stripe = new Stripe(STRIPE_SECRET)
  */
 export const createPaymentFromUserId = async (userId) => {
     const cart = await Cart.findOne({ user: userId })
-    if (!cart) throw new ApiError("Cannot retrive user cart", 404);
-    if (cart.books.length === 0) throw new ApiError("Cannot checkout empty cart", 400);
+    if (!cart || cart.books.length === 0) throw new ApiError("Cannot checkout an empty cart", 400);
 
     const books = new Map(await Book.find({
         $or: cart.books.map(item => ({ _id: item.book }))
