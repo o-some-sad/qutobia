@@ -7,27 +7,29 @@ import {
   handleMe,
   handleRegister
 } from "../controllers/auth.controller.js";
+import { authenticateToken } from "../middlewares/authenticateToken.js";
 const Router = express.Router();
 
 Router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const result = await handleLogin(email, password);
-    res.cookie('token', result.token, { httpOnly: true, secure: false });
-    res.status(200).json({result});
+    // res.cookie('token', result.token, { httpOnly: true, secure: false });
+    res.status(200).json(result.user);
   } catch (err) {
     next(err);
   }
 });
-Router.post("/logout", (req, res) => {
+Router.post("/logout", async(req, res) => {
   res.clearCookie("token",{ httpOnly: true, secure: true});
   res.json({ message: "Logged out successfully!" });
 });
-Router.get("/me", async (req, res, next) => {
+Router.get("/me",authenticateToken, async (req, res, next) => {
   //authenticateToken should be called as a middleware
   //returns object of currently logged-in the user
   try {
-    const { userId } = req.body;
+    // const { userId } = req.body;
+    const userId=req.user._id
     const user = await User.findOne({ _id: userId }, { password: 0 });
     if (!user) {
       const err = new Error("user not found");
