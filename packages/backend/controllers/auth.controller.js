@@ -17,7 +17,7 @@ export const handleLogin = async (email, password) => {
     throw new ApiError("user or password are invalid", 400);
   }
   const token = jwt.sign(
-    { _id: user._id, email: user.email, role: user.role },
+    { user },
     process.env.JWT_SECRET,
     { expiresIn: "1h" }
   );

@@ -49,5 +49,10 @@ export const updateOrderValidator = z.object({
   status: z.enum(["pending", "completed", "canceled"]).optional()
 });
 
+export const userLoginValidator = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
 export * from './cart.validator.js'
 export * from './error.validator.js'

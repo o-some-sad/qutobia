@@ -1,0 +1,9 @@
+@import "tailwindcss";
+:host{
+    @apply flex-1 flex;
+}
+
+
+.side-expanded{
+    @apply w-96 items-start transition-all;
+}
