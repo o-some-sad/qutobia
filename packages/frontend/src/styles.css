@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 @plugin "daisyui" {
-    themes: cupcake --default, cupcake --prefersdark, cupcake, dracula;
+    themes: lofi --default, dracula --prefersdark, lofi, dracula;
     logs: true;
   }
