@@ -3,12 +3,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { StripeService, StripeCardComponent, StripeElementsDirective } from 'ngx-stripe';
 import { StripeCardElementOptions, StripeElementsOptions } from '@stripe/stripe-js';
 import { HttpClient } from '@angular/common/http';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-payment-form',
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css'],
-  imports: [StripeElementsDirective, StripeCardComponent, ReactiveFormsModule]
 })
 export class CheckoutComponent {
  
@@ -17,8 +17,12 @@ export class CheckoutComponent {
   pay(){
     fetch("/api/payment/create", {
       method: "POST"
-    }).then(d=>d.json()).then(result=>{      
-      window.location.href = result.url
+    }).then(async d=>{
+      if(d.ok)return d.json()
+      return Promise.reject({status: d.status, data: await d.json()})
+    }).catch(e=>{
+      toast.error(e.data.message)
+      
     })
   }
 }

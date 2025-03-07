@@ -3,12 +3,18 @@ import mongoose from "mongoose";
 import Book from "../models/book.model.js";
 import Cart from "../models/cart.model.js";
 import Payment from "../models/payment.model.js";
-import ApiError from "../utilities/ApiErrors.js"
+import ApiError from "../utilities/apiError.js"
 import { Stripe } from 'stripe'
 
 
+
+//TODO: create a function ensures that specefic env vars are present
 const STRIPE_SECRET = process.env.STRIPE_SECRET;
 if (!STRIPE_SECRET) throw new Error("STRIPE_SECRET is required to run the app")
+
+const APP_URL = process.env.APP_URL
+if(!APP_URL)throw new Error("APP_URL is required to run the app")
+
 const stripe = new Stripe(STRIPE_SECRET)
 
 
@@ -38,6 +44,14 @@ export const createPaymentFromUserId = async (userId) => {
         }))
     })
 
+    const baseUrl = new URL(APP_URL)
+
+    const successUrl = new URL("/api/payment/success", baseUrl)
+    successUrl.searchParams.set("payment", payment._id.toString())
+
+    const cancelUrl = new URL("/api/payment/cancel", baseUrl)
+    cancelUrl.searchParams.set("payment", payment._id.toString())
+
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'payment',
@@ -51,8 +65,8 @@ export const createPaymentFromUserId = async (userId) => {
             },
             quantity: item.quantity
         })),
-        success_url: `http://localhost:4200/api/payment/success?payment=${payment._id.toString()}`,
-        cancel_url: `http://localhost:4200/api/payment/cancel?sid=${payment._id.toString()}`,
+        success_url: successUrl.toString(),
+        cancel_url: cancelUrl.toString(),
     })
 
     await payment.updateOne({
