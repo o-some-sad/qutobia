@@ -5,7 +5,7 @@ import { authenticateToken } from '../middlewares/authenticateToken.js';
 
 const Router = express.Router();
 
-Router.get('/', authenticateToken, async (req, res, next) => {
+Router.get('/', /*authenticateToken,*/ async (req, res, next) => {
   const filters = {};
   const page = +req.query.page || 1;
   const limit = +req.query.limit || 10;
