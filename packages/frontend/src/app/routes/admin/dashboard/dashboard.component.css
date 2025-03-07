@@ -1,0 +1,9 @@
+@import "tailwindcss";
+:host{
+    @apply flex-1 flex;
+}
+
+
+.expanded{
+    @apply w-96;
+}
