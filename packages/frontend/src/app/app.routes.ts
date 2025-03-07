@@ -5,6 +5,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 
 export const routes: Routes = [
   { path: '', loadComponent: () => import("./home-page/home-page.component").then(c => c.HomePageComponent), title: "Home Page" },
+  { path: 'login', loadComponent: ()=>import("./routes/auth/login/login.component").then(c=>c.LoginComponent), title: "Log In" },
   { path: 'profile', loadComponent: () => import("./routes/profile/profile.component").then(c => c.ProfileComponent), title: "Profile" },
   // { path: 'login', loadComponent: () => import("./login/login.component").then(c => c.LoginComponent), title: "Log In" },
   {
