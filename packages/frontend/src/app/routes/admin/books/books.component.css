@@ -1,0 +1,4 @@
+@import "tailwindcss";
+:host{
+    @apply flex-1 bg-gray-300 transition-all;
+}

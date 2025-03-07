@@ -1,17 +1,37 @@
-<div class="container mx-auto p-4">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    @for (item of data; track item.type) {
-      <div class="card bg-base-100 shadow-xl">
-        <div class="card-body">
-          <h2 class="card-title">{{ item.type | titlecase }}</h2>
-          <p class="text-2xl font-bold">{{ item.count }}</p>
-          <div class="card-actions justify-end">
-            <button class="btn btn-outline btn-warning" (click)="navigateToPage(item.type)">
-              View {{ item.type }}
-            </button>
-          </div>
-        </div>
-      </div>
-    }
+<div class="drawer">
+  <input id="drawer" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content">
+    <div class="border-b border-base-300 shadow-sm p-3">
+      <label for="drawer" class="btn btn-sm btn-outline btn-primary">
+        <i-feather name="menu"></i-feather>
+      </label>
+
+    </div>
+    <router-outlet />
+  </div>
+  <div class="drawer-side">
+    <label for="drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+    <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4 flex flex-col gap-3">
+      <!-- Sidebar content here -->
+      <span class="text-xl">Welcome Buddy</span>
+      <li>
+        <a class="border border-base-100" [routerLink]="'/dashboard'">
+          <i-feather name="bar-chart"></i-feather>
+          Stats
+        </a>
+      </li>
+      <li>
+        <a class="border border-base-100">
+          <i-feather name="user"></i-feather>
+          Users
+        </a>
+      </li>
+      <li>
+        <a class="border border-base-100" [routerLink]="'/dashboard/books'">
+          <i-feather name="book"></i-feather>
+          Books
+        </a>
+      </li>
+    </ul>
   </div>
 </div>
