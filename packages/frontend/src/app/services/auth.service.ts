@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable} from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { User } from '../interfaces/user.interface';
@@ -15,6 +15,8 @@ export class AuthService {
     http.post<User>(`${environment.base_url}/auth/login`,user);
   }
   me(): Observable<User>{
-    return this.http.get<User>(`${environment.base_url}/auth/me`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ Authorization: `${token}` });
+    return this.http.get<User>(`${environment.base_url}/auth/me`, { headers });
   }
 }

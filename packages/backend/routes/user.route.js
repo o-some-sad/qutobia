@@ -50,7 +50,4 @@ Router.patch('/:id/image', handleImageUpload('user'), async (req, res, next) => 
   }
 });
 
-
 export default Router;
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M3YmJhYmU5ZjlkZmNiYjUwN2YxM2MiLCJlbWFpbCI6Im1vaHNlbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDEyNjQ3MDUsImV4cCI6MTc0MTI2ODMwNX0.tpJUiG-dAuRYabYU9OVHMol6G6Of01cBmLU3q6TnhQI
