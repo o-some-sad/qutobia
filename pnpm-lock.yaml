@@ -56,6 +56,9 @@ importers:
       nodemailer:
         specifier: ^6.10.0
         version: 6.10.0
+      stripe:
+        specifier: ^17.7.0
+        version: 17.7.0
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -87,6 +90,9 @@ importers:
       '@angular/router':
         specifier: ^19.2.0
         version: 19.2.0(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@19.2.0(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0)))(rxjs@7.8.2)
+      '@stripe/stripe-js':
+        specifier: ^5.9.2
+        version: 5.9.2
       '@tailwindcss/postcss':
         specifier: ^4.0.9
         version: 4.0.9
@@ -96,6 +102,9 @@ importers:
       ngx-sonner:
         specifier: ^3.0.0
         version: 3.0.0(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))
+      ngx-stripe:
+        specifier: ^19.0.0
+        version: 19.0.0(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(@stripe/stripe-js@5.9.2)
       postcss:
         specifier: ^8.5.3
         version: 8.5.3
@@ -1779,6 +1788,10 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
+
+  '@stripe/stripe-js@5.9.2':
+    resolution: {integrity: sha512-g8qabMEu8zoXujyebWHkeQrM6k9Dm8h22FUaMNIFFTv4GtrWBhLYphhsra/PBEcM3p+mRr/srEIj9g9RV5d0xg==}
+    engines: {node: '>=12.16'}
 
   '@tailwindcss/node@4.0.9':
     resolution: {integrity: sha512-tOJvdI7XfJbARYhxX+0RArAhmuDcczTC46DGCEziqxzzbIaPnfYaIyRT31n4u8lROrsO7Q6u/K9bmQHL2uL1bQ==}
@@ -3690,6 +3703,13 @@ packages:
       '@angular/common': '>=19.0.0'
       '@angular/core': '>=19.0.0'
 
+  ngx-stripe@19.0.0:
+    resolution: {integrity: sha512-Q95EnHcEjZrHg4f4XMwMhRlJNg/jenBfypk9JISC3T4R2hc+J6HS2NMHBuft9hfRepKrcQY+FiSLzH2yS+5cAg==}
+    peerDependencies:
+      '@angular/common': '>=19.0.0 <20.0.0'
+      '@angular/core': '>=19.0.0 <20.0.0'
+      '@stripe/stripe-js': '>=5.0.0 <6.0.0'
+
   node-addon-api@5.1.0:
     resolution: {integrity: sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==}
 
@@ -4433,6 +4453,10 @@ packages:
   strip-ansi@7.1.0:
     resolution: {integrity: sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==}
     engines: {node: '>=12'}
+
+  stripe@17.7.0:
+    resolution: {integrity: sha512-aT2BU9KkizY9SATf14WhhYVv2uOapBWX0OFWF4xvcj1mPaNotlSc2CsxpS4DS46ZueSppmCF5BX1sNYBtwBvfw==}
+    engines: {node: '>=12.*'}
 
   supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
@@ -6499,6 +6523,8 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
+  '@stripe/stripe-js@5.9.2': {}
+
   '@tailwindcss/node@4.0.9':
     dependencies:
       enhanced-resolve: 5.18.1
@@ -8553,6 +8579,13 @@ snapshots:
       '@angular/core': 19.2.0(rxjs@7.8.2)(zone.js@0.15.0)
       tslib: 2.8.1
 
+  ngx-stripe@19.0.0(@angular/common@19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(@stripe/stripe-js@5.9.2):
+    dependencies:
+      '@angular/common': 19.2.0(@angular/core@19.2.0(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2)
+      '@angular/core': 19.2.0(rxjs@7.8.2)(zone.js@0.15.0)
+      '@stripe/stripe-js': 5.9.2
+      tslib: 2.8.1
+
   node-addon-api@5.1.0: {}
 
   node-addon-api@6.1.0:
@@ -9397,6 +9430,11 @@ snapshots:
   strip-ansi@7.1.0:
     dependencies:
       ansi-regex: 6.1.0
+
+  stripe@17.7.0:
+    dependencies:
+      '@types/node': 22.13.8
+      qs: 6.13.0
 
   supports-color@5.5.0:
     dependencies:
