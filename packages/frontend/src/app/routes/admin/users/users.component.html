@@ -72,14 +72,10 @@
                   class="toggle theme-controller"
                   [checked]="user.role !== 'admin'"
                   (change)="changeRole(user)"
-                  [ngClass]="{ 'bg-yellow-500': user.role === 'admin' }"
-                  [disabled]="loadingMap[user._id]"
+                  [ngClass]="{ 'bg-warning': user.role === 'admin' }"
                 />
                 <span class="label-text">User</span>
               </label>
-              @if (loadingMap[user._id]) {
-                <span class="loading loading-spinner text-success"></span>
-              }
             </td>
           </tr>
         }

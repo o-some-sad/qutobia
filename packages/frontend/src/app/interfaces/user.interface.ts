@@ -13,3 +13,10 @@ export interface UsersResponse {
   totalPages: number;
   data: User[];
 }
+
+export interface UserPassword{
+  _id: string;
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
