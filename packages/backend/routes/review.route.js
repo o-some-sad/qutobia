@@ -9,6 +9,8 @@ import {
   updateReviewById,
   deleteReviewById,
 } from "../controllers/review.controller.js";
+import ApiError from "../utilities/ApiErrors.js";
+
 const Router = express.Router();
 Router.post("/", authenticateToken, async (req, res, next) => {
   try {
@@ -22,9 +24,7 @@ Router.get("/:id", authenticateToken, async (req, res, next) => {
   try {
     const bookId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(bookId)) {
-      const err = new Error("book id is not valid");
-      err.status = 404;
-      throw err;
+      throw new ApiError("invalid book ID", 404);
     }
     const reviews = await getAllReviewsByBookId(bookId);
     return res.status(200).json(reviews);
@@ -36,9 +36,7 @@ Router.patch("/:id", async (req, res, next) => {
   try {
     const reviewId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(reviewId)) {
-      const err = new Error("review id is not valid");
-      err.status = 401;
-      throw err;
+      throw new ApiError("invalid review ID", 404);
     }
     const updatedFields = req.body;
     const updatedReview = await updateReviewById(reviewId, updatedFields);
@@ -51,9 +49,7 @@ Router.delete("/:id", authenticateToken, isAdmin, async (req, res, next) => {
   try {
     const reviewId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(reviewId)) {
-      const err = new Error("invalid review ID");
-      err.status = 404;
-      throw err;
+      throw new ApiError("invalid review ID", 404);
     }
     await deleteReviewById(reviewId);
     res.status(200).json({ message: "removed sucessfully" });
