@@ -6,20 +6,21 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 export const routes: Routes = [
   { path: '', loadComponent: () => import("./home-page/home-page.component").then(c => c.HomePageComponent), title: "Home Page" },
   { path: 'profile', loadComponent: () => import("./routes/profile/profile.component").then(c => c.ProfileComponent), title: "Profile" },
-  { path: 'login', loadComponent: () => import("./login/login.component").then(c => c.LoginComponent), title: "Log In" },
-  { path: 'dashboard', 
-    loadComponent: () => import("./routes/admin/dashboard/dashboard.component").then(c => c.DashboardComponent), 
+  // { path: 'login', loadComponent: () => import("./login/login.component").then(c => c.LoginComponent), title: "Log In" },
+  {
+    path: 'dashboard',
+    loadComponent: () => import("./routes/admin/dashboard/dashboard.component").then(c => c.DashboardComponent),
     title: "Dashboard",
     children: [
       {
         path: "",
-        loadComponent: ()=> import ("./routes/admin/stats/stats.component").then(c=>c.StatsComponent),
+        loadComponent: () => import("./routes/admin/stats/stats.component").then(c => c.StatsComponent),
         title: "Dashboard - Stats"
       },
       {
-      path: 'books',
-      loadComponent: () => import("./routes/admin/books/books.component").then(c => c.BooksComponent), title: "Books"
-    }]
+        path: 'books',
+        loadComponent: () => import("./routes/admin/books/books.component").then(c => c.BooksComponent), title: "Books"
+      }]
   },
   {
     path: 'dashboard/users', loadComponent: () => import("./routes/admin/users/users.component").then(c => c.UsersComponent), title: "Users"
