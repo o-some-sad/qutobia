@@ -35,6 +35,10 @@ const orderSchema = new mongoose.Schema(
             type: String,
             enum: ['pending', 'completed', 'canceled'],
             default: 'pending',
+        },
+        session:{
+            type: String,
+            required: true,
         }
     },
     { timestamps: true }
