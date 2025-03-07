@@ -6,6 +6,7 @@ import appRouter from "./routes/index.js";
 import cors from "cors";
 import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
 import { corsOptions } from "./utilities/corsOptions.js";
+import redis from "redis";
 // import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -20,6 +21,17 @@ const connectDB = async () => {
   }
 };
 
+const redisClient = redis.createClient();
+redisClient.on("error", (err) => console.error("Redis Error:", err));
+
+(async () => {
+  await redisClient.connect();
+  console.log("Connected to Redis successfully");
+
+  await redisClient.set("redis key", "redis value");
+  const value = await redisClient.get("key");
+})();
+
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
@@ -28,9 +40,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const value = await redisClient.get("redis key");
   res.end(
-    `<div style="text-align: center;"><h1>Welcome to Kotobia WebSite</h1></div>`
+    `<div style="text-align: center;"><h1>Welcome to Kotobia WebSite, value from redis: ${value}</h1></div>`
   );
 });
 
