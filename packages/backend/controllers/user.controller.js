@@ -1,17 +1,6 @@
 import {userPasswordValidator, userValidator} from 'shared';
 import User from "../models/user.model.js";
 
-
-
-export const createUser = async (userData) => { // for test until we have register
-  try {
-    await userValidator.parseAsync(userData);
-    return await User.create(userData);
-  } catch (err) {
-    throw err;
-  }
-};
-
 export const getAllUsers = async (filters, page, limit) => {
   try {
     const count = await User.countDocuments(filters);

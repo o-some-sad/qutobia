@@ -1,0 +1,4 @@
+<label class="flex items-center gap-2">
+  <input type="radio" [name]="name" class="radio radio-success" [value]="value" [checked]="selectedValue === value" (change)="onValueChange()" />
+  <span>{{ label }}</span>
+</label>

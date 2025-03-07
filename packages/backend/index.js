@@ -46,5 +46,5 @@ app.use(handleErrorMiddleware);
 
 app.listen(process.env.PORT, async () => {
   await connectDB();
-  console.log(`Server running on   || 3000}`);
+  console.log(`Server running on http://localhost:${process.env.PORT}`);
 });

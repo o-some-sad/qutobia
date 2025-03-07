@@ -6,6 +6,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, title: "Home Page" },
+  { path: 'login', loadComponent: ()=>import("./login/login.component").then(c=>c.LoginComponent), title: "Log In" },
   { path: 'dashboard', loadComponent: ()=>import("./routes/admin/dashboard/dashboard.component").then(c=>c.DashboardComponent), title: "Dashboard" },
   { path: 'dashboard/users', loadComponent: ()=>import("./routes/admin/users/users.component").then(c=>c.UsersComponent), title: "Users" },
   { path: 'dashboard/books', loadComponent: ()=>import("./routes/admin/books/books.component").then(c=>c.BooksComponent), title: "Books" },

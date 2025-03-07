@@ -34,13 +34,13 @@ export const handleLogin = async (email, password) => {
 
 export const handleRegister = async(body) => {
   // CHECK if ALL fields are full
-  const{userEmail,username,password}=body;
-  const isEmailRegistered = await User.exists({email: userEmail});
-  const isUsernameRegistered = await User.exists({name: username});
+  const{email,name,password}=body;
+  const isEmailRegistered = await User.exists({email: email});
+  const isUsernameRegistered = await User.exists({name: name});
   //TODO: don't check if username already exist (just use it as human name)
   //TODO: figure out how to check if email is a valid email
   // CHECK if the username is taken
-  if(username === undefined || userEmail === undefined || password === undefined){
+  if(name === undefined || email === undefined || password === undefined){
     //TODO: use schema validator
     const err = new Error("username, email and password are required");
     err.status = 400;
@@ -60,7 +60,7 @@ export const handleRegister = async(body) => {
   else{  // If the user's email/username is unavailable --> create user
     // call node-mailer
     const msg = fs.readFileSync('public/mailBody.html', 'utf-8');
-    sendMail(userEmail, "Email Verification", msg);
+    sendMail(email, "Email Verification", msg);
     return await User.create(body);
   }
 };

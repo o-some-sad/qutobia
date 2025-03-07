@@ -13,14 +13,14 @@ Router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const result = await handleLogin(email, password);
-    res.cookie('token', result.token, { httpOnly: true, secure: false});
-    res.status(200).json(result.user);
+    res.cookie('token', result.token, { httpOnly: true, secure: false });
+    res.status(200).json({result});
   } catch (err) {
     next(err);
   }
 });
 Router.post("/logout", (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token",{ httpOnly: true, secure: true});
   res.json({ message: "Logged out successfully!" });
 });
 Router.get("/me", async (req, res, next) => {
