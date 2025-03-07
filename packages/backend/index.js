@@ -6,13 +6,11 @@ import appRouter from "./routes/index.js";
 import cors from "cors";
 import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
 import { corsOptions } from "./utilities/corsOptions.js";
-import cookieParser from 'cookie-parser';
-
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URL);
