@@ -4,6 +4,6 @@
 }
 
 
-.expanded{
-    @apply w-96;
+.side-expanded{
+    @apply w-96 items-start transition-all;
 }
