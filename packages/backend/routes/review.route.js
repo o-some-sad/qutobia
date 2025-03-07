@@ -11,16 +11,21 @@ import {
 } from "../controllers/review.controller.js";
 import ApiError from "../utilities/ApiErrors.js";
 
+// login --> token (user information) -->post review {user: _id (from payload), book: id}
+//already logged in
+// I have to own the book .. order(user, )
 const Router = express.Router();
 Router.post("/", authenticateToken, async (req, res, next) => {
   try {
-    const review = await addReview(req.body);
+    const userId = req.user._id;
+    const review = await addReview(userId, req.body);
     return res.status(200).json(review);
   } catch (err) {
     next(err);
   }
 });
-Router.get("/:id", authenticateToken, async (req, res, next) => {
+Router.get("/:id", async (req, res, next) => {
+  //public, no auth needed
   try {
     const bookId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(bookId)) {
@@ -32,7 +37,7 @@ Router.get("/:id", authenticateToken, async (req, res, next) => {
     next(err);
   }
 });
-Router.patch("/:id", async (req, res, next) => {
+Router.patch("/:id", authenticateToken, async (req, res, next) => {
   try {
     const reviewId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(reviewId)) {
