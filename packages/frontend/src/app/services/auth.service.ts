@@ -18,4 +18,7 @@ export class AuthService {
   register(user:UserRegister):Observable<User>{
     return this.http.post<User>(`http://localhost:3000/api/auth/register`,user);
   }
+  me(){
+    return this.http.get<User>(`http://localhost:3000/api/auth/me`);
+  }
 }
