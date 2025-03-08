@@ -75,9 +75,11 @@ export const handleRegister = async (body) => {
     err.status = 400;
     throw err;
   }
-  const isEmailValid = await validateEmail(email);
-  if (!isEmailValid) {
-    throw new ApiError("The provided email is invalid or doesn't exist", 400);
+  if (process.env.ENVIORNMENT === "production") {
+    const isEmailValid = await validateEmail(email);
+    if (!isEmailValid) {
+      throw new ApiError("The provided email is invalid or doesn't exist", 400);
+    }
   }
   // If the user's email/username is unavailable --> create user
   // call node-mailer
