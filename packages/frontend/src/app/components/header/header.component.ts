@@ -6,6 +6,7 @@ import {AuthService} from '../../services/auth.service';
 import {User} from '../../interfaces/user.interface';
 import {SharedService} from '../../services/shared.service';
 import { IconsModule } from '../../modules/icons/icons.module';
+import { CartService } from '../../services/cart.service';
 
 const THEMES = {
   system: null,
@@ -22,13 +23,22 @@ const THEMES = {
 })
 export class HeaderComponent implements OnInit {
   user: User | null = null;
-  constructor(private authService: AuthService, private sharedService: SharedService){
+  cartQuantity = 0;
+  cartAmout = 0;
+
+  constructor(private authService: AuthService, private sharedService: SharedService, private cartService: CartService){
     this.applyTheme()    
+    this.cartService.cart$.subscribe(cart=>{
+      if(!cart)return
+      this.cartQuantity = cart.books.reduce((total, item)=>item.quantity + total, 0)
+      this.cartAmout = cart.books.reduce((total, item)=>(item.quantity*item.book.price)+total, 0)
+    })
   }
   ngOnInit(): void {
     this.authService.me().subscribe({
       next: (res) => {
         this.user = res;
+        this.cartService.fetchCart()
       },
       error: (_) => {
         this.user = null;

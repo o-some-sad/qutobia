@@ -13,7 +13,7 @@ cartRouter.get("/", authenticateToken, async (req, res, next) => {
     try {
         const { pick = [] } = req.query
 
-        const cart = await cartController.getByUserId(req.user._id.toString(), CartPropsValidator.parse(pick))
+        const cart = await cartController.getByUserId(req.user._id.toString())
 
         res.json(cart)
     } catch (error) {
