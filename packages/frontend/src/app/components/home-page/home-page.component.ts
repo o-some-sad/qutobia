@@ -17,8 +17,7 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void { // so it's the 1st things that's displayed when the website is opened
       this.bookService.getBooks().subscribe(res => {
-        this.books = res; // populate books array with API response
-        console.log("BOOKS: ", this.books); // got all books objects
+        this.books = res; // populate books array with API response , got all book objects
       })
   }
 }

@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{KOTOBIA_URL}}/api/books/67c85fccb144911426e3ec2c
-  body: none
+  url: {{KOTOBIA_URL}}/api/books/
+  body: multipartForm
   auth: none
+}
+
+body:multipart-form {
+  ~image: @file(/Users/janahazem/Downloads/9781801116015.jpg)
 }

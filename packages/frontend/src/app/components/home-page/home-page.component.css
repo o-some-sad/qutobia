@@ -1,6 +1,7 @@
 .halfbkg {
     height: 400px;
     background-image: url(../../../assets/photo-1457369804613-52c61a468e7d.jpeg);
+    /* background-image: url(../../../assets/background.png); */
     background-size: cover;
     background-position: center right;
     display: grid;
@@ -43,7 +44,7 @@ img {
 }
 
 .carousel-item img {  
-    border: 3px solid white;  
+    border: 1px solid black; 
     border-radius: 5px;
 }
 

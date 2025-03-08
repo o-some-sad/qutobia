@@ -5,10 +5,10 @@
     transition: 0.3s;
     border-radius: 5px;
     margin: auto;
-    /* border: 3px solid green; */
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    border: 1px solid rgb(0, 0, 0);
 }
 
 #card:hover{
