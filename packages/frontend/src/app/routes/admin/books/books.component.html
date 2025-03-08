@@ -1,16 +1,15 @@
 
 <div class="container mx-auto">
     <div class="overflow-x-auto">
-        <table class="table table-xs">
+        <table class="table">
           <thead>
             <tr>
               <th></th>
-              <th>Name</th>
-              <th>Job</th>
-              <th>company</th>
-              <th>location</th>
-              <th>Last Login</th>
-              <th>Favorite Color</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -20,8 +19,10 @@
               <td>Quality Control Specialist</td>
               <td>Littel, Schaden and Vandervort</td>
               <td>Canada</td>
-              <td>12/16/2020</td>
-              <td>Blue</td>
+              <td class="flex gap-1 flex-wrap">
+                <button class="btn btn-sm btn-primary">Edit</button>
+                <button class="btn btn-sm btn-error">Delete</button>
+              </td>
             </tr>
           </tbody>
           @if(false){
