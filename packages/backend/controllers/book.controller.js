@@ -1,14 +1,25 @@
-//@ts-check
 import Book from "../models/book.model.js";
 import ApiError from "../utilities/ApiErrors.js";
 import redisClient from "../utilities/redisClient.js";
 
 const addBook = async (formData) => {
   try {
-    console.log("lol");
     const book = await Book.create(formData);
-    console.log("another lol");
-    await redisClient.del("allBooks"); //delete the cache, to be added in the next get request
+    const allBooks = await redisClient.get("allBooks");
+    if (allBooks) {
+      var allBooksParsed = JSON.parse(allBooks);
+      allBooksParsed.Books.push(book);
+      console.log("appending to allBooks cache");
+      await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
+    }
+    // else {
+    //   console.log("creating cache for allBooks");
+    //   await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
+    // }
+    console.log("caching the book individually");
+    await redisClient.set(`book:${book._id}`, JSON.stringify(book));
+    // console.log(typeof allBooks);
+    // await redisClient.del("allBooks"); //delete the cache, to be added in the next get request
     return book;
   } catch (error) {
     console.log("ERROR: ", error);
@@ -35,6 +46,7 @@ const listBooks = async () => {
     throw new ApiError("No books found to list!", 400);
   }
   const result = { Total_Pages: totalPages, Books: books };
+  console.log("adding allBooks cache");
   await redisClient.set("allBooks", JSON.stringify(result));
   return result;
 };
@@ -76,13 +88,33 @@ const getBookByid = async (id) => {
   if (bookByid === null) {
     throw new ApiError("No books found to list!", 400);
   }
+  console.log("caching the book individually");
   await redisClient.set(`book:${id}`, JSON.stringify(bookByid));
   return bookByid;
 };
 
 const updateBookImage = async (id, filePath) => {
   try {
-    return await Book.findByIdAndUpdate(id, { image: filePath }, { new: true });
+    const updatedBook = await Book.findByIdAndUpdate(
+      id,
+      { image: filePath },
+      { new: true }
+    );
+    console.log("updating the individual book cache");
+    await redisClient.set(`book:${id}`, JSON.stringify(bookUpdated));
+    const allBooks = await redisClient.get("allBooks");
+    if (allBooks) {
+      let allBooksParsed = JSON.parse(allBooks);
+      allBooksParsed.Books = allBooksParsed.Books.map((book) => {
+        if (book._id === id) {
+          return bookUpdated;
+        }
+        return book;
+      });
+      console.log("updating allBooks cache");
+      await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
+      return updatedBook;
+    }
   } catch (err) {
     throw err;
   }
@@ -97,7 +129,16 @@ const deleteBook = async (id) => {
   if (bookDeleted === null || bookDeleted.deletedAt != null) {
     throw new ApiError("No books found to delete!", 400);
   }
-  await redisClient.del("all_books");
+  const allBooks = await redisClient.get("allBooks");
+  if (allBooks) {
+    let allBooksParsed = JSON.parse(allBooks);
+    allBooksParsed.Books = allBooksParsed.Books.filter(
+      (book) => book._id !== id
+    );
+    console.log("deleting from allBooks cache");
+    await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
+  }
+  console.log("deleting individual book cache");
   await redisClient.del(`book:${id}`);
   return "Book deleted successfully !";
 };
@@ -111,8 +152,21 @@ const updateBookDetails = async (id, rest) => {
   if (bookUpdated === null || bookUpdated.deletedAt != null) {
     throw new ApiError("No books found to update!", 400);
   }
-  await redisClient.del(`book:${id}`);
-  await redisClient.del("allBooks");
+  const allBooks = await redisClient.get("allBooks");
+  if (allBooks) {
+    let allBooksParsed = JSON.parse(allBooks);
+    allBooksParsed.Books = allBooksParsed.Books.map((book) => {
+      if (book._id === id) {
+        return bookUpdated;
+      } else {
+        return book;
+      }
+    });
+    console.log("update allBooks cache");
+    await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
+  }
+  console.log("updating the individual book cache");
+  await redisClient.set(`book:${id}`, JSON.stringify(bookUpdated));
   return { message: "Book updated successfully!", bookUpdated };
 };
 
