@@ -1,8 +1,11 @@
 @if(cartService.loading() && !cart && !error){
-...
-}@else if (error) {
-<h1>{{error}}</h1>
-}@else if(cart && cart.books.length === 0){
+<div class="w-full flex-1 flex items-center justify-center">
+    <div class="loading"></div>
+</div>
+}
+@else if (error) {
+    <h1>{{error}}</h1>
+    }@else if(cart && cart.books.length === 0){
     <div class="p-3 flex flex-col items-center justify-center gap-3">
         <h1 class="text-2xl">
             Your cart is still empty
@@ -10,82 +13,88 @@
         <button (click)="cartService.fetchCart()">Hello</button>
         <a routerLink="/" class="btn btn-primary btn-soft btn-lg">Find Your next read</a>
     </div>
-}
-@else if (cart) {
-<div class="flex flex-col h-full">
-   @if(selectedIds.length){
-    <div class="border-b border-b-base-200 p-3">
-        <button class="btn btn-error btn-sm">
-            Delete selected ({{selectedIds.length}})
-        </button>
-    </div>
-   }
-    <div class="overflow-x-auto">
-        <table class="table">
-            <!-- head -->
-            <thead>
-                <tr>
-                    <th>
-                        <label>
-                            <input type="checkbox" class="checkbox" />
-                        </label>
-                    </th>
-                    <th>Details</th>
-                    <th>Amount</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- row 1 -->
-                @for (item of cart.books; track item.book._id) {
-                <tr>
-                    <th>
-                        <label>
-                            <input [checked]="selectedIds.includes(item.book._id)" (change)="handleBookSelection(item.book._id)" type="checkbox" class="checkbox" />
-                        </label>
-                    </th>
-                    <td>
-                        <div class="flex items-center gap-3">
-                            <div class="avatar">
-                                <div class="mask mask-squircle h-12 w-12">
-                                    <img [src]="item.book.image"
-                                        alt="Avatar Tailwind CSS Component" />
+    }
+    @else if (cart) {
+    <div class="flex flex-col h-full w-full">
+        @if(selectedIds.length){
+        <div class="border-b border-b-base-200 p-3">
+            <button class="btn btn-error btn-sm">
+                Delete selected ({{selectedIds.length}})
+            </button>
+        </div>
+        }
+        <div class="overflow-x-auto">
+            <table class="table">
+                <!-- head -->
+                <thead>
+                    <tr>
+                        <th>
+                            <label>
+                                <input type="checkbox" class="checkbox" />
+                            </label>
+                        </th>
+                        <th>Details</th>
+                        <th>Amount</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- row 1 -->
+                    @for (item of cart.books; track item.book._id) {
+                    <tr>
+                        <th>
+                            <label>
+                                <input [checked]="selectedIds.includes(item.book._id.toString())"
+                                    (change)="handleBookSelection(item.book._id.toString())" type="checkbox"
+                                    class="checkbox" />
+                            </label>
+                        </th>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <div class="avatar">
+                                    <div class="mask mask-squircle h-12 w-12">
+                                        <img [src]="item.book.image" alt="Avatar Tailwind CSS Component" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="font-bold">{{item.book.title}}</div>
+                                    <!-- TODO: populate the authors -->
+                                    <div class="text-sm opacity-50">{{item.book.author.join(", ")}}</div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="font-bold">{{item.book.title}}</div>
-                                <!-- TODO: populate the authors -->
-                                <div class="text-sm opacity-50">{{item.book.author.join(", ")}}</div>
+                        </td>
+                        <td>
+                            {{item.book.price | currency}} x {{item.quantity}}PCs
+                            <hr class="w-1/2 text-base-300" />
+                            {{ item.book.price * item.quantity | currency }}
+                        </td>
+                        <th>
+                            <div class="flex gap-3 flex-wrap items-center">
+                                <button [disabled]="cartService.loading()" class="btn btn-ghost">details</button>
+                                <div class="join items-stretch">
+                                    <button [disabled]="cartService.loading()" class="btn join-item"
+                                        (click)="decreaseBookQuantity(item.book._id.toString())">-</button>
+                                    <div
+                                        class="px-4 bg-neutral text-neutral-content join-item inline-flex items-center justify-center">
+                                        {{item.quantity}}</div>
+                                    <button [disabled]="cartService.loading() || item.quantity >= item.book.stock"
+                                        class="btn join-item"
+                                        (click)="increaseBookQuantity(item.book._id.toString())">+</button>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td>
-                        {{item.book.price | currency}} x {{item.quantity}}PCs
-                        <hr class="w-1/2 text-base-300" />
-                        {{ item.book.price * item.quantity | currency }}
-                    </td>
-                    <th>
-                        <div class="flex gap-3 flex-wrap items-center">
-                            <button [disabled]="cartService.loading()" class="btn btn-ghost">details</button>
-                            <div class="join items-stretch">
-                                <button [disabled]="cartService.loading()" class="btn join-item" (click)="decreaseBookQuantity(item.book._id)">-</button>
-                                <div class="px-4 bg-neutral text-neutral-content join-item inline-flex items-center justify-center">{{item.quantity}}</div>
-                                <button [disabled]="cartService.loading() || item.quantity >= item.book.stock" class="btn join-item" (click)="increaseBookQuantity(item.book._id)">+</button>
-                            </div>
-                        </div>
-                    </th>
-                </tr>
-                }
-                <tr>
-                    <td></td>
-                    <td class="text-right border-neutral font-bold rounded-tl-2xl">
+                        </th>
+                    </tr>
+                    }
+                    <tr>
+                        <td></td>
+                        <td class="text-right border-neutral font-bold rounded-tl-2xl">
                             Subtotal
-                    </td>
-                    <td class="border border-neutral font-bold">{{totalAmount$ | async | currency }}</td>
-                </tr>
-            </tbody>
-            <!-- foot -->
-            @if(cart.books.length > 10){
+                        </td>
+                        <td class="border border-neutral font-bold">{{totalAmount$ | async | currency }}</td>
+                    </tr>
+                </tbody>
+                <!-- foot -->
+                @if(cart.books.length > 10){
                 <tfoot>
                     <tr>
                         <th></th>
@@ -94,13 +103,32 @@
                         <th></th>
                     </tr>
                 </tfoot>
-            }
-        </table>
+                }
+            </table>
+        </div>
     </div>
-    
-</div>
+    <div class="basis-1/3 p-3 h-fit sticky top-3 flex flex-col">
+        <h2 class="text-3xl mb-8">Finish your order</h2>
+        <div class="flex items-center justify-between">
+            <span class="text-lg font-bold">Subtotal</span>
+            <span class="text-lg"> {{totalAmount$ | async | currency }} </span>
+        </div>
+        <div class="flex items-center justify-between">
+            <span class="text-lg font-bold">Discount amount</span>
+            <span class="text-lg"> {{ 0 | currency }} </span>
+        </div>
+        <div class="divider"></div>
 
+        <div class="flex items-center justify-between mb-8">
+            <span class="text-lg font-bold">Discount amount</span>
+            <span class="text-lg"> {{ totalAmount$ | async | currency }} </span>
+        </div>
+
+        <button class="btn btn-primary btn-lg">
+            Checkout
+        </button>
+    </div>
     <!-- <div class="fixed top-0 left-0 bg-neutral/30 backdrop-blur-none w-full h-full z-50 transition-all opacity-0 pointer-events-none" [class.backdrop-blur-sm]="loading" [class.opacity-100]="loading"></div> -->
-}@else {
+    }@else {
     {{cart | json}}
-}
+    }

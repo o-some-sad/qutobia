@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {map, Observable} from 'rxjs';
-import {User, UsersResponse} from '../interfaces/user.interface';
+import {User, UserPassword, UserResponse, UsersResponse} from '../interfaces/user.interface';
 import {environment} from '../../environments/environment.development';
 import {HttpClient} from '@angular/common/http';
 
@@ -20,7 +20,13 @@ export class UserService {
       }))
     );
   }
-  updateUser(user: User): Observable<User> {
-    return this.http.patch<User>(`${environment.base_url}/users/${user._id}`, user);
+  updateUser(user: User): Observable<UserResponse> {
+    return this.http.patch<UserResponse>(`${environment.base_url}/users/${user._id}`, user);
+  }
+  changePassword(userPassword: UserPassword): Observable<User> {
+    return this.http.patch<User>(`${environment.base_url}/users/${userPassword._id}/password`, userPassword);
+  }
+  uploadImage(userId: string, image: FormData): Observable<UserResponse> {
+    return this.http.patch<UserResponse>(`${environment.base_url}/users/${userId}/image`, image);
   }
 }

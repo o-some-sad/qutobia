@@ -18,7 +18,7 @@ export const CartValidator = z.object({
 export const CartPopulatedValidator = CartValidator.omit({ books: true }).extend({
     books: z.object({
         book: z.object({
-            _id: z.string(),
+            _id: ZodObjectId,
             title: z.string(),
             price: z.number(),
             author: z.string().array(),

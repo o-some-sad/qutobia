@@ -2,7 +2,7 @@ import User from "../models/user.model.js";
 import Book from "../models/book.model.js";
 import { v2 as cloudinary } from 'cloudinary';
 import {uploadBookImage, uploadUserImage} from "../utilities/cloudinaryConfig.js";
-
+//TODO: Handle limi
 export const handleImageUpload = (model)=> async (req, res, next) => {
   const id = req.params.id;
   switch (model) {
