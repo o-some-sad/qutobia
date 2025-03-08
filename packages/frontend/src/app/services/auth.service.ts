@@ -4,6 +4,7 @@ import { Observable} from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { User } from '../interfaces/user.interface';
 import { UserLogin } from '../interfaces/user-login';
+import { UserRegister } from '../interfaces/user-register';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AuthService {
     return this.
     http.post<User>(`http://localhost:3000/api/auth/login`,user);
   }
-  me(): Observable<User>{
-    return this.http.get<User>(`${environment.base_url}/auth/me`,{ withCredentials: true });
+  register(user:UserRegister):Observable<User>{
+    return this.http.post<User>(`http://localhost:3000/api/auth/register`,user);
   }
 }

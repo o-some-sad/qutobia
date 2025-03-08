@@ -12,6 +12,9 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
+register() {
+  this._Router.navigate(['register'])
+}
   isLoading:boolean=false;
  handelLogin:FormGroup=new FormGroup({
  email:new FormControl(null,[Validators.email,Validators.required]),
