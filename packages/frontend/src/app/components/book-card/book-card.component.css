@@ -1,0 +1,88 @@
+#card{
+    width: 200px;
+    height: 300px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    margin: auto;
+    /* border: 3px solid green; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+#card:hover{
+    transform: scale(1.1);
+}
+
+img {
+    height: 150px;
+    display: block;
+    margin: auto;
+    width: 50%;
+    padding-top: 10px;
+}
+
+.imgBorder {
+    width: 100%;
+    /* background-color: rgba(211, 211, 211, 0.529); */
+    height: 168px;
+}
+
+.card-title {
+    font-size: 15px;
+    text-align: center;
+    margin-top: -30px;
+    /* border: 3px solid red; */
+}
+
+.card-details{
+    /* display: flex;
+    flex-direction: column; */
+    justify-items: center;
+    gap: 3px;
+    align-self: center;
+    width: 150px;
+    /* border: 3px solid red; */
+}
+
+h5 {
+    font-size: 10px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: -webkit-box;	/* enables multi-line ellipsis behavior */
+    -webkit-line-clamp: 1;	/* limits text to 2 lines before showing ... */
+    -webkit-box-orient: vertical; /* ensures vertical stacking of lines */
+    overflow: hidden; /* hides extra content beyond the limit */
+    text-overflow: ellipsis; /* adds ... when text is cut off */
+    word-break: break-word;
+    font-weight: lighter;
+}
+
+.price {
+    /* color: rgb(150, 25, 25); */
+    text-align: center;
+}
+
+#cartBtn {
+    width: 95px;
+    height: 27px;
+    font-size: 10.5px;
+    margin-bottom: -10px;
+}
+
+#cartBtn:hover {
+    color: black;
+    background-color: white;
+}
+
+/* .outOfStock{
+    background-color: rgb(227, 103, 14);
+    border: 3px solid rgb(227, 103, 14);
+    color: white;
+}
+
+.inStock{
+    border: 3px solid green;
+    background-color: green;
+    color: white;
+} */
