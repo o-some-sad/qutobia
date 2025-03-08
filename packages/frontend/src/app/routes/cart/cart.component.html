@@ -41,7 +41,7 @@
                 <tr>
                     <th>
                         <label>
-                            <input [checked]="selectedIds.includes(item.book._id)" (change)="handleBookSelection(item.book._id)" type="checkbox" class="checkbox" />
+                            <input [checked]="selectedIds.includes(item.book._id.toString())" (change)="handleBookSelection(item.book._id.toString())" type="checkbox" class="checkbox" />
                         </label>
                     </th>
                     <td>
@@ -68,9 +68,9 @@
                         <div class="flex gap-3 flex-wrap items-center">
                             <button [disabled]="cartService.loading()" class="btn btn-ghost">details</button>
                             <div class="join items-stretch">
-                                <button [disabled]="cartService.loading()" class="btn join-item" (click)="decreaseBookQuantity(item.book._id)">-</button>
+                                <button [disabled]="cartService.loading()" class="btn join-item" (click)="decreaseBookQuantity(item.book._id.toString())">-</button>
                                 <div class="px-4 bg-neutral text-neutral-content join-item inline-flex items-center justify-center">{{item.quantity}}</div>
-                                <button [disabled]="cartService.loading() || item.quantity >= item.book.stock" class="btn join-item" (click)="increaseBookQuantity(item.book._id)">+</button>
+                                <button [disabled]="cartService.loading() || item.quantity >= item.book.stock" class="btn join-item" (click)="increaseBookQuantity(item.book._id.toString())">+</button>
                             </div>
                         </div>
                     </th>
