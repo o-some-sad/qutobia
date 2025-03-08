@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "19.2.2",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
@@ -19,6 +20,7 @@
     "@angular/router": "^19.2.0",
     "@stripe/stripe-js": "^5.9.2",
     "@tailwindcss/postcss": "^4.0.9",
+    "angular-feather": "^6.5.1",
     "frontend": "file:",
     "ngx-sonner": "^3.0.0",
     "ngx-stripe": "^19.0.0",

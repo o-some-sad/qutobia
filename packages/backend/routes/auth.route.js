@@ -15,23 +15,21 @@ Router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const tokenAndUser = await handleLogin(email, password);
-    // res.cookie("token", result.token, { httpOnly: true, secure: false });
+    res.cookie("token", tokenAndUser.token, { httpOnly: true, secure: false,sameSite:"lax" });
     res.status(200).json(tokenAndUser); //send token and user to the clientSide
   } catch (err) {
     next(err);
   }
 });
 Router.post("/logout", (req, res) => {
-  //will be handled in the client side
-  // res.clearCookie("token", { httpOnly: true, secure: true });
-  // res.json({ message: "Logged out successfully!" });
+  res.clearCookie("token", { httpOnly: true, secure: true });
+  res.json({ message: "Logged out successfully!" });
 });
 Router.get("/me", authenticateToken, async (req, res, next) => {
   //authenticateToken should be called as a middleware
   //returns object of currently logged-in the user
   try {
-    const { _id } = req.user;
-    const user = await User.findOne({ _id: _id }, { password: 0 });
+    const user = req.user;
     if (!user) {
       throw new ApiError("user not found", 404);
     }

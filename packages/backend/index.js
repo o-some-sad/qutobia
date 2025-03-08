@@ -6,7 +6,8 @@ import appRouter from "./routes/index.js";
 import cors from "cors";
 import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
 import { corsOptions } from "./utilities/corsOptions.js";
-// import cookieParser from "cookie-parser";
+import redisClient from "./utilities/redisClient.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -20,7 +21,7 @@ const connectDB = async () => {
   }
 };
 
-app.use(cors(corsOptions));
+app.use(cors({ origin: ["http://localhost:3000", "http://localhost:4200"], credentials: true }));
 
 app.use((req, res, next) => {
   //dummy logger for testing
@@ -28,9 +29,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  await redisClient.set("key", "awesome redis value");
+  const value = await redisClient.get("key");
   res.end(
-    `<div style="text-align: center;"><h1>Welcome to Kotobia WebSite</h1></div>`
+    `<div style="text-align: center;"><h1>Welcome to Kotobia WebSite, value from redis: ${value}</h1></div>`
   );
 });
 
@@ -40,6 +43,7 @@ app.get("/api/hello", (req, res) => {
   });
 });
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api", appRouter);
 app.use(handleErrorMiddleware);
 

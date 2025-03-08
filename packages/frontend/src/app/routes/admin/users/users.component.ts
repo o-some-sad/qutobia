@@ -7,6 +7,7 @@ import { toast } from 'ngx-sonner';
 import {SearchComponent} from '../../../components/search/search.component';
 import {RadioButtonComponent} from '../../../components/radio-button/radio-button.component';
 import {PaginationComponent} from '../../../components/pagination/pagination.component';
+import {SharedService} from '../../../services/shared.service';
 
 @Component({
   selector: 'app-users',
@@ -26,7 +27,6 @@ export class UsersComponent implements OnInit {
   totalPages: number = 1;
   searchValue: string = '';
   selectedRole: string = 'all';
-  loadingMap: { [key: string]: boolean } = {};
 
   constructor(private userService: UserService) {
     this.data = [];
@@ -48,19 +48,17 @@ export class UsersComponent implements OnInit {
   }
   changeRole(user: User) {
     const originalRole = user.role;
-    this.loadingMap[user._id] = true;
     user.role = user.role === 'user' ? 'admin' : 'user';
+    const toast_id = toast.loading('Updating role...');
     this.userService.updateUser(user).subscribe({
-      next: (res) => {
-        this.loadingMap[user._id] = false;
-        toast.success('Role updated successfully');
+      next: (_) => {
+        toast.success('Role updated successfully', { id: toast_id });
         this.data.find(u => u._id === user._id)!['role'] = user.role;
         this.loadUsers(this.currPage);
       },
-      error: (err) => {
-        this.loadingMap[user._id] = false;
+      error: (_) => {
         user.role = originalRole;
-        toast.error('Failed to update role');
+        toast.error('Failed to update role', { id: toast_id });
       }
     });
   }
