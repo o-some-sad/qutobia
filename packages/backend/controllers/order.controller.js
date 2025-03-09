@@ -30,18 +30,6 @@ export const getById = async (Id) => {
 export const updateOrder = async (data, id) => {
   try {
     const validatedData = updateOrderValidator.parse(data);
-    const totalPrice = validatedData.books.reduce(
-      (total, book) => total + book.price * book.quantity,
-      0
-    );
-    const items= validatedData.books.reduce(
-      (total, book) => total + book.quantity,
-      0
-    );
-    validatedData.totalPrice = totalPrice;
-    validatedData.items = items;
-    console.log(items);
-    
     return await Order.findByIdAndUpdate(id, validatedData, { new: true });
   } catch (err) {
     throw err;

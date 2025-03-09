@@ -19,16 +19,16 @@ export class OrdersComponent {
     { color: "bg-red-500", text: "Cancelled" },
   ];
   ordersData: any;
-  serachedValue:string='';
-  edit:boolean=false;
-  editVale:string=''
+  searchedValue: string = '';
+  editOrderId: string | null = null;
+  editValue: string = '';
   constructor(private _OrdersService:OrdersService){
    
     
   }
   ngOnInit() {
     this._OrdersService.getOrders().subscribe({
-      next:(data)=>{this.ordersData=data.order
+      next:(data)=>{this.ordersData=data.order;
       },
       error:(err)=>console.error(err)
     })
@@ -36,17 +36,33 @@ export class OrdersComponent {
     
   }
   getFilteredOrders() {
-    return this.ordersData.filter((order:any) => order.user.name.toLowerCase().startsWith(this.serachedValue));
+    return this.ordersData.filter((order: any) => 
+      order.user.name.toLowerCase().startsWith(this.searchedValue.toLowerCase())
+    );
   }
-  editOrder(){
-    this.edit=true;
-    
+  editOrder(orderId: string, currentStatus: string) {
+    this.editOrderId = orderId;
+    this.editValue = currentStatus;
   }
-  updateOrder(){
-    console.log(this.editVale);
-    this.edit=false;
+  updateOrder() {
+    console.log(this.editValue);
+    this._OrdersService.updateOrder({status:this.editValue}).subscribe({
+      next:(res)=>{
+        console.log(res);
+        this._OrdersService.getOrders().subscribe({
+          next:(data)=>{this.ordersData=data.order;
+          },
+          error:(err)=>console.error(err)
+        })
+      }
+    })
+    this.editOrderId = null;
     console.log("edit");
-    
+  }
+
+  getStatusClass(status: string): string {
+    const statusObj = this.status.find(stat => stat.text === status);
+    return statusObj ? statusObj.color : 'bg-gray-500';
   }
 
 }

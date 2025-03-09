@@ -16,7 +16,7 @@
       <input
         type="search"
         name="search"
-        [(ngModel)]="serachedValue"
+        [(ngModel)]="searchedValue"
         required
         placeholder="Search"
       />
@@ -40,7 +40,8 @@
         </tr>
       </thead>
       <tbody>
-        @if (serachedValue.length===0) { @for(order of ordersData;track $index){
+        @if (searchedValue.length === 0) { @for(order of ordersData;track
+        $index){
         <tr
           class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
         >
@@ -61,22 +62,24 @@
           </td>
           <td class="px-6 py-4">
             <div class="flex items-center">
-              @if(edit){
+              @if(editOrderId === order._id){
               <select
-                [(ngModel)]="editVale"
+                [(ngModel)]="editValue"
                 id="countries"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option selected>{{ order.status }}</option>
                 <option value="Processing">Processing</option>
+                <option value="Completed">Completed</option>
                 <option value="Pending">Pending</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
 
-              } @else { @for(stat of status; track $index){
-              @if(stat.text===order.status ){
-              <div [class]="stat.color" class="w-3 h-3 rounded-full"></div>
-              } }
+              } @else {
+              <div
+                [ngClass]="getStatusClass(order.status)"
+                class="w-3 h-3 rounded-full"
+              ></div>
               <span class="ml-3 text-gray-800">{{ order.status }}</span>
               }
             </div>
@@ -85,7 +88,7 @@
             {{ order.totalPrice | currency : "USD" }}
           </td>
           <td class="px-6 py-4">
-            @if (edit) {
+            @if (editOrderId === order._id) {
             <button
               (click)="updateOrder()"
               type="button"
@@ -95,7 +98,7 @@
             </button>
             }@else {
             <button
-              (click)="editOrder()"
+              (click)="editOrder(order._id, order.status)"
               class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
               Edit
@@ -126,21 +129,24 @@
           </td>
           <td class="px-6 py-4">
             <div class="flex items-center">
-              @if(edit){
+              @if(editOrderId === order._id){
               <select
-                [(ngModel)]="editVale"
+                [(ngModel)]="editValue"
                 id="countries"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
                 <option selected>{{ order.status }}</option>
                 <option value="Processing">Processing</option>
+                <option value="Completed">Completed</option>
                 <option value="Pending">Pending</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
-              } @else { @for(stat of status; track $index){
-              @if(stat.text===order.status ){
-              <div [class]="stat.color" class="w-3 h-3 rounded-full"></div>
-              } }
+              } @else {
+              <div
+                [ngClass]="getStatusClass(order.status)"
+                class="w-3 h-3 rounded-full"
+              ></div>
+              <span class="ml-3 text-gray-800">{{ order.status }}</span>
               <span class="ml-3 text-gray-800">{{ order.status }}</span>
               }
             </div>
@@ -149,7 +155,7 @@
             {{ order.totalPrice | currency : "USD" }}
           </td>
           <td class="px-6 py-4">
-            @if (edit) {
+            @if (editOrderId === order._id) {
             <button
               (click)="updateOrder()"
               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
@@ -158,7 +164,7 @@
             </button>
             }@else {
             <button
-              (click)="editOrder()"
+              (click)="editOrder(order._id, order.status)"
               class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
               Edit

@@ -33,20 +33,11 @@ export const orderValidator = z.object({
       })
   ).nonempty("At least one book is required"),
   totalPrice: z.number().min(0, "Total price must be a positive number"),
-  status: z.enum(['Completed' , 'Processing' , 'Pending' , 'delivered' , 'Cancelled'])
+  status: z.enum(['Completed' , 'Processing' , 'Pending', 'Cancelled'])
 });
 
 export const updateOrderValidator = z.object({
-  user: z.string().optional(),
-  books: z.array(
-      z.object({
-          book: z.string().min(1, "Book ID is required"),
-          quantity: z.number().min(0, "Quantity must be at least 0"),
-          price: z.number().min(0, "Price must be a positive number")
-      })
-  ).optional(),
-  totalPrice: z.number().min(0, "Total price must be a positive number").optional(),
-  status: z.enum(["pending", "completed", "canceled"]).optional()
+  status: z.enum(['Completed' , 'Processing' , 'Pending', 'Cancelled'])
 });
 
 export const userLoginValidator = z.object({
