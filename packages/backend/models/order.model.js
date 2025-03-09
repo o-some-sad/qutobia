@@ -31,9 +31,14 @@ const orderSchema = new mongoose.Schema(
             required: true,
             min: 0,
         },
+        items:{
+            type: Number,
+            required: true,
+            min: 0,
+        },
         status: {
             type: String,
-            enum: ['pending', 'completed', 'canceled'],
+            enum: ['Completed' , 'Processing' , 'Pending' , 'delivered' , 'Cancelled'],
             default: 'pending',
         },
         session:{
