@@ -27,6 +27,7 @@
     "multer-storage-cloudinary": "^4.0.0",
     "nodemailer": "^6.10.0",
     "redis": "^4.7.0",
+    "winston": "^3.17.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
