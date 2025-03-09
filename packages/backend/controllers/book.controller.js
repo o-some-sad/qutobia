@@ -37,14 +37,14 @@ const listBooks = async () => {
   const books = await Book.find({ deletedAt: null }).exec();
   const bookCount = await Book.find({ deletedAt: null })
     .countDocuments()
-    .exec();
+    .exec();    
   // exec() --> the query will run even if await is NOT there (returns a promise)
   // totalPages = totalBooks(bookCount) / booksPerPage(10)
   // totalPages = Math.ceil(bookCount / 10)
   const totalPages = Math.ceil(bookCount / 10);
-  if (books.length === 0) {
-    throw new ApiError("No books found to list!", 400);
-  }
+  // if (books.length === 0) {
+  //   throw new ApiError("No books found to list!", 400);
+  // }
   const result = { Total_Pages: totalPages, Books: books };
   console.log("adding allBooks cache");
   await redisClient.set("allBooks", JSON.stringify(result));
@@ -68,9 +68,9 @@ const filterBooks = async (rest, skip, limit) => {
     .countDocuments()
     .exec();
   const filterTotalPages = Math.ceil(filteredBookCount / 10);
-  if (books.length === 0) {
-    throw new ApiError("No books found to list!", 400);
-  }
+  // if (books.length === 0) {
+  //   throw new ApiError("No books found to list!", 400);
+  // }
   const result = { Total_Pages: filterTotalPages, Books: books };
   await redisClient.set(cacheKey, JSON.stringify(result));
   return result;

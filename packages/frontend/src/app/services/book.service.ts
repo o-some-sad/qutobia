@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment.development';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { BookItem, BookResponse } from '../interfaces/book.interface';
 
 
@@ -11,8 +11,15 @@ import { BookItem, BookResponse } from '../interfaces/book.interface';
 export class BookService {
 
   constructor(private http: HttpClient) { }
-  getBooks(): Observable<BookItem[]>{
-    return this.http.get<BookResponse>(`${environment.base_url}/books`).pipe(map(res => res.Books));
+  getBooks(page = 1, filter:  object = {}): Observable<BookItem[]>{
+    return this.http.get<BookResponse>(`${environment.base_url}/books`, {
+      params: {
+        skip: (page - 1) * 10, limit: 10,
+        ...filter
+      }
+    }).pipe(
+      tap(console.log),
+      map(res => res.Books));
   }
 }
 // to extract data from the server-side
