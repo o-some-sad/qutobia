@@ -7,7 +7,6 @@ import {User} from '../../interfaces/user.interface';
 import {SharedService} from '../../services/shared.service';
 import { IconsModule } from '../../modules/icons/icons.module';
 import { CartService } from '../../services/cart.service';
-import { AuthService } from '../../services/auth.service';
 
 
 const THEMES = {
@@ -28,7 +27,7 @@ export class HeaderComponent implements OnInit {
   cartQuantity = 0;
   cartAmout = 0;
 
-  constructor(private authService: AuthService, private sharedService: SharedService, private cartService: CartService){
+  constructor(private authService: AuthService, private sharedService: SharedService, private cartService: CartService,private _Router:Router){
     this.applyTheme()    
     this.cartService.cart$.subscribe(cart=>{
       if(!cart)return
@@ -53,11 +52,9 @@ export class HeaderComponent implements OnInit {
   onSearchChange(search: string) {}
 
   currentTheme!: keyof typeof THEMES;
-  constructor(private _AuthService:AuthService,private _Router:Router){
-    this.applyTheme()
-  }
+ 
   logOut(){
-    this._AuthService.logout().subscribe({
+    this.authService.logout().subscribe({
     error:(err)=>console.error(err),
     complete:()=>this._Router.navigate(['/login'])
     
