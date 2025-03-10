@@ -1,1 +1,134 @@
-<p>profile works!</p>
+<div class="p-8 bg-base-200 min-h-screen">
+  <div class="max-w-2xl mx-auto bg-base-100 p-6 rounded-lg shadow-lg relative">
+    <div class="badge absolute top-0 right-0 rounded-none "
+     [ngClass]="{
+        'badge-neutral': user.role === 'admin',
+        'badge-info': user.role === 'user'
+     }">
+      {{ user.role }}
+    </div>
+
+    <div class="flex justify-center">
+      <div class="avatar">
+        <div class="w-24 rounded-full" (click)="openFileInput()">
+          @if (selectedImage || user.image) {
+            <img [src]="selectedImage || user.image" alt="User Avatar"/>
+          } @else {
+            <img
+              src="https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3383.jpg?w=900"
+              alt="User Avatar"/>
+          }
+        </div>
+      </div>
+    </div>
+
+    <input
+      type="file"
+      id="fileInput"
+      style="display: none"
+      (change)="onFileSelected($event)"
+      accept="image/*"
+    />
+
+    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-4">
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Name</span>
+        </label>
+        <input
+          type="text"
+          formControlName="name"
+          class="input input-bordered w-full"
+        />
+        @if (profileFormControls['name'].invalid && profileFormControls['name'].touched) {
+          @if (profileFormControls['name'].hasError('required')) {
+            <label class="label">
+              <span class="label-text-alt text-red-600">Name is required</span>
+            </label>
+          } @else if (profileFormControls['name'].hasError('minlength')) {
+            <label class="label">
+              <span class="label-text-alt text-red-600">Name must be at least 2 characters</span>
+            </label>
+          }
+        }
+      </div>
+
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">E-mail</span>
+        </label>
+        <input
+          type="email"
+          [value]="user.email"
+          class="input input-bordered w-full"
+          disabled
+        />
+      </div>
+
+      <div class="form-control mt-6">
+        <button type="submit" class="btn btn-success">Update Profile</button>
+      </div>
+    </form>
+
+    <!-- password -->
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="mt-8 space-y-4">
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">old password</span>
+        </label>
+        <input
+          type="password"
+          formControlName="oldPassword"
+          class="input input-bordered w-full"
+        />
+        @if (passwordFormControls['oldPassword'].invalid && passwordFormControls['oldPassword'].touched) {
+          <label class="label">
+            <span class="label-text-alt text-red-600">OldPassword is required</span>
+          </label>
+        }
+      </div>
+
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">new password</span>
+        </label>
+        <input
+          type="password"
+          formControlName="newPassword"
+          class="input input-bordered w-full"
+        />
+        @if (passwordFormControls['newPassword'].invalid && passwordFormControls['newPassword'].touched) {
+          @if (passwordFormControls['newPassword'].hasError('required')) {
+            <label class="label">
+              <span class="label-text-alt text-red-600">NewPassword is required</span>
+            </label>
+          } @else if (passwordFormControls['newPassword'].hasError('pattern')) {
+            <label class="label">
+              <span class="label-text-alt text-red-600">NewPassword is invalid.</span>
+            </label>
+          }
+        }
+      </div>
+
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">confirm password</span>
+        </label>
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          class="input input-bordered w-full"
+        />
+        @if (passwordForm.hasError('NewPasswordNoMatch') && passwordFormControls['newPassword'].touched) {
+          <label class="label">
+            <span class="label-text-alt text-red-600">Passwords don't match.</span>
+          </label>
+        }
+      </div>
+
+      <div class="form-control mt-6">
+        <button type="submit" class="btn btn-neutral">Change Password</button>
+      </div>
+    </form>
+  </div>
+</div>
