@@ -1,6 +1,6 @@
 <div class="flex justify-center mt-4">
   <div class="btn-group">
-    <button class="btn" (click)="goToPage(currPage - 1)" [disabled]="currPage === 1">prev</button>
+    <!-- <button class="btn" (click)="goToPage(currPage - 1)" [disabled]="currPage === 1">prev</button> -->
     @for (page of [].constructor(totalPages); track page; let i = $index) {
       <button
         class="btn"
@@ -10,6 +10,6 @@
         {{ i + 1 }}
       </button>
     }
-    <button class="btn" (click)="goToPage(currPage + 1)" [disabled]="currPage === totalPages">next</button>
+    <!-- <button class="btn" (click)="goToPage(currPage + 1)" [disabled]="currPage === totalPages">next</button> -->
   </div>
 </div>
