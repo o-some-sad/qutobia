@@ -35,7 +35,6 @@ export const orderValidator = z.object({
     )
     .nonempty("At least one book is required"),
   totalPrice: z.number().min(0, "Total price must be a positive number"),
-  status: z.enum(["pending", "completed", "canceled"]),
   status: z.enum(['Completed' , 'Processing' , 'Pending', 'Cancelled'])
 });
 
