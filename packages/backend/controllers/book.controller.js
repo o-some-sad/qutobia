@@ -52,11 +52,12 @@ const filterBooks = async (filters, page, limit) => {
 
   try {
     const count = await Book.countDocuments(filters);
-    const books = await Book.find(filters).sort({createdAt: -1}).skip((page - 1) * limit).limit(limit).exec();
+    const books = await Book.find(filters).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).exec();
+    // sort --> for the newest book to be at the beginning
     // skip logic to be handled in the client-side
-    return {totalPages: Math.ceil(count / limit), data: books};
+    return { totalPages: Math.ceil(count / limit), data: books };
   } catch (err) {
-    throw err;
+    throw new ApiError("No books found to list!", 400);
   }
 };
 
@@ -100,7 +101,7 @@ const updateBookImage = async (id, filePath) => {
       return updatedBook;
     }
   } catch (err) {
-    throw err;
+    throw new ApiError("Failed to update book image !", 400);
   }
 };
 

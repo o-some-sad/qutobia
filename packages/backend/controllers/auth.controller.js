@@ -52,13 +52,10 @@ export const handleRegister = async (body) => {
   const isEmailRegistered = await User.exists({ email: email });
   // const isUsernameRegistered = await User.exists({ name: name });
 
-  
   // CHECK if the username is taken
   if (name === undefined || email === undefined || password === undefined) {
     //TODO: use schema validator
-    const err = new Error("username, email and password are required");
-    err.status = 400;
-    throw err;
+    throw new ApiError("Username, email and password are required !");
   }
   // CHECK if the user's email is taken
   if (isEmailRegistered !== null) {
