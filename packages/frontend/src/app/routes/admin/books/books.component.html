@@ -1,7 +1,13 @@
 <ng-template #headerPortal>
   <label class="input input-sm">
-    <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></g></svg>
-    <input type="search" required placeholder="Search" [ngModel]="search | async" (ngModelChange)="search.next($event)" />
+    <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </g>
+    </svg>
+    <input type="search" required placeholder="Search" [ngModel]="search | async"
+      (ngModelChange)="search.next($event)" />
   </label>
   <button class="btn btn-sm btn-primary">New book</button>
 </ng-template>
@@ -52,7 +58,7 @@
         }@else {
         @for (book of books; track book._id) {
         <tr>
-          <th>{{$index + 1}}</th>
+          <th></th>
           <td>{{book.title}}</td>
           <td>{{ book.author.join(", ") }}</td>
           <td> {{book.stock}} </td>
@@ -65,12 +71,12 @@
           </td>
         </tr>
         }@empty {
-          <tr>
-            <td></td>
-            <td class="text-center p-5 text-3xl font-bold" colspan="5">
-              No books yet
-            </td>
-          </tr>
+        <tr>
+          <td></td>
+          <td class="text-center p-5 text-3xl font-bold" colspan="5">
+            Nothing to see here
+          </td>
+        </tr>
         }
         }
       </tbody>
@@ -89,5 +95,12 @@
       }
     </table>
   </div>
+ <div class="flex items-center justify-center">
+  <div class="join">
+    @for (page of _util_.range(totalPages); track $index) {
+    <input (change)="currentPage.next(page+1); loadBooks()" class="join-item btn btn-square" type="radio" name="pagination" [attr.aria-label]="page + 1" [checked]="(currentPage | async) === page+1" />
+    }
+  </div>
+ </div>
 </div>
 }
