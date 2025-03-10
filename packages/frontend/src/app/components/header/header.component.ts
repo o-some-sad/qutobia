@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {SearchComponent} from '../search/search.component';
 import { IconsModule } from '../../modules/icons/icons.module';
+import { AuthService } from '../../services/auth.service';
 
 const THEMES = {
   system: null,
@@ -21,10 +22,16 @@ export class HeaderComponent {
   onSearchChange(search: string) {}
 
   currentTheme!: keyof typeof THEMES;
-  constructor(){
-    this.applyTheme()    
+  constructor(private _AuthService:AuthService,private _Router:Router){
+    this.applyTheme()
   }
-
+  logOut(){
+    this._AuthService.logout().subscribe({
+    error:(err)=>console.error(err),
+    complete:()=>this._Router.navigate(['/login'])
+    
+    })
+  }
 
 
   setTheme(theme: keyof typeof THEMES){
@@ -41,4 +48,5 @@ export class HeaderComponent {
     if(THEMES[currentTheme as keyof typeof THEMES])document.documentElement.setAttribute("data-theme", THEMES[currentTheme as keyof typeof THEMES]!)
     else document.documentElement.removeAttribute("data-theme")
   }
+  
 }

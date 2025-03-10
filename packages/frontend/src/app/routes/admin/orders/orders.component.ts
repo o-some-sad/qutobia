@@ -44,9 +44,8 @@ export class OrdersComponent {
     this.editOrderId = orderId;
     this.editValue = currentStatus;
   }
-  updateOrder() {
-    console.log(this.editValue);
-    this._OrdersService.updateOrder({status:this.editValue}).subscribe({
+  updateOrder(id:string) {
+    this._OrdersService.updateOrder({status:this.editValue}, id).subscribe({
       next:(res)=>{
         console.log(res);
         this._OrdersService.getOrders().subscribe({

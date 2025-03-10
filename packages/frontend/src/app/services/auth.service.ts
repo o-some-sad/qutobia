@@ -13,12 +13,15 @@ export class AuthService {
   constructor(private http: HttpClient) { }
   login(user:UserLogin): Observable<User>{
     return this.
-    http.post<User>(`http://localhost:3000/api/auth/login`,user);
+    http.post<User>(`${environment.base_url}/auth/login`,user);
   }
   register(user:UserRegister):Observable<User>{
-    return this.http.post<User>(`http://localhost:3000/api/auth/register`,user);
+    return this.http.post<User>(`${environment.base_url}/auth/register`,user);
   }
   me(){
-    return this.http.get<User>(`http://localhost:3000/api/auth/me`);
+    return this.http.get<User>(`${environment.base_url}/auth/me`);
+  }
+  logout(){
+    return this.http.get(`${environment.base_url}/auth/logout`);
   }
 }
