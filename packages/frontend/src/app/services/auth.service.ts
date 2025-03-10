@@ -21,4 +21,7 @@ export class AuthService {
   me(){
     return this.http.get<User>(`${environment.base_url}/auth/me`);
   }
+  logout(){
+    return this.http.get(`${environment.base_url}/auth/logout`);
+  }
 }

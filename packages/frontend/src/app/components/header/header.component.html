@@ -70,8 +70,8 @@
           </ul>
         </div>
       </li>
-      <li><a>Logout</a></li>
-      } @else {
+      <li><a (click)="logOut()">Logout</a></li>
+    } @else {
       <li><a routerLink='/login'>Login/Register</a></li>
       }
     </ul>
