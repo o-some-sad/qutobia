@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {SearchComponent} from '../search/search.component';
 import {AuthService} from '../../services/auth.service';
 import {User} from '../../interfaces/user.interface';
 import {SharedService} from '../../services/shared.service';
 import { IconsModule } from '../../modules/icons/icons.module';
 import { CartService } from '../../services/cart.service';
+
 
 const THEMES = {
   system: null,
@@ -26,7 +27,7 @@ export class HeaderComponent implements OnInit {
   cartQuantity = 0;
   cartAmout = 0;
 
-  constructor(private authService: AuthService, private sharedService: SharedService, private cartService: CartService){
+  constructor(private authService: AuthService, private sharedService: SharedService, private cartService: CartService,private _Router:Router){
     this.applyTheme()    
     this.cartService.cart$.subscribe(cart=>{
       if(!cart)return
@@ -51,6 +52,16 @@ export class HeaderComponent implements OnInit {
   onSearchChange(search: string) {}
 
   currentTheme!: keyof typeof THEMES;
+ 
+  logOut(){
+    this.authService.logout().subscribe({
+    error:(err)=>console.error(err),
+    complete:()=>this._Router.navigate(['/login'])
+    
+    })
+  }
+
+
   setTheme(theme: keyof typeof THEMES){
     window.localStorage.setItem("theme", theme)
     this.applyTheme()
@@ -63,4 +74,5 @@ export class HeaderComponent implements OnInit {
     if(THEMES[currentTheme as keyof typeof THEMES])document.documentElement.setAttribute("data-theme", THEMES[currentTheme as keyof typeof THEMES]!)
     else document.documentElement.removeAttribute("data-theme")
   }
+  
 }
