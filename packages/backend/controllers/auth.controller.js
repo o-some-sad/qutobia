@@ -50,30 +50,16 @@ export const handleRegister = async (body) => {
   // CHECK if ALL fields are full
   const { email, name, password } = body;
   const isEmailRegistered = await User.exists({ email: email });
-  const isUsernameRegistered = await User.exists({ name: name });
-  //TODO: don't check if username already exist (just use it as human name)
-  //TODO: figure out how to check if email is a valid email
+  // const isUsernameRegistered = await User.exists({ name: name });
+
   // CHECK if the username is taken
   if (name === undefined || email === undefined || password === undefined) {
     //TODO: use schema validator
-    const err = new Error("username, email and password are required");
-    err.status = 400;
-    throw err;
-  }
-  if (isUsernameRegistered !== null) {
-    const err = new Error(
-      "This username is already taken. Please choose a different one."
-    );
-    err.status = 400;
-    throw err;
+    throw new ApiError("Username, email and password are required !");
   }
   // CHECK if the user's email is taken
   if (isEmailRegistered !== null) {
-    const err = new Error(
-      "This email is already in use. Please use a different email or log in."
-    );
-    err.status = 400;
-    throw err;
+    throw new ApiError("This email is already in use. Please use a different email or log in.");
   }
   if (process.env.ENVIORNMENT === "production") {
     const isEmailValid = await validateEmail(email);

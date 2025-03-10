@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment.development';
-import { Observable, map, tap } from 'rxjs';
-import { BookItem, BookResponse } from '../interfaces/book.interface';
+import { Observable, map } from 'rxjs';
+import { BookItem, BooksResponse } from '../interfaces/book.interface';
 
 
 @Injectable({
@@ -11,15 +11,12 @@ import { BookItem, BookResponse } from '../interfaces/book.interface';
 export class BookService {
 
   constructor(private http: HttpClient) { }
-  getBooks(page = 1, filter:  object = {}): Observable<BookItem[]>{
-    return this.http.get<BookResponse>(`${environment.base_url}/books`, {
-      params: {
-        skip: (page - 1) * 10, limit: 10,
-        ...filter
-      }
-    }).pipe(
-      tap(console.log),
-      map(res => res.Books));
+  getBooks(page: number, limit: number, search: string): Observable<BooksResponse>{
+    let url = `${environment.base_url}/books?page=${page}&limit=${limit}`;
+    if(search) url+=`&title=${search}`; // to filter books according to the title the user inputs
+    return this.http.get<BooksResponse>(url).pipe(map(res => ({
+      totalPages: res.totalPages, data: res.data
+    })));
   }
 }
 // to extract data from the server-side

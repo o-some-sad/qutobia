@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-book-card',
@@ -9,4 +10,8 @@ import { CommonModule } from '@angular/common';
 })
 export class BookCardComponent {
   @Input() BookItem : any;
+
+  // constructor(private cartService : CartService) {
+    
+  // }
 }
