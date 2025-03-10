@@ -1,0 +1,32 @@
+<!-- <div class="book-card">
+  <h3>{{ BookItem.title }}</h3>
+  <p>Author: {{ BookItem.author.join(', ') }}</p>
+  <p>Price: ${{ BookItem.price }}</p>
+  <p>{{ BookItem.description }}</p>
+  <p>Stock: {{ BookItem.stock }}</p>
+  <img [src]="BookItem.image" alt="{{ BookItem.title }}">
+</div> -->
+
+<div id="card">
+  <!-- <div id="classStyling" [ngClass]="BookItem.stock < 20 ? 'outOfStock': 'inStock'">{{ BookItem.stock }}</div> -->
+  <figure>
+    <div class="imgBorder"><img [src]="BookItem.image" alt="{{ BookItem.title }}"></div>
+  </figure>
+  <div class="card-details">
+  <span class="card-title">
+    {{ BookItem.title }}
+    <!-- <div class="badge badge-secondary">NEW</div> -->
+  </span>
+    <!-- <p>Author: {{ BookItem.author.join(', ') }}</p> -->
+    <h5>{{ BookItem.description }}</h5>
+    <div class="price">${{ BookItem.price }}</div>
+    <button id="cartBtn" class="btn btn-neutral">Add to Cart</button>
+    <!-- (click)="{{this.cartService.addBook('book')}} -->
+    <!-- <p>Stock: {{ BookItem.stock }}</p> -->
+
+    <!-- <span id="Plus" class="badge badge-outline badge-neutral">Plus</span> -->
+    <!-- <div class="card-actions justify-end">
+      <div class="badge badge-outline">Plus</div>
+    </div> -->
+  </div>
+</div><br>

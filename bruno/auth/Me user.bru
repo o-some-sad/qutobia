@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: 
-  body: none
+  url: {{KOTOBIA_URL}}/api/auth/me
+  body: json
   auth: none
+}
+
+headers {
+  ~Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M3YmJhYmU5ZjlkZmNiYjUwN2YxM2MiLCJlbWFpbCI6Im1vaHNlbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDEzMjYxMzAsImV4cCI6MTc0MTMyOTczMH0.mVErv2-MxtQb3GgvAzwAme97Qgq4XY5SL-5DjTJSsFY
 }

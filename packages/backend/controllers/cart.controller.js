@@ -72,15 +72,13 @@ export const removeCartItem = async (book, user, quantity = 1, completely = fals
 /**
  * 
  * @param {string} user 
- * @param {z.infer<typeof CartPropsValidator>} props
  */
-export const getByUserId = async (user, props = ["price", "title"]) => {
-
-
+export const getByUserId = async (user) => {
+    const fields = ["title", "price", "author", "image", "stock"]
     const cart = await Cart.findOne({
         user
-    }).populate("books.book", props.join(" "))
-    // .then(cart=>CartPopulatedValidator.parse(cart || { user }))    
+    }).populate("books.book", fields.join(" "))
+    .then(cart=>CartPopulatedValidator.parse(cart || { user }))    
     return cart
 }
 

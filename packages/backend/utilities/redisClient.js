@@ -1,5 +1,6 @@
 import redis from "redis";
 import dotenv from "dotenv";
+import Book from "../models/book.model.js";
 
 dotenv.config();
 
@@ -15,5 +16,16 @@ const redisClient = redis.createClient({
 redisClient.on("error", (err) => console.error("Redis Error:", err));
 
 await redisClient.connect();
+
+(async () => {
+  const books = await Book.find({ deletedAt: null }).exec();
+  const bookCount = await Book.find({ deletedAt: null })
+    .countDocuments()
+    .exec();
+  const totalPages = Math.ceil(bookCount / 10);
+  const allBooks = { Total_Pages: totalPages, Books: books };
+  redisClient.set("allBooks", JSON.stringify(allBooks));
+})();
+
 console.log("redis up and running");
 export default redisClient;

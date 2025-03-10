@@ -1,8 +1,13 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {SearchComponent} from '../search/search.component';
+import {AuthService} from '../../services/auth.service';
+import {User} from '../../interfaces/user.interface';
+import {SharedService} from '../../services/shared.service';
 import { IconsModule } from '../../modules/icons/icons.module';
+import { CartService } from '../../services/cart.service';
+
 
 const THEMES = {
   system: null,
@@ -17,14 +22,44 @@ const THEMES = {
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+  user: User | null = null;
+  cartQuantity = 0;
+  cartAmout = 0;
+
+  constructor(private authService: AuthService, private sharedService: SharedService, private cartService: CartService,private _Router:Router){
+    this.applyTheme()    
+    this.cartService.cart$.subscribe(cart=>{
+      if(!cart)return
+      this.cartQuantity = cart.books.reduce((total, item)=>item.quantity + total, 0)
+      this.cartAmout = cart.books.reduce((total, item)=>(item.quantity*item.book.price)+total, 0)
+    })
+  }
+  ngOnInit(): void {
+    this.authService.me().subscribe({
+      next: (res) => {
+        this.user = res;
+        this.cartService.fetchCart()
+      },
+      error: (_) => {
+        this.user = null;
+      }
+    });
+    this.sharedService.userImage$.subscribe(imageUrl=>{
+      if(this.user && imageUrl) this.user.image = imageUrl;
+    });
+  }
   onSearchChange(search: string) {}
 
   currentTheme!: keyof typeof THEMES;
-  constructor(){
-    this.applyTheme()    
+ 
+  logOut(){
+    this.authService.logout().subscribe({
+    error:(err)=>console.error(err),
+    complete:()=>this._Router.navigate(['/login'])
+    
+    })
   }
-
 
 
   setTheme(theme: keyof typeof THEMES){
@@ -32,8 +67,6 @@ export class HeaderComponent {
     this.applyTheme()
   }
   
-  
-
   private applyTheme(){
     let currentTheme = localStorage.getItem("theme") || "system"
     if(!(currentTheme in THEMES))currentTheme = "system";
@@ -41,4 +74,5 @@ export class HeaderComponent {
     if(THEMES[currentTheme as keyof typeof THEMES])document.documentElement.setAttribute("data-theme", THEMES[currentTheme as keyof typeof THEMES]!)
     else document.documentElement.removeAttribute("data-theme")
   }
+  
 }

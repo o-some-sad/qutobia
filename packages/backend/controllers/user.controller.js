@@ -13,6 +13,8 @@ export const getAllUsers = async (filters, page, limit) => {
 
 export const updateUser = async (id, userData) => {
   try {
+    delete userData.image;
+    delete userData.email;
     delete userData.password;
     await userValidator.partial().parseAsync(userData);
     return await User.findByIdAndUpdate(id, userData, {new: true});

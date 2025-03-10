@@ -1,1 +1,107 @@
-<p>profile works!</p>
+<div class="p-8 bg-base-200 min-h-screen">
+  <div class="max-w-2xl mx-auto bg-base-100 p-6 rounded-lg shadow-lg relative">
+    <div
+      class="badge absolute top-0 right-0 rounded-none"
+      [ngClass]="{
+        'badge-neutral': user.role === 'admin',
+        'badge-info': user.role === 'user'
+      }"
+    >
+      {{ user.role }}
+    </div>
+
+    <div class="flex items-center space-x-6">
+      <div class="avatar relative">
+        <div class="w-50 rounded-full overflow-hidden cursor-pointer" (click)="openFileInput()">
+          @if (selectedImage || user.image) {
+            <img [src]="selectedImage || user.image" alt="User Avatar" class="w-full h-full object-cover" />
+          } @else {
+            <img
+              src="https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3383.jpg?w=900"
+              alt="User Avatar"
+              class="w-full h-full object-cover" />
+          }
+          <!-- Overlay camera icon -->
+          <div class="absolute inset-0 flex items-center justify-center bg-info rounded-full opacity-0 hover:opacity-30 transition-opacity duration-200">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="flex-1 space-y-4">
+        <app-user-input
+          [control]="profileFormControls['name']"
+          label="Name"
+          type="text"
+          placeholder="Enter user name"
+        ></app-user-input>
+
+        <app-user-input
+          [control]="profileFormControls['email']"
+          label="E-mail"
+          type="text"
+          placeholder="Enter user email"
+        ></app-user-input>
+
+        <div class="form-control mt-6">
+          <button type="submit" class="btn btn-success">Update Profile</button>
+        </div>
+      </form>
+    </div>
+
+    <input
+      type="file"
+      id="fileInput"
+      style="display: none"
+      (change)="onFileSelected($event)"
+      accept="image/*"
+    />
+
+    <!-- password -->
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="mt-8 space-y-4">
+      <app-user-input
+        [control]="passwordFormControls['currentPassword']"
+        label="CurrentPassword"
+        type="password"
+        placeholder="Enter current password"
+      ></app-user-input>
+
+      <app-user-input
+        [control]="passwordFormControls['newPassword']"
+        label="NewPassword"
+        type="password"
+        placeholder="Enter new password"
+      ></app-user-input>
+
+      <app-user-input
+        [control]="passwordFormControls['confirmPassword']"
+        label="ConfirmPassword"
+        type="password"
+        placeholder="Enter confirm password"
+      ></app-user-input>
+
+      <div class="form-control mt-6">
+        <button type="submit" class="btn btn-neutral">Change Password</button>
+      </div>
+    </form>
+  </div>
+</div>
