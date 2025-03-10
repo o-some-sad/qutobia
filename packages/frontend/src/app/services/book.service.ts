@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment.development';
 import { Observable, map } from 'rxjs';
-import { BookItem, BooksResponse } from '../interfaces/book.interface';
+import {BookItem, BookResponse, BooksResponse} from '../interfaces/book.interface';
 
 
 @Injectable({
@@ -17,6 +17,18 @@ export class BookService {
     return this.http.get<BooksResponse>(url).pipe(map(res => ({
       totalPages: res.totalPages, data: res.data
     })));
+  }
+  addBook(formData: FormData): Observable<BookResponse> {
+    return this.http.post<BookResponse>(`${environment.base_url}/books`, formData);
+  }
+  updateBook(book: BookItem): Observable<BookResponse> {
+    return this.http.patch<BookResponse>(`${environment.base_url}/books/${book._id}`, book);
+  }
+  uploadImage(bookId: string, image: FormData): Observable<BookResponse> {
+    return this.http.patch<BookResponse>(`${environment.base_url}/books/${bookId}/image`, image);
+  }
+  deleteBook(bookId: string): Observable<BookResponse> {
+    return this.http.delete<BookResponse>(`${environment.base_url}/books/${bookId}`);
   }
 }
 // to extract data from the server-side

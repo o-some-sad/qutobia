@@ -1,5 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import {User} from '../../interfaces/user.interface';
 import {confirmPasswordValidator} from '../../validations/confirm-password.validator';
 import {UserService} from '../../services/user.service';
@@ -7,13 +14,15 @@ import {toast} from 'ngx-sonner';
 import {AuthService} from '../../services/auth.service';
 import {NgClass} from '@angular/common';
 import {SharedService} from '../../services/shared.service';
+import {UserInputComponent} from '../../components/user-input/user-input.component';
 
 @Component({
   selector: 'app-profile',
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    NgClass
+    NgClass,
+    UserInputComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -35,9 +44,12 @@ export class ProfileComponent implements OnInit {
   ) {
     this.profileForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]]
     });
+    this.profileFormControls['email'].disable();
+
     this.passwordForm = this.fb.group({
-      oldPassword: ['', Validators.required],
+      currentPassword: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]],
       confirmPassword: ['', Validators.required],
     }, { validators: confirmPasswordValidator });
@@ -47,15 +59,15 @@ export class ProfileComponent implements OnInit {
       this.user = res;
       this.originalName = this.user.name;
       this.originalImage = this.user.image;
-      this.profileForm.patchValue({name: this.user.name});
+      this.profileForm.patchValue({name: this.user.name, email: this.user.email});
     });
   }
 
-  get profileFormControls():{ [key: string]: AbstractControl } {
-    return this.profileForm.controls;
+  get profileFormControls():{ [key: string]: FormControl } {
+    return this.profileForm.controls as { [key: string]: FormControl };
   }
-  get passwordFormControls():{ [key: string]: AbstractControl } {
-    return this.passwordForm.controls;
+  get passwordFormControls():{ [key: string]: FormControl } {
+    return this.passwordForm.controls as { [key: string]: FormControl };
   }
 
   updateProfile() {

@@ -50,3 +50,4 @@ export const userLoginValidator = z.object({
 export * from "./cart.validator.js";
 export * from "./error.validator.js";
 export * from "./review.validator.js";
+export * from './book.validator.js'

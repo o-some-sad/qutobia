@@ -1,11 +1,13 @@
 <div class="drawer">
   <input id="drawer" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content">
-    <div class="border-b border-base-300 shadow-sm p-3">
-      <label for="drawer" class="btn btn-sm btn-outline btn-primary">
+    <div class="border-b border-base-300 shadow-sm p-3 flex items-center gap-3">
+      <label tabindex="0" for="drawer" class="btn btn-sm btn-outline btn-primary">
         <i-feather name="menu"></i-feather>
       </label>
-
+      @if(headerService.portal | async; as portal){
+        <ng-container *ngTemplateOutlet="portal"></ng-container>
+      }
     </div>
     <router-outlet />
   </div>

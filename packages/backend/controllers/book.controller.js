@@ -1,6 +1,7 @@
 import Book from "../models/book.model.js";
 import ApiError from "../utilities/ApiErrors.js";
 import redisClient from "../utilities/redisClient.js";
+import User from "../models/user.model.js";
 
 const addBook = async (formData) => {
   try {
@@ -155,6 +156,18 @@ const updateBookDetails = async (id, rest) => {
   return { message: "Book updated successfully!", bookUpdated };
 };
 
+/********************************************************************************/
+const getAllBooks = async (filters, page, limit) => {
+  try {
+    const count = await User.countDocuments(filters);
+    const books = await Book.find(filters).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).exec();
+    console.log(count)
+    return { totalPages: Math.ceil(count / limit), data: books};
+  } catch (err) {
+    throw err;
+  }
+};
+
 export {
   addBook,
   updateBookImage,
@@ -162,4 +175,5 @@ export {
   getBookByid,
   deleteBook,
   updateBookDetails,
+  getAllBooks
 };
