@@ -9,8 +9,9 @@
     <input type="search" required placeholder="Search" [ngModel]="search | async"
       (ngModelChange)="search.next($event)" />
   </label>
-  <button class="btn btn-sm btn-primary">New book</button>
+  <button class="btn btn-sm btn-primary" (click)="openBookForm('add', null)">New book</button>
 </ng-template>
+<app-book-dialog (bookAdded)="onBookAdded()" (bookUpdated)="onBookUpdated()"></app-book-dialog>
 
 @if(error){
 <div>
@@ -56,18 +57,18 @@
         </tr>
         }
         }@else {
-        @for (book of books; track book._id) {
+        @for (book of books; track book!._id) {
         <tr>
           <th></th>
           <td>{{book.title}}</td>
-          <td>{{ book.author.join(", ") }}</td>
-          <td> {{book.stock}} </td>
+          <td>{{ book!.author.join(", ") }}</td>
+          <td> {{book!.stock}} </td>
           <td>
-            {{book.price | currency}}
+            {{book!.price | currency}}
           </td>
           <td class="flex gap-1 flex-wrap">
-            <button class="btn btn-sm btn-primary">Edit</button>
-            <button class="btn btn-sm btn-error">Delete</button>
+            <button class="btn btn-sm btn-primary" (click)="openBookForm('edit', book)">Edit</button>
+            <button class="btn btn-sm btn-error" (click)="deleteBook(book!._id)">Delete</button>
           </td>
         </tr>
         }@empty {
