@@ -55,6 +55,7 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
   totalPages: number = 0;
   loading = false;
   error: Error | null = null;
+  lastBooksCount = 3; //? for preventing layout shifting between pagination
 
   onBookAdded(): void {
     this.currentPage.next(1);
@@ -108,6 +109,7 @@ export class BooksComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe({
         next: (result) => {
           this.totalPages = result.totalPages;
+          this.lastBooksCount = result.data.length || 3
           this.books = result.data;
           this.loading = false;
         },

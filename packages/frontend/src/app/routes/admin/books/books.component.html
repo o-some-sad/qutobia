@@ -33,7 +33,7 @@
       </thead>
       <tbody>
         @if(loading){
-        @for (dummy of _util_.range(3); track $index) {
+        @for (dummy of _util_.range(lastBooksCount); track $index) {
         <tr>
           <th>
             <div class="skeleton w-4 h-4"></div>
