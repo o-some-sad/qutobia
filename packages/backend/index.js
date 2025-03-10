@@ -8,6 +8,7 @@ import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
 import { corsOptions } from "./utilities/corsOptions.js";
 import redisClient from "./utilities/redisClient.js";
 import cookieParser from "cookie-parser";
+import './utilities/logger.js'
 
 dotenv.config();
 const app = express();

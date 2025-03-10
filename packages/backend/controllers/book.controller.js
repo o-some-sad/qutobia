@@ -85,13 +85,13 @@ const updateBookImage = async (id, filePath) => {
       { new: true }
     );
     console.log("updating the individual book cache");
-    await redisClient.set(`book:${id}`, JSON.stringify(bookUpdated));
+    await redisClient.set(`book:${id}`, JSON.stringify(updatedBook));
     const allBooks = await redisClient.get("allBooks");
     if (allBooks) {
       let allBooksParsed = JSON.parse(allBooks);
       allBooksParsed.Books = allBooksParsed.Books.map((book) => {
         if (book._id === id) {
-          return bookUpdated;
+          return updatedBook;
         }
         return book;
       });
