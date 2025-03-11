@@ -1,4 +1,4 @@
-import {userPasswordValidator, userValidator} from 'shared';
+import {userPasswordValidator, updateUserValidator} from 'shared';
 import User from "../models/user.model.js";
 
 export const getAllUsers = async (filters, page, limit) => {
@@ -11,7 +11,7 @@ export const updateUser = async (id, userData) => {
   delete userData.image;
   delete userData.email;
   delete userData.password;
-  await userValidator.partial().parseAsync(userData);
+  await updateUserValidator.parseAsync(userData);
   return await User.findByIdAndUpdate(id, userData, {new: true});
 };
 

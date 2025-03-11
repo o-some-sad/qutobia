@@ -16,4 +16,7 @@ export class OrdersService {
    
     return this._HttpClient.patch(`${environment.base_url}/orders/${id}`,updateBody)
   }
+  getUserOrder(id:string|undefined){
+    return this._HttpClient.get(`${environment.base_url}/orders/${id}`)
+  }
 }

@@ -22,7 +22,7 @@
           {{ label }} must be at least 2 characters.
         } @else if (control.hasError('pattern')) {
           {{ label }} is invalid.
-        } @if (control.hasError('NewPasswordNoMatch')) {
+        } @else if (control.hasError('NewPasswordNoMatch')) {
           {{ label }} don't match.
         }
       </span>

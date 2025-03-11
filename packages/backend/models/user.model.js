@@ -31,6 +31,13 @@ export const userSchema = new mongoose.Schema({
     default: null,
     trim: true
   },
+  contact: {
+    type: {
+      address: String,
+      phone: String
+    },
+    default: null,
+  },
   verified: {
     type: Boolean,
     default: true
@@ -55,7 +62,7 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 userSchema.set('toJSON', {
-  transform: (doc, {_id, name, email, role, image}) => ({_id, name, email, role, image})
+  transform: (doc, {_id, name, email, role, image, contact}) => ({_id, name, email, role, image, contact})
 });
 
 const User = mongoose.model('User', userSchema);

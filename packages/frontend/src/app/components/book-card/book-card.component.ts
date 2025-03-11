@@ -11,7 +11,12 @@ import { CartService } from '../../services/cart.service';
 export class BookCardComponent {
   @Input() BookItem : any;
 
-  // constructor(private cartService : CartService) {
+  constructor(private cartService : CartService) {
     
-  // }
+  }
+
+  addToCart(book: string){
+    console.log("Pressed: ", book);
+    this.cartService.addBook(book);
+  }
 }
