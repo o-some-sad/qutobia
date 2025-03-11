@@ -20,8 +20,7 @@
     <!-- <p>Author: {{ BookItem.author.join(', ') }}</p> -->
     <h5>{{ BookItem.description }}</h5>
     <div class="price">${{ BookItem.price }}</div>
-    <button id="cartBtn" class="btn btn-neutral">Add to Cart</button>
-    <!-- (click)="{{this.cartService.addBook('book')}} -->
+    <button id="cartBtn" class="btn btn-neutral" (click)="addToCart(BookItem._id)">Add to Cart</button>
     <!-- <p>Stock: {{ BookItem.stock }}</p> -->
 
     <!-- <span id="Plus" class="badge badge-outline badge-neutral">Plus</span> -->
