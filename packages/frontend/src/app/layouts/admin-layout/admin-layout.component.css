@@ -1,0 +1,3 @@
+.drawer:has(#drawer[checked]){
+    background: red !important;
+ }

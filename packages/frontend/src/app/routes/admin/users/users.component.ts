@@ -1,13 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {User} from '../../../interfaces/user.interface';
 import {UserService} from '../../../services/user.service';
 import {FormsModule} from '@angular/forms';
-import {NgClass} from '@angular/common';
+import {CommonModule, NgClass} from '@angular/common';
 import { toast } from 'ngx-sonner';
 import {SearchComponent} from '../../../components/search/search.component';
 import {RadioButtonComponent} from '../../../components/radio-button/radio-button.component';
 import {PaginationComponent} from '../../../components/pagination/pagination.component';
 import {SharedService} from '../../../services/shared.service';
+import { HeaderService } from '../../../services/header.service';
 
 @Component({
   selector: 'app-users',
@@ -16,24 +17,31 @@ import {SharedService} from '../../../services/shared.service';
     NgClass,
     SearchComponent,
     RadioButtonComponent,
-    PaginationComponent
+    PaginationComponent,
+    CommonModule,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, AfterViewInit {
   data: User[];
   currPage: number = 1;
   totalPages: number = 1;
   searchValue: string = '';
   selectedRole: string = 'all';
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private headerService: HeaderService) {
     this.data = [];
   }
   ngOnInit(): void {
     this.loadUsers(this.currPage);
   }
+
+  @ViewChild('headerPortal') portal!: TemplateRef<any>;
+  ngAfterViewInit(): void {
+    this.headerService.setPortal(this.portal)
+  }
+
   goToPage(page: number) {
     this.currPage = page;
     this.loadUsers(page);

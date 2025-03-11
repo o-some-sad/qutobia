@@ -22,7 +22,7 @@ export class AdminLayoutComponent {
         .subscribe(event => {
           const drawer = this.elementRef.nativeElement.querySelector("input[type=checkbox]#drawer") as HTMLInputElement | null;
           if (!drawer) return;
-          drawer.checked = false
+          // drawer.checked = false
         })
     }
   

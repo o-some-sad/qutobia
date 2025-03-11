@@ -29,7 +29,6 @@ import { ActivatedRoute, Router } from '@angular/router';
     CurrencyPipe,
     FormsModule,
     CommonModule,
-    FormsModule,
     BookDialogComponent,
   ],
   templateUrl: './books.component.html',
