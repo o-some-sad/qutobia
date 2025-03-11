@@ -130,9 +130,9 @@ for await (const review of reviews) {
   await Review.create(review)
 }
 
-const carts = [];
+// const carts = [];
 
-const orders = [];
+// const orders = [];
 
 
 await mongoose.disconnect()

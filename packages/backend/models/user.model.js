@@ -2,7 +2,7 @@ import process from 'node:process';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
-const userSchema = new mongoose.Schema({
+export const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -30,6 +30,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
     trim: true
+  },
+  contact: {
+    type: {
+      address: String,
+      phone: String
+    },
+    default: null,
+  },
+  verified: {
+    type: Boolean,
+    default: true
   }
 }, {timestamps: true});
 
@@ -51,7 +62,7 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 userSchema.set('toJSON', {
-  transform: (doc, {_id, name, email, role, image}) => ({_id, name, email, role, image})
+  transform: (doc, {_id, name, email, role, image, contact}) => ({_id, name, email, role, image, contact})
 });
 
 const User = mongoose.model('User', userSchema);

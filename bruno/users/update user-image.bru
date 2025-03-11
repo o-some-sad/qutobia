@@ -1,11 +1,11 @@
 meta {
   name: update user-image
   type: http
-  seq: 3
+  seq: 4
 }
 
 patch {
-  url: {{KOTOBIA_URL}}/api/users/67c37f6e28c3ce898b0bfb0d/image
+  url: {{KOTOBIA_URL}}/api/users/67c7bbabe9f9dfcbb507f13c/image
   body: multipartForm
   auth: none
 }
@@ -15,5 +15,5 @@ body:form-urlencoded {
 }
 
 body:multipart-form {
-  image: @file(C:\Users\Azaki\Pictures\Screenshots\Screenshot 2025-02-28 173551.png)
+  image: @file(D:\WhatsApp Image 2024-12-13 at 7.02.11 PM.jpeg)
 }

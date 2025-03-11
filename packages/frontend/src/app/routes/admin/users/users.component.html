@@ -1,0 +1,92 @@
+<div class="container mx-auto p-4" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+     xmlns="http://www.w3.org/1999/html">
+
+  <h1 class="text-2xl font-bold">User List</h1>
+  <div class="flex items-center justify-between mb-4">
+    <app-search (searchChange)="onSearchChange($event)"></app-search>
+
+    <div class="flex items-center gap-4">
+      <app-radio-button
+        name="role"
+        value="all"
+        label="All"
+        [selectedValue]="selectedRole"
+        (selectedValueChange)="onValueChange($event)"
+      ></app-radio-button>
+
+      <app-radio-button
+        name="role"
+        value="admin"
+        label="Admin"
+        [selectedValue]="selectedRole"
+        (selectedValueChange)="onValueChange($event)"
+      ></app-radio-button>
+
+      <app-radio-button
+        name="role"
+        value="user"
+        label="User"
+        [selectedValue]="selectedRole"
+        (selectedValueChange)="onValueChange($event)"
+      ></app-radio-button>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>E-mail</th>
+        <th>Role</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (user of data; track user._id) {
+          <tr>
+            <td>
+              @if (user.image) {
+                <div class="avatar">
+                  <div class="w-13 rounded-full">
+                    <img [src]="user.image" alt="User Image"/>
+                  </div>
+                </div>
+              } @else {
+                <div class="avatar">
+                  <div class="w-13 rounded-full">
+                    <img
+                      src="https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3383.jpg?w=900"
+                      alt="User Image"/>
+                  </div>
+                </div>
+              }
+            </td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <label class="flex cursor-pointer gap-2">
+                <span class="label-text">Admin</span>
+                <input
+                  type="checkbox"
+                  class="toggle theme-controller"
+                  [checked]="user.role !== 'admin'"
+                  (change)="changeRole(user)"
+                  [ngClass]="{ 'bg-warning': user.role === 'admin' }"
+                />
+                <span class="label-text">User</span>
+              </label>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <app-pagination
+    [currPage]="currPage"
+    [totalPages]="totalPages"
+    (pageChange)="goToPage($event)"
+  ></app-pagination>
+</div>

@@ -4,13 +4,15 @@ import express from "express";
 import mongoose from "mongoose";
 import appRouter from "./routes/index.js";
 import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
+import redisClient from "./utilities/redisClient.js";
+import cookieParser from "cookie-parser";
+import './utilities/logger.js'
 import path from "node:path";
 
 dotenv.config({
   path: path.join(cwd(), ".env"),
 });
 const app = express();
-
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URL);
@@ -32,6 +34,7 @@ const public_dir = path.join(cwd(), "_PUBLIC_");
 app.use(express.static(public_dir));
 
 app.use(express.json());
+app.use(cookieParser());
 app.use("/api", appRouter);
 app.use(handleErrorMiddleware);
 

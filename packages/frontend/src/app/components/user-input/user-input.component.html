@@ -1,0 +1,31 @@
+<div class="form-control">
+  <label class="label">
+    <span class="label-text">{{ label }}</span>
+  </label>
+  <input
+    [type]="type"
+    [formControl]="control"
+    [placeholder]="placeholder"
+    class="input input-bordered w-full"
+  />
+
+  @if (control.invalid && control.touched) {
+    <label class="label">
+      <span class="label-text-alt text-red-600">
+        @if (control.hasError('required')) {
+          {{ label }} is required.
+        } @else if (control.hasError('integer')) {
+          {{ label }} must be an integer.
+        } @else if (control.hasError('positiveNumber')) {
+          {{ label }} must be a positive number.
+        } @else if (control.hasError('minlength')) {
+          {{ label }} must be at least 2 characters.
+        } @else if (control.hasError('pattern')) {
+          {{ label }} is invalid.
+        } @else if (control.hasError('NewPasswordNoMatch')) {
+          {{ label }} don't match.
+        }
+      </span>
+    </label>
+  }
+</div>

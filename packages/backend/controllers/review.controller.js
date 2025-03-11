@@ -1,8 +1,9 @@
 //@ts-check
 import Review from "../models/review.model.js";
-
-export const addReview = async (reviewData) => {
+import ApiError from "../utilities/ApiErrors.js";
+export const addReview = async (userId, reviewData) => {
   const reviewDataObj = { ...reviewData };
+  reviewDataObj.user = userId;
   //validate the object before adding it, not needed so far
   const review = await Review.create(reviewDataObj);
   return review;
@@ -14,9 +15,7 @@ export const getAllReviewsByBookId = async (bookId) => {
     .populate("book", "title")
     .exec();
   if (reviews.length === 0) {
-    const err = new Error("review not found");
-    err.status = 404;
-    throw err;
+    throw new ApiError("review not found", 404);
   }
   return reviews;
 };
@@ -33,9 +32,7 @@ export const updateReviewById = async (reviewId, updatedFields) => {
     }
   );
   if (!updatedReview) {
-    const err = new Error("review doesn't exist");
-    err.status = 404;
-    throw err;
+    throw new ApiError("review doesn't exist", 404);
   }
   return updatedReview;
 };
@@ -44,8 +41,6 @@ export const deleteReviewById = async (reviewId) => {
   //authorization needed
   const deleted = await Review.deleteOne({ _id: reviewId });
   if (deleted.deletedCount === 0) {
-    const err = new Error("review not found");
-    err.status = 404;
-    throw err;
+    throw new ApiError("review not found", 404);
   }
 };

@@ -1,0 +1,4 @@
+@import "tailwindcss";
+:host{
+    @apply flex flex-1 flex-col md:flex-row container mx-auto;
+}

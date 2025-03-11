@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import User from "../models/user.model.js";
+import Order from "../models/order.model.js";
+import Book from "../models/book.model.js";
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -8,7 +11,7 @@ const reviewSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator: async function (value) {
-          const user = await mongoose.model("User").findById(value);
+          const user = await User.findById(value);
           if (user === null) return false;
           return true;
         },
@@ -21,7 +24,7 @@ const reviewSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator: async function (value) {
-          const book = await mongoose.model("Book").findById(value);
+          const book = await Book.findById(value);
           if (book === null) return false;
           return true;
         },
@@ -32,7 +35,7 @@ const reviewSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: [1, "rating can't be lower than 1"],
-      max: [10, "rating can't be higher than 10"],
+      max: [5, "rating can't be higher than 5"],
     },
     review: {
       type: String,
@@ -45,7 +48,7 @@ const reviewSchema = new mongoose.Schema(
 );
 
 reviewSchema.pre("save", async function (next) {
-  const existingReview = await mongoose.model("Review").findOne({
+  const existingReview = await Review.findOne({
     user: this.user,
     book: this.book,
   });
@@ -56,5 +59,18 @@ reviewSchema.pre("save", async function (next) {
 
   next();
 });
+
+reviewSchema.pre("save", async function (next) {
+  const ownBook = await Order.findOne({
+    user: this.user,
+    "books.book": this.book,
+    status: "completed",
+  });
+  if (!ownBook) {
+    return next(new Error("User doesn't own the book to review it"));
+  }
+  next();
+});
+
 const Review = mongoose.model("Review", reviewSchema);
 export default Review;

@@ -1,30 +1,65 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { SearchComponent } from '../search/search.component';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../interfaces/user.interface';
+import { SharedService } from '../../services/shared.service';
+import { IconsModule } from '../../modules/icons/icons.module';
+import { CartService } from '../../services/cart.service';
+import { ThemingService } from '../../services/theming.service';
 
 @Component({
   selector: 'app-header',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink, SearchComponent, IconsModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
 })
-export class HeaderComponent {
-  searchValue = signal('')
-  searchFocused = signal(false)
-  searchResults = signal<string[]>([])
+export class HeaderComponent implements OnInit {
+  themingService = inject(ThemingService)
 
-  constructor() {
-    let ival: number | undefined = undefined;
-    effect(() => {
-      clearTimeout(ival)
-      if (!this.searchFocused()) return;
-      if (!this.searchValue()) {
-        this.searchResults.set([])
-        return
-      }
-      ival = setTimeout(() => {
-        console.log(`The current count is: ${this.searchValue()}`);
-        this.searchResults.set(Array.from({ length: 5 }).map(() => Math.random().toString()))
-      }, 1000);
+  user: User | null = null;
+  cartQuantity = 0;
+  cartAmout = 0;
+
+  constructor(
+    private authService: AuthService,
+    private sharedService: SharedService,
+    private cartService: CartService,
+    private _Router: Router
+  ) {
+    this.cartService.cart$.subscribe((cart) => {
+      if (!cart) return;
+      this.cartQuantity = cart.books.reduce(
+        (total, item) => item.quantity + total,
+        0
+      );
+      this.cartAmout = cart.books.reduce(
+        (total, item) => item.quantity * item.book.price + total,
+        0
+      );
+    });
+  }
+  ngOnInit(): void {
+    this.authService.me().subscribe({
+      next: (res) => {
+        this.user = res;
+        this.cartService.fetchCart();
+      },
+      error: (_) => {
+        this.user = null;
+      },
+    });
+    this.sharedService.userImage$.subscribe((imageUrl) => {
+      if (this.user && imageUrl) this.user.image = imageUrl;
+    });
+  }
+  onSearchChange(search: string) {}
+
+  logOut() {
+    this.authService.logout().subscribe({
+      error: (err) => console.error(err),
+      complete: () => this._Router.navigate(['/login']),
     });
   }
 }

@@ -1,0 +1,18 @@
+meta {
+  name: get all-users
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{KOTOBIA_URL}}/api/users?name=mohsen
+  body: none
+  auth: none
+}
+
+params:query {
+  name: mohsen
+  ~role: user
+  ~limit: 3
+  ~page: 3
+}

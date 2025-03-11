@@ -1,0 +1,66 @@
+<div class="container mx-auto px-4 py-8">
+  <div
+    class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8"
+  >
+    <div class="mx-auto text-center">
+      <h1 class="text-3xl font-bold tracking-tighter">Order List</h1>
+      <p class="text-gray-600">Manage your recent orders</p>
+    </div>
+  </div>
+
+  <div class="flex justify-center ">
+    <div class="w-9/12 ">
+      @for (order of orders.order; track order._id) {
+      <div class="bg-white p-6 rounded-lg my-5 shadow-sm border">
+        <h2 class="text-xl font-semibold text-indigo-600 mb-2">
+          Order ID: {{ order._id }}
+        </h2>
+        <p class="text-gray-700">
+          <span class="font-semibold">User:</span> {{ order.user.name }}
+        </p>
+        <div class="text-gray-700 flex items-center">
+          Status: <span class="ml-3 text-gray-800">{{ order.status }}</span>
+          <div
+            [ngClass]="getStatusClass(order.status)"
+            class="w-3 h-3 rounded-full ml-2"
+          ></div>
+        </div>
+        <p class="text-gray-700">
+          <span class="font-semibold">Total Price:</span> ${{
+            order.totalPrice.toFixed(2)
+          }}
+        </p>
+        <p class="text-gray-700">
+          <span class="font-semibold">Items:</span> {{ order.items }}
+        </p>
+
+        <h3 class="text-lg font-semibold mt-4 text-gray-800">Books:</h3>
+        <div class="space-y-4">
+          @for (book of order.books; track book.book._id) {
+          <div class="flex gap-4 pb-4 border-b">
+            <img
+              src="{{ book.book.image }}"
+              alt="{{ book.book.title }}"
+              class="w-16 h-20 object-cover rounded"
+            />
+            <div class="flex-1">
+              <h3 class="font-medium">{{ book.book.title }}</h3>
+              <p class="text-sm text-gray-600">
+                Author: {{ book.book.author.join(", ") }}
+              </p>
+              <p class="text-sm text-gray-600">Quantity: {{ book.quantity }}</p>
+              <p class="text-sm text-gray-600">
+                Price:
+                <span class="font-semibold text-indigo-600"
+                  >${{ book.price.toFixed(2) }}</span
+                >
+              </p>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

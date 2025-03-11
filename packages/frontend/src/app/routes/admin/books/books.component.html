@@ -1,0 +1,109 @@
+<ng-template #headerPortal>
+ <div class="flex gap-1">
+  <label class="input input-sm">
+    <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </g>
+    </svg>
+    <input type="search" required placeholder="Search" [ngModel]="search | async"
+      (ngModelChange)="search.next($event)" />
+  </label>
+  <button class="btn btn-sm btn-primary" (click)="openBookForm('add', null)">New book</button>
+ </div>
+</ng-template>
+<app-book-dialog (bookAdded)="onBookAdded()" (bookUpdated)="onBookUpdated()"></app-book-dialog>
+
+@if(error){
+<div>
+  <h1 class="text-4xl">{{error.message}}</h1>
+</div>
+}@else {
+<div class="container mx-auto">
+  <div class="overflow-x-auto">
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if(loading){
+        @for (dummy of _util_.range(lastBooksCount); track $index) {
+        <tr>
+          <th>
+            <div class="skeleton w-4 h-4"></div>
+          </th>
+          <td>
+            <div class="skeleton w-[12ch] h-4"></div>
+          </td>
+          <td>
+            <div class="skeleton w-[8ch] h-4"></div>
+          </td>
+          <td>
+            <div class="skeleton w-[2ch] h-4"></div>
+          </td>
+          <td>
+            <div class="skeleton w-[4ch] h-4"></div>
+          </td>
+          <td class="flex gap-1 flex-wrap">
+            <button class="btn btn-sm w-[7ch] skeleton"></button>
+            <button class="btn btn-sm w-[7ch] skeleton"></button>
+          </td>
+        </tr>
+        }
+        }@else {
+        @for (book of books; track book!._id) {
+        <tr>
+          <th></th>
+          <td>{{book.title}}</td>
+          <td>{{ book!.author.join(", ") }}</td>
+          <td> {{book!.stock}} </td>
+          <td>
+            {{book!.price | currency}}
+          </td>
+          <td class="flex gap-1 flex-wrap">
+            <button class="btn btn-sm btn-primary" (click)="openBookForm('edit', book)">Edit</button>
+            <button class="btn btn-sm btn-error" (click)="deleteBook(book!._id)">Delete</button>
+          </td>
+        </tr>
+        }@empty {
+        <tr>
+          <td></td>
+          <td class="text-center p-5 text-3xl font-bold" colspan="5">
+            Nothing to see here
+          </td>
+        </tr>
+        }
+        }
+      </tbody>
+      @if(false){
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Job</th>
+          <th>company</th>
+          <th>location</th>
+          <th>Last Login</th>
+          <th>Favorite Color</th>
+        </tr>
+      </tfoot>
+      }
+    </table>
+  </div>
+ <div class="flex items-center justify-center">
+  <div class="join">
+    @for (page of _util_.range(totalPages); track $index) {
+    <input (change)="currentPage.next(page+1); loadBooks()" class="join-item btn btn-square" type="radio" name="pagination" [attr.aria-label]="page + 1" [checked]="(currentPage | async) === page+1" />
+    }
+  </div>
+ </div>
+</div>
+}

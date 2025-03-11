@@ -8,20 +8,20 @@ const orderSchema = new mongoose.Schema(
             required: true,
         },
         books: {
-            type:[{
-                book:{
+            type: [{
+                book: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'Book',
                     required: true,
                 },
-                quantity:{
-                    type:Number,
+                quantity: {
+                    type: Number,
                     required: true,
-                    min:0
+                    min: 0
                 },
-                price:{
-                    type:Number,
-                    required:true,
+                price: {
+                    type: Number,
+                    required: true,
                 }
             }],
             required: true,
@@ -31,10 +31,19 @@ const orderSchema = new mongoose.Schema(
             required: true,
             min: 0,
         },
+        items:{
+            type: Number,
+            required: true,
+            min: 0,
+        },
         status: {
             type: String,
-            enum: ['pending', 'completed', 'canceled'],
+            enum: ['Completed' , 'Processing' , 'Pending' , 'Cancelled'],
             default: 'pending',
+        },
+        session:{
+            type: String,
+            required: true,
         }
     },
     { timestamps: true }

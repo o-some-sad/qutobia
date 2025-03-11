@@ -1,0 +1,112 @@
+<input type="checkbox" id="book-modal" class="modal-toggle" [checked]="isOpen" (change)="toggleModal()" />
+<div class="modal">
+  <div class="modal-box">
+    @if (mode === 'add') {
+      <h3 class="font-bold text-lg">Add New Book</h3>
+    } @else if (mode === 'edit') {
+      <h3 class="font-bold text-lg">Update Book</h3>
+    }
+
+    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+      <div class="flex gap-4 mb-4">
+        <div class="avatar relative mt-4">
+          <div class="w-50 h-50 rounded-full overflow-hidden cursor-pointer relative group" (click)="openFileInput()">
+            @if (originalImage) {
+              <img [src]="originalImage" alt="User Avatar" class="w-full h-full object-cover" />
+            } @else {
+              <div class="w-full h-full flex items-center justify-center rounded-full border-4 border-gray-200">
+                <i-feather name="book" class="w-16 h-16"></i-feather>
+              </div>
+            }
+
+            <!-- Overlay camera icon -->
+            <div
+              class="absolute inset-0 flex items-center justify-center bg-info rounded-full opacity-0 hover:opacity-30 transition-opacity duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24"
+                   stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-4 flex-grow">
+          <app-user-input
+            [control]="bookFormControls['title']"
+            label="Title"
+            type="text"
+            placeholder="Enter book title"
+          ></app-user-input>
+
+          <app-user-input
+            [control]="bookFormControls['stock']"
+            label="Stock"
+            type="number"
+            placeholder="Enter book stock"
+          ></app-user-input>
+
+          <app-user-input
+            [control]="bookFormControls['price']"
+            label="Price"
+            type="number"
+            placeholder="Enter book price"
+          ></app-user-input>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <app-user-input
+          [control]="bookFormControls['description']"
+          label="Description"
+          type="text"
+          placeholder="Enter book description"
+        ></app-user-input>
+      </div>
+
+      <!-- Authors -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Authors</span>
+        </label>
+        <div formArrayName="author">
+          @for (author of authors.controls; track author; let idx = $index) {
+            <div [formGroupName]="idx" class="flex items-center gap-2 mb-2">
+              <input
+                type="text"
+                formControlName="author"
+                placeholder="Enter author name"
+                class="input input-bordered w-full"
+              />
+              <button type="button" class="btn btn-error" (click)="removeAuthor(idx)">Delete</button>
+            </div>
+          }
+        </div>
+        @if (bookFormControls['author'].invalid && bookFormControls['author'].touched) {
+          <label class="label block">
+            <span class="label-text-alt text-red-600">Author is required</span>
+          </label>
+        }
+        <button type="button" class="btn btn-primary mt-2" (click)="addAuthor()">Add More Author</button>
+      </div>
+
+      <input
+        type="file"
+        id="fileInput"
+        style="display: none"
+        (change)="onFileSelected($event)"
+        accept="image/*"
+      />
+
+      <div class="modal-action">
+        <button type="button" class="btn" (click)="closeModal()">Cancel</button>
+        @if (mode === 'add') {
+          <button type="submit" class="btn btn-primary" [disabled]="bookForm.invalid">Add Book</button>
+        } @else if (mode === 'edit') {
+          <button type="submit" class="btn btn-primary" [disabled]="bookForm.invalid">Update Book</button>
+        }
+      </div>
+    </form>
+  </div>
+</div>
