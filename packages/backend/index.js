@@ -4,7 +4,6 @@ import express from "express";
 import mongoose from "mongoose";
 import appRouter from "./routes/index.js";
 import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
-import redisClient from "./utilities/redisClient.js";
 import cookieParser from "cookie-parser";
 import './utilities/logger.js'
 import path from "node:path";
