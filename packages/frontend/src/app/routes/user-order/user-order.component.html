@@ -1,156 +1,66 @@
+<div class="container mx-auto px-4 py-8">
+  <div
+    class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8"
+  >
+    <div class="mx-auto text-center">
+      <h1 class="text-3xl font-bold tracking-tighter">Order List</h1>
+      <p class="text-gray-600">Manage your recent orders</p>
+    </div>
+  </div>
 
-    <div class="container mx-auto px-4 py-8">
-      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-8">
-        <div>
-          <h1 class="text-3xl font-bold tracking-tighter">Order Details</h1>
-          <p class="text-gray-600">Order #{{ formatId(order._id) }}</p>
+  <div class="flex justify-center ">
+    <div class="w-9/12 ">
+      @for (order of orders.order; track order._id) {
+      <div class="bg-white p-6 rounded-lg my-5 shadow-sm border">
+        <h2 class="text-xl font-semibold text-indigo-600 mb-2">
+          Order ID: {{ order._id }}
+        </h2>
+        <p class="text-gray-700">
+          <span class="font-semibold">User:</span> {{ order.user.name }}
+        </p>
+        <div class="text-gray-700 flex items-center">
+          Status: <span class="ml-3 text-gray-800">{{ order.status }}</span>
+          <div
+            [ngClass]="getStatusClass(order.status)"
+            class="w-3 h-3 rounded-full ml-2"
+          ></div>
         </div>
-        <div class="flex gap-2">
-          <a routerLink="/orders" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50">
-            Back to Orders
-          </a>
-          <button (click)="trackOrder()" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">
-            Track Order
-          </button>
-        </div>
-      </div>
-  
-      <div class="grid gap-8 md:grid-cols-3">
-        <!-- Left Column -->
-        <div class="md:col-span-2 space-y-6">
-          <!-- Order Status -->
-          <div class="bg-white p-6 rounded-lg shadow-sm border">
-            <h2 class="text-xl font-semibold mb-4">Order Status</h2>
-            <div class="relative">
-              <div class="flex items-center justify-between mb-2">
-                <!-- Status Steps -->
-                <div *ngFor="let step of ['ordered', 'processing', 'shipped', 'delivered']; let i = index" 
-                     class="flex flex-col items-center">
-                  <div [class]="getStatusClass(step)" 
-                       class="w-8 h-8 rounded-full flex items-center justify-center text-white">
-                    <i [class]="step === 'shipped' ? 'fas fa-box' : 'fas fa-check'"></i>
-                  </div>
-                  <span class="text-sm mt-1 capitalize">{{ step }}</span>
-                </div>
-              </div>
-              <div class="absolute top-4 left-0 right-0 h-1 bg-gray-200 -z-10">
-                <!-- <div [class]="getStatusClass(order.status)"  -->
-                     class="h-full transition-all duration-500" 
-                     <!-- [style.width.%]="getProgressWidth(order.status)"> -->
-                </div>
-              </div>
-            </div>
-            <p class="text-sm text-gray-600 mt-4">
-              Your order was shipped on {{ order.updatedAt | date:'longDate' }}. 
-              <!-- Estimated delivery: {{ getDeliveryDate() | date:'longDate' }}. -->
-            </p>
-          </div>
-  
-          <!-- Order Items -->
-          <div class="bg-white p-6 rounded-lg shadow-sm border">
-            <h2 class="text-xl font-semibold mb-4">Order Items</h2>
-            <div class="space-y-4">
-              <div *ngFor="let item of order.books" class="flex gap-4 pb-4 border-b">
-                <img [src]="item.book.coverImage" alt="Book cover" class="w-16 h-20 object-cover rounded">
-                <div class="flex-1">
-                  <h3 class="font-medium">{{ item.book.title }}</h3>
-                  <p class="text-sm text-gray-600">{{ item.book.author }}</p>
-                  <p class="text-sm text-gray-600">{{ item.book.format }}</p>
-                  <div class="flex justify-between mt-2">
-                    <span class="text-sm">Qty: {{ item.quantity }}</span>
-                    <span class="font-medium">{{ (item.quantity * item.price) | currency }}</span>
-                  </div>
-                </div>
-              </div>
+        <p class="text-gray-700">
+          <span class="font-semibold">Total Price:</span> ${{
+            order.totalPrice.toFixed(2)
+          }}
+        </p>
+        <p class="text-gray-700">
+          <span class="font-semibold">Items:</span> {{ order.items }}
+        </p>
+
+        <h3 class="text-lg font-semibold mt-4 text-gray-800">Books:</h3>
+        <div class="space-y-4">
+          @for (book of order.books; track book.book._id) {
+          <div class="flex gap-4 pb-4 border-b">
+            <img
+              src="{{ book.book.image }}"
+              alt="{{ book.book.title }}"
+              class="w-16 h-20 object-cover rounded"
+            />
+            <div class="flex-1">
+              <h3 class="font-medium">{{ book.book.title }}</h3>
+              <p class="text-sm text-gray-600">
+                Author: {{ book.book.author.join(", ") }}
+              </p>
+              <p class="text-sm text-gray-600">Quantity: {{ book.quantity }}</p>
+              <p class="text-sm text-gray-600">
+                Price:
+                <span class="font-semibold text-indigo-600"
+                  >${{ book.price.toFixed(2) }}</span
+                >
+              </p>
             </div>
           </div>
-  
-          <!-- Shipping Information -->
-          <div class="bg-white p-6 rounded-lg shadow-sm border">
-            <h2 class="text-xl font-semibold mb-4">Shipping Information</h2>
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 class="font-medium text-gray-700 mb-2">Shipping Address</h3>
-                <p class="text-sm">{{ order.shippingAddress.name }}</p>
-                <p class="text-sm">{{ order.shippingAddress.street }}</p>
-                <p class="text-sm">
-                  {{ order.shippingAddress.city }}, 
-                  {{ order.shippingAddress.state }} 
-                  {{ order.shippingAddress.zip }}
-                </p>
-                <p class="text-sm">{{ order.shippingAddress.country }}</p>
-                <p class="text-sm">Phone: {{ order.shippingAddress.phone }}</p>
-              </div>
-              <div>
-                <h3 class="font-medium text-gray-700 mb-2">Shipping Method</h3>
-                <p class="text-sm">Standard Shipping (3-5 business days)</p>
-                <p class="text-sm font-medium mt-4">Tracking Number</p>
-                <p class="text-sm">1Z999AA10123456784</p>
-                <a href="#" class="text-sm text-blue-600 hover:underline mt-2 inline-block">
-                  Track Package
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Right Column -->
-        <div class="space-y-6">
-          <!-- Order Summary -->
-          <div class="bg-white p-6 rounded-lg shadow-sm border">
-            <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
-            <div class="space-y-3">
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-600">Order Date:</span>
-                <span>{{ order.createdAt | date:'mediumDate' }}</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-600">Order Number:</span>
-                <span>{{ formatId(order._id) }}</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-600">Payment Method:</span>
-                <span>Credit Card (ending in 4242)</span>
-              </div>
-              <hr class="my-3">
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-600">Subtotal:</span>
-                <span>{{ order.totalPrice | currency }}</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-600">Shipping:</span>
-                <span>$4.99</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-600">Tax:</span>
-                <span>$3.36</span>
-              </div>
-              <hr class="my-3">
-              <div class="flex justify-between font-bold">
-                <span>Total:</span>
-                <span>{{ order.totalPrice + 4.99 + 3.36 | currency }}</span>
-              </div>
-            </div>
-          </div>
-  
-          <!-- Actions -->
-          <div class="bg-white p-6 rounded-lg shadow-sm border">
-            <h2 class="text-xl font-semibold mb-4">Actions</h2>
-            <div class="space-y-3">
-              <button (click)="downloadInvoice()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">
-                Download Invoice
-              </button>
-              <button class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50">
-                Return Items
-              </button>
-              <button class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50">
-                Buy Again
-              </button>
-              <button class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-50">
-                Contact Support
-              </button>
-            </div>
-          </div>
+          }
         </div>
       </div>
-  
+      }
+    </div>
+  </div>
+</div>

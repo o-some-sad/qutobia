@@ -29,7 +29,7 @@ register() {
    this._authService.login(this.handlelogin.value).subscribe({
     next: (value) => {
         this.isLoading=false;
-        this._Router.navigate(['/dashboard/orders'])
+        this._Router.navigate(['/'])
     },
     error: (err) => {
       this.errMessage=err.error.message;
