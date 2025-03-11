@@ -11,6 +11,6 @@ export const authenticateToken = async (req, res, next) => {
     
     next();
   } catch {
-    throw new ApiError("Invalid token", 401)
+    next(new ApiError("Invalid token", 401))
   }
 };
