@@ -8,7 +8,7 @@ import { ThemingService } from './services/theming.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, NgxSonnerToaster],
+  imports: [RouterOutlet, NgxSonnerToaster],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
