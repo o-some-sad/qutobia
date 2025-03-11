@@ -1,9 +1,10 @@
 //@ts-check
 import Cart from "../models/cart.model.js";
+// V these values are being used as jsdoc types
+// eslint-disable-next-line no-unused-vars
 import { CartItemValidator, CartPopulatedValidator, CartPropsValidator, CartValidator } from 'shared'
 import mongoose from 'mongoose'
 import Book from "../models/book.model.js";
-import { z } from "zod";
 /**
  * 
  * @param {Zod.infer<typeof CartItemValidator>} payload 

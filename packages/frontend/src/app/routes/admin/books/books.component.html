@@ -1,4 +1,5 @@
 <ng-template #headerPortal>
+ <div class="flex gap-1">
   <label class="input input-sm">
     <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
@@ -10,6 +11,7 @@
       (ngModelChange)="search.next($event)" />
   </label>
   <button class="btn btn-sm btn-primary" (click)="openBookForm('add', null)">New book</button>
+ </div>
 </ng-template>
 <app-book-dialog (bookAdded)="onBookAdded()" (bookUpdated)="onBookUpdated()"></app-book-dialog>
 

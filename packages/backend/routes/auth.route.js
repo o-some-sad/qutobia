@@ -1,10 +1,8 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import mongoose from "mongoose";
 import {
   handleLogin,
-  handleMe,
   handleRegister,
 } from "../controllers/auth.controller.js";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
