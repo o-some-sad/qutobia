@@ -10,6 +10,8 @@ import {
 import { handleImageUpload } from "../middlewares/uploadImage.middleware.js";
 import mongoose from "mongoose";
 import multer from "multer";
+import {authenticateToken} from "../middlewares/authenticateToken.js";
+import {isAdmin} from "../middlewares/isAdmin.js";
 // AUTHENTICATION IS STILL NEEDED
 
 const router = express.Router();
@@ -17,8 +19,8 @@ const upload = multer();
 
 router.post(
   "/",
-  // authenticateToken,
-  // isAdmin,
+  authenticateToken,
+  isAdmin,
   handleImageUpload("book"),
   async (req, res) => {
     const formData = req.body;
@@ -64,8 +66,8 @@ router.get("/:id", async (req, res, next) => {
 
 router.patch(
   "/:id/image",
-  // authenticateToken,
-  // isAdmin,
+  authenticateToken,
+  isAdmin,
   handleImageUpload("book"),
   async (req, res, next) => {
     const id = req.params.id;
@@ -78,7 +80,7 @@ router.patch(
   }
 );
 
-router.delete("/:id", /*authenticateToken, isAdmin,*/ async (req, res, next) => {
+router.delete("/:id", authenticateToken, isAdmin, async (req, res, next) => {
   const id = req.params.id;
   try {
     const removeBook = await deleteBook(id);
@@ -98,8 +100,8 @@ router.delete("/:id", /*authenticateToken, isAdmin,*/ async (req, res, next) => 
 router.patch(
   "/:id",
   upload.none(),
-  // authenticateToken,
-  // isAdmin,
+  authenticateToken,
+  isAdmin,
   async (req, res, next) => {
     // upload.none() --> for handling text-fields ONLY (won't update img)
     const id = req.params.id;

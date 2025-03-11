@@ -11,8 +11,8 @@
       <div class="flex gap-4 mb-4">
         <div class="avatar relative mt-4">
           <div class="w-50 h-50 rounded-full overflow-hidden cursor-pointer relative group" (click)="openFileInput()">
-            @if (selectedImage || book?.image) {
-              <img [src]="selectedImage || book?.image" alt="User Avatar" class="w-full h-full object-cover" />
+            @if (originalImage) {
+              <img [src]="originalImage" alt="User Avatar" class="w-full h-full object-cover" />
             } @else {
               <div class="w-full h-full flex items-center justify-center rounded-full border-4 border-gray-200">
                 <i-feather name="book" class="w-16 h-16"></i-feather>

@@ -5,11 +5,23 @@ export const main = z.object({
   name: z.string(),
 });
 
+const contactValidator = z.object({
+  address: z.string(),
+  phone: z.string(),
+});
 export const userValidator = z.object({
   name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(8),
   role: z.enum(["admin", "user"]),
+  contact: z.union([z.null(), contactValidator])
+});
+export const updateUserValidator = userValidator.partial({
+  name: true,
+  email: true,
+  password: true,
+  role: true,
+  contact: true,
 });
 
 export const userPasswordValidator = z

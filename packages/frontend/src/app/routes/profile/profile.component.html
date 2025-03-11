@@ -12,17 +12,18 @@
 
     <div class="flex items-center space-x-6">
       <div class="avatar relative">
-        <div class="w-50 rounded-full overflow-hidden cursor-pointer" (click)="openFileInput()">
+        <div class="w-55 rounded-full overflow-hidden cursor-pointer" (click)="openFileInput()">
           @if (selectedImage || user.image) {
-            <img [src]="selectedImage || user.image" alt="User Avatar" class="w-full h-full object-cover" />
+            <img [src]="selectedImage || user.image" alt="User Avatar" class="w-full h-full object-cover"/>
           } @else {
             <img
               src="https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3383.jpg?w=900"
               alt="User Avatar"
-              class="w-full h-full object-cover" />
+              class="w-full h-full object-cover"/>
           }
           <!-- Overlay camera icon -->
-          <div class="absolute inset-0 flex items-center justify-center bg-info rounded-full opacity-0 hover:opacity-30 transition-opacity duration-200">
+          <div
+            class="absolute inset-0 flex items-center justify-center bg-info rounded-full opacity-0 hover:opacity-30 transition-opacity duration-200">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-8 w-8 text-white"
@@ -61,6 +62,30 @@
           type="text"
           placeholder="Enter user email"
         ></app-user-input>
+
+        <app-user-input
+          [control]="profileFormControls['address']"
+          label="Address"
+          type="text"
+          placeholder="Enter user address"
+        ></app-user-input>
+
+        <app-user-input
+          [control]="profileFormControls['phone']"
+          label="Phone"
+          type="tel"
+          placeholder="Enter user phone"
+        ></app-user-input>
+
+        @if (profileForm.hasError('addressPhoneMismatch') && !this.user.contact) {
+          <div class="text-red-600 mt-2">
+            Address and phone must be provided together.
+          </div>
+        } @else if (profileForm.hasError('invalidPhone')) {
+          <div class="text-red-600 mt-2">
+            Phone is invalid.
+          </div>
+        }
 
         <div class="form-control mt-6">
           <button type="submit" class="btn btn-success">Update Profile</button>
