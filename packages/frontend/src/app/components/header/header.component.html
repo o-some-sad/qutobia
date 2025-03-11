@@ -50,19 +50,19 @@
           <div tabindex="0" role="button">Theme</div>
           <ul tabindex="0" class="dropdown-content menu menu-sm bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
             <li>
-              <button (click)="setTheme('system')">
+              <button (click)="themingService.setTheme('system')">
                 <i-feather name="monitor"></i-feather>
                 System
               </button>
             </li>
             <li>
-              <button (click)="setTheme('light')">
+              <button (click)="themingService.setTheme('light')">
                 <i-feather name="sun"></i-feather>
                 Light
               </button>
             </li>
             <li>
-              <button (click)="setTheme('dark')">
+              <button (click)="themingService.setTheme('dark')">
                 <i-feather name="moon"></i-feather>
                 Dark
               </button>
@@ -70,8 +70,8 @@
           </ul>
         </div>
       </li>
-      <li><a>Logout</a></li>
-      } @else {
+      <li><a (click)="logOut()">Logout</a></li>
+    } @else {
       <li><a routerLink='/login'>Login/Register</a></li>
       }
     </ul>

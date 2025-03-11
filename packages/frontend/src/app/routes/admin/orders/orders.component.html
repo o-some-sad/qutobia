@@ -1,1 +1,256 @@
-<p>orders works!</p>
+<div class="w-11/12 mx-auto pt-10">
+  <div class="p-5">
+    <label class="input">
+      <svg class="h-[1em] opacity-50" viewBox="0 0 24 24">
+        <g
+          stroke-linejoin="round"
+          stroke-linecap="round"
+          stroke-width="2.5"
+          fill="none"
+          stroke="currentColor"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </g>
+      </svg>
+      <input
+        type="search"
+        name="search"
+        [(ngModel)]="searchedValue"
+        required
+        placeholder="Search"
+      />
+    </label>
+  </div>
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table
+      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    >
+      <thead
+        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+      >
+        <tr>
+          <th scope="col" class="px-6 py-3">Order ID</th>
+          <th scope="col" class="px-6 py-3">Customer</th>
+          <th scope="col" class="px-6 py-3">Date</th>
+          <th scope="col" class="px-6 py-3">Items</th>
+          <th scope="col" class="px-6 py-3">Status</th>
+          <th scope="col" class="px-6 py-3">Amount</th>
+          <th scope="col" class="px-6 py-3">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+         @if (searchedValue.length === 0) { @for(order of ordersData;track
+        $index){
+        <tr
+          class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
+        >
+          <th
+            scope="row"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          >
+            {{ order._id }}
+          </th>
+          <td class="px-6 py-4">
+            {{ order.user.name }}
+          </td>
+          <td class="px-6 py-4">
+            {{ order.updatedAt | date : "medium" }}
+          </td>
+          <td class="px-6 py-4">
+            {{ order.items }}
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex items-center">
+              @if(editOrderId === order._id){
+              <select
+                [(ngModel)]="editValue"
+                id="countries"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option selected>{{ order.status }}</option>
+                <option value="Processing">Processing</option>
+                <option value="Completed">Completed</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+
+              } @else {
+              <div
+                [ngClass]="getStatusClass(order.status)"
+                class="w-3 h-3 rounded-full"
+              ></div>
+              <span class="ml-3 text-gray-800">{{ order.status }}</span>
+              }
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            {{ order.totalPrice | currency : "USD" }}
+          </td>
+          <td class="px-6 py-4">
+            @if (editOrderId === order._id) {
+            <button
+              (click)="updateOrder(order._id)"
+              type="button"
+              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            >
+              Submit
+            </button>
+            }@else {
+            <button
+              (click)="editOrder(order._id, order.status)"
+              class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+            >
+              Edit
+            </button>
+
+            }
+          </td>
+        </tr>
+
+        } }@else { @for(order of getFilteredOrders(); track $index) {
+        <tr
+          class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
+        >
+          <th
+            scope="row"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          >
+            {{ order._id }}
+          </th>
+          <td class="px-6 py-4">
+            {{ order.user.name }}
+          </td>
+          <td class="px-6 py-4">
+            {{ order.updatedAt | date : "medium" }}
+          </td>
+          <td class="px-6 py-4">
+            {{ order.items }}
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex items-center">
+              @if(editOrderId === order._id){
+              <select
+                [(ngModel)]="editValue"
+                id="countries"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option selected>{{ order.status }}</option>
+                <option value="Processing">Processing</option>
+                <option value="Completed">Completed</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              } @else {
+              <div
+                [ngClass]="getStatusClass(order.status)"
+                class="w-3 h-3 rounded-full"
+              ></div>
+              <span class="ml-3 text-gray-800">{{ order.status }}</span>
+              <span class="ml-3 text-gray-800">{{ order.status }}</span>
+              }
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            {{ order.totalPrice | currency : "USD" }}
+          </td>
+          <td class="px-6 py-4">
+            @if (editOrderId === order._id) {
+            <button
+              (click)="updateOrder(order._id)"
+              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            >
+              Submit
+            </button>
+            }@else {
+            <button
+              (click)="editOrder(order._id, order.status)"
+              class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+            >
+              Edit
+            </button>
+
+            }
+          </td>
+        </tr>
+
+        } }
+      </tbody>
+    </table>
+  </div>
+</div>
+@if (!ordersData) {
+
+  <div
+    role="status"
+    class="w-11/12 mx-auto space-y-4 border border-gray-200 divide-y divide-gray-200 rounded-sm shadow-sm animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700"
+  >
+    <div class="flex items-center justify-between">
+      <div>
+        <div
+          class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"
+        ></div>
+        <div
+          class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"
+        ></div>
+      </div>
+      <div
+        class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"
+      ></div>
+    </div>
+    <div class="flex items-center justify-between pt-4">
+      <div>
+        <div
+          class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"
+        ></div>
+        <div
+          class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"
+        ></div>
+      </div>
+      <div
+        class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"
+      ></div>
+    </div>
+    <div class="flex items-center justify-between pt-4">
+      <div>
+        <div
+          class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"
+        ></div>
+        <div
+          class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"
+        ></div>
+      </div>
+      <div
+        class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"
+      ></div>
+    </div>
+    <div class="flex items-center justify-between pt-4">
+      <div>
+        <div
+          class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"
+        ></div>
+        <div
+          class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"
+        ></div>
+      </div>
+      <div
+        class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"
+      ></div>
+    </div>
+    <div class="flex items-center justify-between pt-4">
+      <div>
+        <div
+          class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"
+        ></div>
+        <div
+          class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"
+        ></div>
+      </div>
+      <div
+        class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"
+      ></div>
+    </div>
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  } 

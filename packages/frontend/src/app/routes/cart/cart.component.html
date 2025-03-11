@@ -6,7 +6,7 @@
 @else if (error) {
     <h1>{{error}}</h1>
     }@else if(cart && cart.books.length === 0){
-    <div class="p-3 flex flex-col items-center justify-center gap-3">
+    <div class="p-3 flex flex-col items-center justify-center gap-3 flex-1">
         <h1 class="text-2xl">
             Your cart is still empty
         </h1>
@@ -39,7 +39,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- row 1 -->
                     @for (item of cart.books; track item.book._id) {
                     <tr>
                         <th>

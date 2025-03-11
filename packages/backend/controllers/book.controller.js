@@ -1,29 +1,26 @@
 import Book from "../models/book.model.js";
 import ApiError from "../utilities/ApiErrors.js";
 import redisClient from "../utilities/redisClient.js";
+import User from "../models/user.model.js";
 
 const addBook = async (formData) => {
-  try {
-    const book = await Book.create(formData);
-    const allBooks = await redisClient.get("allBooks");
-    if (allBooks) {
-      var allBooksParsed = JSON.parse(allBooks);
-      allBooksParsed.Books.push(book);
-      console.log("appending to allBooks cache");
-      await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
-    }
-    // else {
-    //   console.log("creating cache for allBooks");
-    //   await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
-    // }
-    console.log("caching the book individually");
-    await redisClient.set(`book:${book._id}`, JSON.stringify(book));
-    // console.log(typeof allBooks);
-    // await redisClient.del("allBooks"); //delete the cache, to be added in the next get request
-    return book;
-  } catch (error) {
-    throw new ApiError("Failed to add Book !");
+  const book = await Book.create(formData);
+  const allBooks = await redisClient.get("allBooks");
+  if (allBooks) {
+    var allBooksParsed = JSON.parse(allBooks);
+    allBooksParsed.Books.push(book);
+    console.log("appending to allBooks cache");
+    await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
   }
+  // else {
+  //   console.log("creating cache for allBooks");
+  //   await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
+  // }
+  console.log("caching the book individually");
+  await redisClient.set(`book:${book._id}`, JSON.stringify(book));
+  // console.log(typeof allBooks);
+  // await redisClient.del("allBooks"); //delete the cache, to be added in the next get request
+  return book;
 };
 
 const filterBooks = async (filters, page, limit) => {
@@ -56,7 +53,7 @@ const filterBooks = async (filters, page, limit) => {
     // sort --> for the newest book to be at the beginning
     // skip logic to be handled in the client-side
     return { totalPages: Math.ceil(count / limit), data: books };
-  } catch (err) {
+  } catch {
     throw new ApiError("No books found to list!", 400);
   }
 };
@@ -100,7 +97,7 @@ const updateBookImage = async (id, filePath) => {
       await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
       return updatedBook;
     }
-  } catch (err) {
+  } catch {
     throw new ApiError("Failed to update book image !", 400);
   }
 };
@@ -155,6 +152,14 @@ const updateBookDetails = async (id, rest) => {
   return { message: "Book updated successfully!", bookUpdated };
 };
 
+/********************************************************************************/
+const getAllBooks = async (filters, page, limit) => {
+  const count = await User.countDocuments(filters);
+  const books = await Book.find(filters).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).exec();
+  console.log(count)
+  return { totalPages: Math.ceil(count / limit), data: books };
+};
+
 export {
   addBook,
   updateBookImage,
@@ -162,4 +167,5 @@ export {
   getBookByid,
   deleteBook,
   updateBookDetails,
+  getAllBooks
 };

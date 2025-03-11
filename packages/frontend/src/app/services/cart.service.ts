@@ -12,14 +12,14 @@ export class CartService {
   private http = inject(HttpClient)
   cart$ = new BehaviorSubject<z.infer<typeof CartPopulatedValidator> | null>(null);
   loading = signal(false);
-  error$ = new BehaviorSubject<Error | null>(null)
+  error$ = new BehaviorSubject<HttpErrorResponse | null>(null)
 
 
   async fetchCart() {
     this.loading.set(true)
     const observable = this.http.get("/api/cart")
       .pipe(map(unsafe => CartPopulatedValidator.parse(unsafe)))
-      .pipe(catchError(this.errorHandler))
+      .pipe(catchError(this.errorHandler.bind(this)))
     observable.subscribe(value => {
       this.cart$.next(value)
       this.loading.set(false)
@@ -78,10 +78,11 @@ export class CartService {
 
 
 
-  errorHandler(error: HttpErrorResponse) {
+  errorHandler(error: HttpErrorResponse) {    
     const formattedError = ApiErrorValidator.safeParse(error.error)
     this.loading.set(false)
     if (formattedError.success) {
+      this.error$.next(error)
       return throwError(() => new Error(formattedError.data.message))
     }
     return throwError(() => error)
