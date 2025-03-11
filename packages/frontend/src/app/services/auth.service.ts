@@ -9,7 +9,6 @@ import { UserRegister } from '../interfaces/user-register';
   providedIn: 'root'
 })
 export class AuthService {
-<<<<<<< HEAD
   user?:User;
   constructor(private http: HttpClient) {
     this.me().subscribe({
@@ -21,11 +20,6 @@ export class AuthService {
   login(user:User): Observable<User>{
     return this.
     http.post<User>(`${environment.base_url}/auth/login`,user);
-=======
-  constructor(private http: HttpClient) { }
-  login(user:UserLogin): Observable<User>{
-    return this.http.post<User>(`${environment.base_url}/auth/login`,user);
->>>>>>> main
   }
   register(user:UserRegister):Observable<User>{
     return this.http.post<User>(`${environment.base_url}/auth/register`,user);
