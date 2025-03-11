@@ -10,9 +10,6 @@ import {
 import { handleImageUpload } from "../middlewares/uploadImage.middleware.js";
 import mongoose from "mongoose";
 import multer from "multer";
-import Book from "../models/book.model.js";
-import { authenticateToken } from "../middlewares/authenticateToken.js";
-import { isAdmin } from "../middlewares/isAdmin.js";
 // AUTHENTICATION IS STILL NEEDED
 
 const router = express.Router();
@@ -108,7 +105,7 @@ router.patch(
     const id = req.params.id;
     const body = req.body;
     // deletedAt shouldn't be updated here - avoid updating it SO destructure it
-    const { deletedAt, ...rest } = body;
+    const { deletedAt: _deletedAt, ...rest } = body;
     try {
       const updatedBook = await updateBookDetails(id, rest);
       return res.status(200).json(updatedBook);

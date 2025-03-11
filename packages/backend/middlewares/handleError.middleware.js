@@ -2,7 +2,7 @@ import { ZodError } from "zod";
 import ApiError from "../utilities/apiError.js";
 import { logger } from "../utilities/logger.js";
 
-export const handleErrorMiddleware = (err, req, res, next) => {
+export const handleErrorMiddleware = (err, req, res) => {
   if (err instanceof ApiError) {
     logger.error(err.message, {
       stack: err.stack

@@ -3,9 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import appRouter from "./routes/index.js";
-import cors from "cors";
 import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
-import { corsOptions } from "./utilities/corsOptions.js";
 import redisClient from "./utilities/redisClient.js";
 import cookieParser from "cookie-parser";
 import './utilities/logger.js'
@@ -22,7 +20,6 @@ const connectDB = async () => {
   }
 };
 
-app.use(cors({ origin: ["http://localhost:3000", "http://localhost:4200"], credentials: true }));
 
 app.use((req, res, next) => {
   //dummy logger for testing
