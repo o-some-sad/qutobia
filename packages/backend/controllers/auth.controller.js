@@ -39,7 +39,7 @@ export const handleLogin = async (email, password) => {
   if (!isValidPass) {
     throw new ApiError("user or password are invalid", 400);
   }
-  const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1h" });
+  const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1d" });
   return {
     token,
     user,
