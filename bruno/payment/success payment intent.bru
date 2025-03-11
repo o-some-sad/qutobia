@@ -1,11 +1,11 @@
 meta {
-  name: create payment intent
+  name: success payment intent
   type: http
-  seq: 1
+  seq: 2
 }
 
-post {
-  url: {{KOTOBIA_URL}}/api/payment/create?payment=67cfb1258b58c499755cee0a
+get {
+  url: {{KOTOBIA_URL}}/api/payment/success?payment=67cfb1258b58c499755cee0a
   body: json
   auth: none
 }

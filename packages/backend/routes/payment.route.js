@@ -3,46 +3,43 @@
 import express from "express";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
 import ApiError from "../utilities/apiError.js";
-import * as PaymentController from '../controllers/payment.controller.js'
+import * as PaymentController from "../controllers/payment.controller.js";
 
-export const paymentRouter = express.Router()
-
-
+export const paymentRouter = express.Router();
 
 //TODO: add auth token after finishing login frontend logic
-paymentRouter.post("/create", async (req, res, next) => {
+paymentRouter.post("/create", authenticateToken, async (req, res, next) => {
   try {
-    // if (req.user.role !== 'user') throw new ApiError("Unauthorized", 401);
-    const userId = "67c8dca6a873b682bd760235"
-
-    const url = await PaymentController.createPaymentFromUserId(userId)
-    
-
+    const url = await PaymentController.createPaymentFromUserId(req.user._id);
 
     res.json({
-      url: url
-    })
+      url: url,
+    });
   } catch (error) {
     console.log(error);
-    
-    return next(error)
+
+    return next(error);
   }
-})
+});
 
-
-paymentRouter.get("/success", async (req, res) => {
-  const { payment } = req.query
-  //TODO: THIS SHOULD NEVER HAPPEN
-  if(!payment || typeof payment !== "string")throw new ApiError("Cannot retrive payment reference", 500);
-  
-  await PaymentController.transformPayment(payment)
-
-
-  res.redirect("/")
-})
+paymentRouter.get("/success", authenticateToken, async (req, res, next) => {
+  try {
+    const { payment } = req.query;
+    //TODO: THIS SHOULD NEVER HAPPEN
+    if (!payment || typeof payment !== "string"){
+      throw new ApiError("Cannot retrive payment reference", 400);
+    }
+    await PaymentController.transformPayment(payment, req.user._id);
+    return res.redirect("/");
+  } catch (err) {
+    console.log("WA?T", err);
+    
+    return next(err);
+  }
+});
 
 paymentRouter.get("/cancel", (req, res) => {
   console.log("CANCEL", req.query);
 
-  res.redirect("/")
-})
+  res.redirect("/");
+});

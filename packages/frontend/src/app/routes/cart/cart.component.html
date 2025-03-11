@@ -1,4 +1,4 @@
-@if(cartService.loading() && !cart && !error){
+@if((cartService.loading() || loading) && !cart && !error){
 <div class="w-full flex-1 flex items-center justify-center">
     <div class="loading"></div>
 </div>
@@ -69,14 +69,14 @@
                         </td>
                         <th>
                             <div class="flex gap-3 flex-wrap items-center">
-                                <button [disabled]="cartService.loading()" class="btn btn-ghost">details</button>
+                                <button [disabled]="cartService.loading() || loading" class="btn btn-ghost">details</button>
                                 <div class="join items-stretch">
-                                    <button [disabled]="cartService.loading()" class="btn join-item"
+                                    <button [disabled]="cartService.loading() || loading" class="btn join-item"
                                         (click)="decreaseBookQuantity(item.book._id.toString())">-</button>
                                     <div
                                         class="px-4 bg-neutral text-neutral-content join-item inline-flex items-center justify-center">
                                         {{item.quantity}}</div>
-                                    <button [disabled]="cartService.loading() || item.quantity >= item.book.stock"
+                                    <button [disabled]="(cartService.loading() || loading) || item.quantity >= item.book.stock"
                                         class="btn join-item"
                                         (click)="increaseBookQuantity(item.book._id.toString())">+</button>
                                 </div>
@@ -123,8 +123,12 @@
             <span class="text-lg"> {{ totalAmount$ | async | currency }} </span>
         </div>
 
-        <button class="btn btn-primary btn-lg">
-            Checkout
+        <button (click)="startCheckout()" class="btn btn-primary btn-lg">
+            @if(loading || cartService.loading()){
+                <span class="loading loading-spinner loading-xs"></span>
+            }@else{
+                Checkout
+            }
         </button>
     </div>
     <!-- <div class="fixed top-0 left-0 bg-neutral/30 backdrop-blur-none w-full h-full z-50 transition-all opacity-0 pointer-events-none" [class.backdrop-blur-sm]="loading" [class.opacity-100]="loading"></div> -->

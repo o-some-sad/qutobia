@@ -1,12 +1,13 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { z } from 'zod';
-import { CartPopulatedValidator } from 'shared';
+import { CartPopulatedValidator, PaymentCreateResponse } from 'shared';
 import { AsyncPipe, CurrencyPipe, JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Types } from 'mongoose';
 import { toast } from 'ngx-sonner';
 import { CartService } from '../../services/cart.service';
 import { catchError, firstValueFrom, map, Observable, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-cart',
@@ -22,11 +23,13 @@ export class CartComponent implements OnInit {
   cart: z.infer<typeof CartPopulatedValidator> | null = null;
   error: string | null = null;
 
+  loading = false
+
   selectedIds: string[] = [];
 
   totalAmount$: Observable<number>;
 
-  constructor(public cartService: CartService) {
+  constructor(public cartService: CartService, public http: HttpClient) {
     this.totalAmount$ = cartService.cart$.pipe(
       map((cart) => {
         return cart
@@ -70,5 +73,15 @@ export class CartComponent implements OnInit {
 
   async decreaseBookQuantity(id: string) {
     this.cartService.removeBook(id);
+  }
+
+  async startCheckout(){
+    this.loading = true
+    this.http.post<z.infer<typeof PaymentCreateResponse>>("/api/payment/create", null).subscribe({
+      next: result=>{
+        window.location.href = result.url
+        
+      }
+    })
   }
 }
