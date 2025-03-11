@@ -1,13 +1,15 @@
 import { Order } from './../../../interfaces/order';
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { OrdersService } from '../../../services/orders.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IconsModule } from '../../../modules/icons/icons.module';
+import { HeaderService } from '../../../services/header.service';
 
 
 @Component({
   selector: 'app-orders',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule, IconsModule],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css'
 })
@@ -22,10 +24,16 @@ export class OrdersComponent {
   searchedValue: string = '';
   editOrderId: string | null = null;
   editValue: string = '';
-  constructor(private _OrdersService:OrdersService){
-   
-    
-  }
+  constructor(private _OrdersService:OrdersService, private headerService: HeaderService){}
+
+   @ViewChild('headerPortal') portal!: TemplateRef<any>;
+    ngAfterViewInit(): void {
+      this.headerService.setPortal(this.portal)
+    }
+    ngOnDestroy(): void {
+      this.headerService.setPortal(null)
+    }
+
   ngOnInit() {
     this._OrdersService.getOrders().subscribe({
       next:(data)=>{this.ordersData=data.order;
