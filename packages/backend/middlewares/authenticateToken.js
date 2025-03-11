@@ -8,7 +8,7 @@ export const authenticateToken = async (req, res, next) => {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified.user;
     next();
-  } catch (error) {
-    res.status(400).json({ error: "Invalid token" });
+  } catch {
+    next(new ApiError("Invalid token", 401))
   }
 };

@@ -1,10 +1,8 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import mongoose from "mongoose";
 import {
   handleLogin,
-  handleMe,
   handleRegister,
 } from "../controllers/auth.controller.js";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
@@ -29,10 +27,11 @@ Router.get("/me", authenticateToken, async (req, res, next) => {
   //authenticateToken should be called as a middleware
   //returns object of currently logged-in the user
   try {
-    const user = req.user;
+    let user = req.user;
     if (!user) {
       throw new ApiError("user not found", 404);
     }
+    user = await User.findById(req.user._id);
     res.status(200).json(user);
   } catch (err) {
     next(err);

@@ -1,7 +1,6 @@
 import express from 'express';
 import {getAllUsers, updateUser, updateUserImage, updateUserPassword} from '../controllers/user.controller.js';
 import {handleImageUpload} from "../middlewares/uploadImage.middleware.js";
-import { authenticateToken } from '../middlewares/authenticateToken.js';
 
 const Router = express.Router();
 
