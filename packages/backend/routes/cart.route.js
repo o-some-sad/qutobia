@@ -1,10 +1,9 @@
 //@ts-check
 /// <reference path="../express.d.ts" />
 import express from 'express';
-import mongoose from 'mongoose';
 import * as cartController from '../controllers/cart.controller.js'
 import validateSchema from '../middlewares/zodValidator.middleware.js';
-import { CartItemValidator, CartPropsValidator, CartValidator } from 'shared';
+import { CartItemValidator } from 'shared';
 import { authenticateToken } from '../middlewares/authenticateToken.js';
 const cartRouter = express.Router();
 
@@ -13,7 +12,6 @@ cartRouter.get("/", authenticateToken, async (req, res, next) => {
     console.log(req.user);
     
     try {
-        const { pick = [] } = req.query
 
         const cart = await cartController.getByUserId(req.user._id.toString())
 
@@ -30,7 +28,7 @@ cartRouter.post("/", authenticateToken, validateSchema(CartItemValidator), async
         if (req.user.role !== 'user') throw new Error("only users can use cart");
         console.log("!!!", req.body);
 
-        const result = await cartController.addCartItem(req.body, req.user._id.toString())
+        await cartController.addCartItem(req.body, req.user._id.toString())
         res.json({})
     } catch (error) {
         next(error)
