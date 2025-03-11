@@ -1,0 +1,72 @@
+<div class="drawer">
+  <input id="drawer" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content">
+    <div
+      class="border-b border-base-300 shadow-sm p-3 flex items-center justify-between gap-3"
+    >
+      <div class="flex items-center gap-1">
+          <label
+          tabindex="0"
+          for="drawer"
+          class="btn btn-sm btn-outline btn-primary"
+          >
+          <i-feather name="menu"></i-feather>
+        </label>
+        @if(headerService.portal | async; as portal){
+        <ng-container *ngTemplateOutlet="portal"></ng-container>
+        }
+      </div>
+      <ul class="menu bg-base-200 menu-horizontal rounded-box">
+        <li>
+          <a routerLink="/profile">
+            <i-feather name="user" />
+            <span class="hidden md:inline">Profile</span>
+          </a>
+        </li>
+        <li>
+          <a>
+            <i-feather name="bell" />
+          </a>
+        </li>
+      </ul>
+    </div>
+    <router-outlet />
+  </div>
+  <div class="drawer-side">
+    <label
+      for="drawer"
+      aria-label="close sidebar"
+      class="drawer-overlay"
+    ></label>
+    <ul
+      class="menu bg-base-200 text-base-content min-h-full w-80 p-4 flex flex-col gap-3"
+    >
+      <!-- Sidebar content here -->
+      <span class="text-xl">Welcome Buddy</span>
+      <li>
+        <a class="border border-base-100" routerLink="/">
+          <i-feather name="home"></i-feather>
+          Home
+        </a>
+      </li>
+      <li>
+        <a class="border border-base-100" [routerLink]="'/dashboard'">
+          <i-feather name="bar-chart"></i-feather>
+          Stats
+        </a>
+      </li>
+      <li>
+        <a class="border border-base-100" [routerLink]="'/dashboard/users'">
+          <i-feather name="user"></i-feather>
+          Users
+        </a>
+      </li>
+      <li>
+        <a class="border border-base-100" [routerLink]="'/dashboard/books'">
+          <i-feather name="book"></i-feather>
+          Books
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
