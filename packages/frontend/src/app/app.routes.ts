@@ -6,10 +6,11 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { CheckoutComponent } from './routes/checkout/checkout.component';
 
 export const routes: Routes = [
-  { path: '', loadComponent: () => import("./home-page/home-page.component").then(c => c.HomePageComponent), title: "Home Page" },
+  { path: '', loadComponent: () => import("./components/home-page/home-page.component").then(c => c.HomePageComponent), title: "Home Page" },
   { path: 'login', loadComponent: ()=>import("./routes/auth/login/login.component").then(c=>c.LoginComponent), title: "Log In" },
-  { path: 'profile', loadComponent: () => import("./routes/profile/profile.component").then(c => c.ProfileComponent), title: "Profile" },
+  { path: 'order', loadComponent: ()=>import("./routes/user-order/user-order.component").then(c=>c.UserOrderComponent), title: "orders" },
   { path: 'register', loadComponent: () => import("./routes/auth/register/register.component").then(c => c.RegisterComponent), title: "Register" },
+  { path: 'profile', loadComponent: () => import("./routes/profile/profile.component").then(c => c.ProfileComponent), title: "Profile" },
   {
     path: 'dashboard',
     loadComponent: () => import("./routes/admin/dashboard/dashboard.component").then(c => c.DashboardComponent),

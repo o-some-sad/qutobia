@@ -2,7 +2,6 @@ import express from "express";
 import {
   addBook,
   updateBookImage,
-  listBooks,
   filterBooks,
   getBookByid,
   deleteBook,
@@ -21,8 +20,8 @@ const upload = multer();
 
 router.post(
   "/",
-  authenticateToken,
-  isAdmin,
+  // authenticateToken,
+  // isAdmin,
   handleImageUpload("book"),
   async (req, res) => {
     const formData = req.body;
@@ -38,16 +37,13 @@ router.post(
 
 router.get("/", async (req, res, next) => {
   // get ALL or get by filters
+  const filters = {deletedAt: null};
+  const page = +req.query.page || 1;
+  const limit = +req.query.limit || 10;
   try {
-    if (Object.keys(req.query).length === 0) {
-      const booksStored = await listBooks();
-      return res.status(201).json(booksStored);
-    } else {
-      // query params (skip - limit - filters)
-      const { skip, limit, ...rest } = req.query;
-      const filteredBooks = await filterBooks(rest, skip, limit);
-      return res.status(200).json(filteredBooks);
-    }
+    if(req.query.title) filters.title = { $regex: req.query.title, $options: 'i' }; // i for case insensitive
+    const books = await filterBooks(filters, page, limit);
+    res.status(200).json({totalPages: books.totalPages, data: books.data});
   } catch (err) {
     next(err);
   }
@@ -71,8 +67,8 @@ router.get("/:id", async (req, res, next) => {
 
 router.patch(
   "/:id/image",
-  authenticateToken,
-  isAdmin,
+  // authenticateToken,
+  // isAdmin,
   handleImageUpload("book"),
   async (req, res, next) => {
     const id = req.params.id;
@@ -85,7 +81,7 @@ router.patch(
   }
 );
 
-router.delete("/:id", authenticateToken, isAdmin, async (req, res, next) => {
+router.delete("/:id", /*authenticateToken, isAdmin,*/ async (req, res, next) => {
   const id = req.params.id;
   try {
     const removeBook = await deleteBook(id);
@@ -105,8 +101,8 @@ router.delete("/:id", authenticateToken, isAdmin, async (req, res, next) => {
 router.patch(
   "/:id",
   upload.none(),
-  authenticateToken,
-  isAdmin,
+  // authenticateToken,
+  // isAdmin,
   async (req, res, next) => {
     // upload.none() --> for handling text-fields ONLY (won't update img)
     const id = req.params.id;

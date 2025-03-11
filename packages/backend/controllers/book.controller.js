@@ -1,6 +1,7 @@
 import Book from "../models/book.model.js";
 import ApiError from "../utilities/ApiErrors.js";
 import redisClient from "../utilities/redisClient.js";
+import User from "../models/user.model.js";
 
 const addBook = async (formData) => {
   try {
@@ -22,58 +23,43 @@ const addBook = async (formData) => {
     // await redisClient.del("allBooks"); //delete the cache, to be added in the next get request
     return book;
   } catch (error) {
-    console.log("ERROR: ", error);
-    throw new Error("Failed to add Book !");
+    throw new ApiError("Failed to add Book !");
   }
 };
 
-const listBooks = async () => {
-  const cachedBooks = await redisClient.get("allBooks");
-  if (cachedBooks) {
-    console.log("Fetching books from Redis cache");
-    return JSON.parse(cachedBooks);
-  }
-  console.log("Fetching from DB");
-  const books = await Book.find({ deletedAt: null }).exec();
-  const bookCount = await Book.find({ deletedAt: null })
-    .countDocuments()
-    .exec();
-  // exec() --> the query will run even if await is NOT there (returns a promise)
-  // totalPages = totalBooks(bookCount) / booksPerPage(10)
-  // totalPages = Math.ceil(bookCount / 10)
-  const totalPages = Math.ceil(bookCount / 10);
-  if (books.length === 0) {
-    throw new ApiError("No books found to list!", 400);
-  }
-  const result = { Total_Pages: totalPages, Books: books };
-  console.log("adding allBooks cache");
-  await redisClient.set("allBooks", JSON.stringify(result));
-  return result;
-};
+const filterBooks = async (filters, page, limit) => {
+  // const cacheKey = `filtered_books:${JSON.stringify(rest)}:${skip}:${limit}`;
+  // const filter = { ...rest, deletedAt: null }; // to ensure that we get ONLY the books w/ deletedAt: null
+  // // as if I'm adding deletedAt: null in the params
+  // const cachedFilter = await redisClient.get(cacheKey);
+  // if (cachedFilter) {
+  //   console.log("fetching filtered books from Redis cache");
+  //   return JSON.parse(cachedFilter);
+  // }
+  // console.log("fetching from DB");
+  // const books = await Book.find(filter).skip(skip).limit(limit).exec();
+  // const filteredBookCount = await Book.find(filter)
+  //   .skip(skip)
+  //   .limit(limit)
+  //   .countDocuments()
+  //   .exec();
+  // const filterTotalPages = Math.ceil(filteredBookCount / 10);
+  // const result = { Total_Pages: filterTotalPages, Books: books };
+  // await redisClient.set(cacheKey, JSON.stringify(result));
+  // return result;
 
-const filterBooks = async (rest, skip, limit) => {
-  const cacheKey = `filtered_books:${JSON.stringify(rest)}:${skip}:${limit}`;
-  const filter = { ...rest, deletedAt: null }; // to ensure that we get ONLY the books w/ deletedAt: null
-  // as if I'm adding deletedAt: null in the params
-  const cachedFilter = await redisClient.get(cacheKey);
-  if (cachedFilter) {
-    console.log("fetching filtered books from Redis cache");
-    return JSON.parse(cachedFilter);
-  }
-  console.log("fetching from DB");
-  const books = await Book.find(filter).skip(skip).limit(limit).exec();
-  const filteredBookCount = await Book.find(filter)
-    .skip(skip)
-    .limit(limit)
-    .countDocuments()
-    .exec();
-  const filterTotalPages = Math.ceil(filteredBookCount / 10);
-  if (books.length === 0) {
+
+
+
+  try {
+    const count = await Book.countDocuments(filters);
+    const books = await Book.find(filters).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).exec();
+    // sort --> for the newest book to be at the beginning
+    // skip logic to be handled in the client-side
+    return { totalPages: Math.ceil(count / limit), data: books };
+  } catch (err) {
     throw new ApiError("No books found to list!", 400);
   }
-  const result = { Total_Pages: filterTotalPages, Books: books };
-  await redisClient.set(cacheKey, JSON.stringify(result));
-  return result;
 };
 
 const getBookByid = async (id) => {
@@ -101,13 +87,13 @@ const updateBookImage = async (id, filePath) => {
       { new: true }
     );
     console.log("updating the individual book cache");
-    await redisClient.set(`book:${id}`, JSON.stringify(bookUpdated));
+    await redisClient.set(`book:${id}`, JSON.stringify(updatedBook));
     const allBooks = await redisClient.get("allBooks");
     if (allBooks) {
       let allBooksParsed = JSON.parse(allBooks);
       allBooksParsed.Books = allBooksParsed.Books.map((book) => {
         if (book._id === id) {
-          return bookUpdated;
+          return updatedBook;
         }
         return book;
       });
@@ -116,7 +102,7 @@ const updateBookImage = async (id, filePath) => {
       return updatedBook;
     }
   } catch (err) {
-    throw err;
+    throw new ApiError("Failed to update book image !", 400);
   }
 };
 
@@ -170,12 +156,24 @@ const updateBookDetails = async (id, rest) => {
   return { message: "Book updated successfully!", bookUpdated };
 };
 
+/********************************************************************************/
+const getAllBooks = async (filters, page, limit) => {
+  try {
+    const count = await User.countDocuments(filters);
+    const books = await Book.find(filters).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).exec();
+    console.log(count)
+    return { totalPages: Math.ceil(count / limit), data: books};
+  } catch (err) {
+    throw err;
+  }
+};
+
 export {
   addBook,
   updateBookImage,
-  listBooks,
   filterBooks,
   getBookByid,
   deleteBook,
   updateBookDetails,
+  getAllBooks
 };
