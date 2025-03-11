@@ -10,7 +10,9 @@
     <input type="search" required placeholder="Search" [ngModel]="search | async"
       (ngModelChange)="search.next($event)" />
   </label>
-  <button class="btn btn-sm btn-primary" (click)="openBookForm('add', null)">New book</button>
+  <button class="btn btn-sm btn-primary" (click)="openBookForm('add', null)">
+    <i-feather name="plus" />
+  </button>
  </div>
 </ng-template>
 <app-book-dialog (bookAdded)="onBookAdded()" (bookUpdated)="onBookUpdated()"></app-book-dialog>

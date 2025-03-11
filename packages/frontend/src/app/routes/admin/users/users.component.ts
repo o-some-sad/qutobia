@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {User} from '../../../interfaces/user.interface';
 import {UserService} from '../../../services/user.service';
 import {FormsModule} from '@angular/forms';
@@ -23,7 +23,7 @@ import { HeaderService } from '../../../services/header.service';
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
-export class UsersComponent implements OnInit, AfterViewInit {
+export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   data: User[];
   currPage: number = 1;
   totalPages: number = 1;
@@ -40,6 +40,9 @@ export class UsersComponent implements OnInit, AfterViewInit {
   @ViewChild('headerPortal') portal!: TemplateRef<any>;
   ngAfterViewInit(): void {
     this.headerService.setPortal(this.portal)
+  }
+  ngOnDestroy(): void {
+    this.headerService.setPortal(null)
   }
 
   goToPage(page: number) {

@@ -22,6 +22,7 @@ import { BookDialogComponent } from '../../../components/book-dialog/book-dialog
 import { BookItem } from '../../../interfaces/book.interface';
 import { toast } from 'ngx-sonner';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IconsModule } from '../../../modules/icons/icons.module';
 
 @Component({
   selector: 'app-books',
@@ -30,6 +31,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     FormsModule,
     CommonModule,
     BookDialogComponent,
+    IconsModule
   ],
   templateUrl: './books.component.html',
   styleUrl: './books.component.css',
