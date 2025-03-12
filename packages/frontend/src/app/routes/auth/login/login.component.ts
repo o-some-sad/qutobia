@@ -17,17 +17,17 @@ register() {
   this._Router.navigate(['register'])
 }
   isLoading:boolean=false;
- handlelogin:FormGroup=new FormGroup({
+  handellogin:FormGroup=new FormGroup({
  email:new FormControl(null,[Validators.email,Validators.required]),
  password:new FormControl(null,[Validators.required,Validators.minLength(8)]),
 
  });
  constructor(private _authService:AuthService,private _Router:Router,private sharedService: SharedService, private _ActivatedRoute: ActivatedRoute){
-   console.log(this.handlelogin);
+   console.log(this.handellogin);
  }
   errMessage:string=''
  login():void{
-   this._authService.login(this.handlelogin.value).subscribe({
+   this._authService.login(this.handellogin.value).subscribe({
     next: (value) => {
         this.isLoading=false;
         this.sharedService.setUserLogged(value.user);

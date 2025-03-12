@@ -1,25 +1,15 @@
 import express from 'express';
-import { getById, updateOrder, getAllOrder ,createOrder} from '../controllers/order.controller.js';
+import { getById, updateOrder, getAllOrder } from '../controllers/order.controller.js';
 import { authenticateToken } from '../middlewares/authenticateToken.js';
 import { isAdmin } from '../middlewares/isAdmin.js';
 
-
 const router = express.Router();
-
 router.route('/')
     .get(authenticateToken, async (req, res) => {
-        const order = await getAllOrder(req.user);
+        const order = await getAllOrder();
         res.status(200).json({ order })
 
-    })
-     .post(authenticateToken, async (req, res, next) => {
-        try {
-            const orders = await createOrder(req.body)
-            res.status(201).json({ orders });
-        } catch (error) {
-            next(error)
-        }
-    }); 
+    });
 
 router.route('/:id')
     .get(authenticateToken, async (req, res, next) => {
