@@ -15,6 +15,8 @@ Router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const tokenAndUser = await handleLogin(email, password);
+    
+    
     res.cookie("token", tokenAndUser.token, { httpOnly: true, secure: false,sameSite:"lax" });
     res.status(200).json(tokenAndUser); //send token and user to the clientSide
   } catch (err) {
