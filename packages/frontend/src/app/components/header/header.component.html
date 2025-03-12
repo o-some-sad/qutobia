@@ -44,7 +44,9 @@
     <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
       @if (user){
       <li><a routerLink='/profile'>Profile</a></li>
-      <li><a>Settings</a></li>
+      @if (user.role === 'admin') {
+        <li><a routerLink='/dashboard'>Go to Dashboard</a></li>
+      }
       <li>
         <div class="dropdown dropdown-hover dropdown-left">
           <div tabindex="0" role="button">Theme</div>

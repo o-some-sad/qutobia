@@ -10,7 +10,7 @@
       {{ user.role }}
     </div>
 
-    <div class="flex items-center space-x-6">
+    <div class="flex flex-col items-center space-y-6 md:flex-row md:space-x-6 md:space-y-0">
       <div class="avatar relative">
         <div class="w-55 rounded-full overflow-hidden cursor-pointer" (click)="openFileInput()">
           @if (selectedImage || user.image) {
@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="flex-1 space-y-4">
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="w-full md:flex-1 space-y-4">
         <app-user-input
           [control]="profileFormControls['name']"
           label="Name"
