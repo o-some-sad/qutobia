@@ -19,9 +19,9 @@ export class AuthService {
       }
     })
    }
-  login(user:User): Observable<User>{
+  login(user:User): Observable<{user:User,token:string}>{
     return this.
-    http.post<User>(`${environment.base_url}/auth/login`,user);
+    http.post<{user:User,token:string}>(`${environment.base_url}/auth/login`,user);
   }
   register(user:UserRegister):Observable<User>{
     return this.http.post<User>(`${environment.base_url}/auth/register`,user);
