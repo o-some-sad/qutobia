@@ -51,11 +51,11 @@ export const handleLogin = async (email, password) => {
 export const handleRegister = async (body) => {
   // CHECK if ALL fields are full
   const { email, password } = body;
-  const isEmailRegistered = await User.exists({ email: email });
   
   if (passwordStrength(password).value === "Too weak" || passwordStrength(password).value === "Weak") {
-      throw new ApiError("password is weak!", 400);
+    throw new ApiError("password is weak!", 400);
   }
+  const isEmailRegistered = await User.exists({ email: email });
   // CHECK if the user's email is taken
   if (isEmailRegistered !== null) {
     throw new ApiError("This email is already in use. Please use a different email or log in.");
