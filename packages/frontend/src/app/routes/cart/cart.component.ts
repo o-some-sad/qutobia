@@ -1,18 +1,35 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { z } from 'zod';
-import { ApiErrorValidator, CartPopulatedValidator, PaymentCreateResponse } from 'shared';
-import { AsyncPipe, CurrencyPipe, DecimalPipe, JsonPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import {
+  ApiErrorValidator,
+  CartPopulatedValidator,
+  PaymentCreateResponse,
+} from 'shared';
+import {
+  AsyncPipe,
+  CurrencyPipe,
+  DecimalPipe,
+  JsonPipe,
+} from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 import { Types } from 'mongoose';
 import { toast } from 'ngx-sonner';
 import { CartService } from '../../services/cart.service';
 import { catchError, firstValueFrom, map, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { IconsModule } from '../../modules/icons/icons.module';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-cart',
-  imports: [CurrencyPipe, AsyncPipe, JsonPipe, RouterLink, DecimalPipe, IconsModule],
+  imports: [
+    CurrencyPipe,
+    AsyncPipe,
+    JsonPipe,
+    RouterLink,
+    DecimalPipe,
+    IconsModule,
+  ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
   host: {
@@ -24,13 +41,18 @@ export class CartComponent implements OnInit {
   cart: z.infer<typeof CartPopulatedValidator> | null = null;
   error: string | null = null;
 
-  loading = false
+  loading = false;
 
   selectedIds: string[] = [];
 
   totalAmount$: Observable<number>;
 
-  constructor(public cartService: CartService, public http: HttpClient) {
+  constructor(
+    public cartService: CartService,
+    public http: HttpClient,
+    private _authService: AuthService,
+    private router: Router
+  ) {
     this.totalAmount$ = cartService.cart$.pipe(
       map((cart) => {
         return cart
@@ -76,25 +98,31 @@ export class CartComponent implements OnInit {
     this.cartService.removeBook(id);
   }
 
-  async startCheckout(){
-    this.loading = true
-    this.http.post<z.infer<typeof PaymentCreateResponse>>("/api/payment/create", null).subscribe({
-      next: result=>{
-        window.location.href = result.url
-        this.loading = false
-      },
-      error: (error: HttpErrorResponse)=>{
-        try{
-          const apiError = ApiErrorValidator.parse(error.error)
-          toast.error(apiError.message, {})
-          this.loading = false
-          
-        }catch(error){
-          toast.error(`${error}`, {})
-          this.loading = false
-        }
-        
-      }
-    })
+  async startCheckout() {
+    if (this._authService.user?.contact === null) {
+      this.router
+        .navigate(['/profile'], { queryParams: { preOrder: '' } })
+        .then();
+        return;
+    }
+    this.loading = true;
+    this.http
+      .post<z.infer<typeof PaymentCreateResponse>>('/api/payment/create', null)
+      .subscribe({
+        next: (result) => {
+          window.location.href = result.url;
+          this.loading = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          try {
+            const apiError = ApiErrorValidator.parse(error.error);
+            toast.error(apiError.message, {});
+            this.loading = false;
+          } catch (error) {
+            toast.error(`${error}`, {});
+            this.loading = false;
+          }
+        },
+      });
   }
 }
