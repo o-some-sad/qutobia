@@ -10,8 +10,8 @@ import {
 import { handleImageUpload } from "../middlewares/uploadImage.middleware.js";
 import mongoose from "mongoose";
 import multer from "multer";
-import {authenticateToken} from "../middlewares/authenticateToken.js";
-import {isAdmin} from "../middlewares/isAdmin.js";
+import { authenticateToken } from "../middlewares/authenticateToken.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
 // AUTHENTICATION IS STILL NEEDED
 
 const router = express.Router();
@@ -36,13 +36,14 @@ router.post(
 
 router.get("/", async (req, res, next) => {
   // get ALL or get by filters
-  const filters = {deletedAt: null};
+  const filters = { deletedAt: null };
   const page = +req.query.page || 1;
   const limit = +req.query.limit || 10;
   try {
-    if(req.query.title) filters.title = { $regex: req.query.title, $options: 'i' }; // i for case insensitive
+    if (req.query.title)
+      filters.title = { $regex: req.query.title, $options: "i" }; // i for case insensitive
     const books = await filterBooks(filters, page, limit);
-    res.status(200).json({totalPages: books.totalPages, data: books.data});
+    res.status(200).json({ totalPages: books.totalPages, data: books.data });
   } catch (err) {
     next(err);
   }
@@ -60,6 +61,7 @@ router.get("/:id", async (req, res, next) => {
         message: "Invalid ID format. Must be a 24-character hex string.",
       });
     }
+    console.log(err);
     next(err);
   }
 }); // get by ID

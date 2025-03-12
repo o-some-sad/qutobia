@@ -1,0 +1,36 @@
+<p>book-details works! whooohoooooooooooo!</p>
+@if (book) {
+  <div class="flex gap-8 p-8 max-w-7xl mx-auto">
+    <div class="flex-shrink-0">
+      <img
+        [src]="book.image"
+        [alt]="book.title"
+        class="max-w-[400px] rounded-lg shadow-lg"
+      />
+    </div>
+
+    <div class="flex-1">
+      <h1 class="text-4xl font-bold mb-4">{{ book.title }}</h1>
+      <p class="text-xl mb-2">
+        <strong class="font-semibold">Author(s):</strong> {{ book.author.join(', ') }}
+      </p>
+      <p class="text-xl mb-2">
+        <strong class="font-semibold">Price:</strong> ${{ book.price }}
+      </p>
+      <p class="text-xl mb-2">
+        <strong class="font-semibold">Description:</strong> {{ book.description }}
+      </p>
+      <p class="text-xl mb-4">
+        <strong class="font-semibold">Stock:</strong> {{ book.stock }}
+      </p>
+      <button
+        (click)="addToCart(book._id)"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+      >
+        Add to Cart
+      </button>
+    </div>
+  </div>
+} @else {
+  <div class="text-center text-2xl mt-8">Loading...</div>
+}

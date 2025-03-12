@@ -30,6 +30,9 @@ export class BookService {
   deleteBook(bookId: string): Observable<BookResponse> {
     return this.http.delete<BookResponse>(`${environment.base_url}/books/${bookId}`);
   }
+  getBookById(bookId: string): Observable<BookResponse> {
+    return this.http.get<BookResponse>(`${environment.base_url}/books/${bookId}`);
+  }
 }
 // to extract data from the server-side
 // observable --> returns an array of book objects

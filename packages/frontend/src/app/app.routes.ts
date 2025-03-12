@@ -62,6 +62,15 @@ export const routes: Routes = [
         title: 'Cart',
         canActivate: [userOrAdminGuard]
       },
+      // Add the book-details route here
+      {
+        path: 'book/:id',
+        loadComponent: () =>
+          import('./components/book-details/book-details.component').then(
+            (c) => c.BookDetailsComponent
+          ),
+        title: 'Book Details',
+      },
     ],
   },
   {
