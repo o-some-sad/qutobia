@@ -18,6 +18,12 @@ export class BookService {
       totalPages: res.totalPages, data: res.data
     })));
   }
+  filterBooks(search: string): Observable<BooksResponse>{
+    let filterBy = `${environment.base_url}/books?author=${search}`;
+    return this.http.get<BooksResponse>(filterBy).pipe(map(res => ({
+      totalPages: res.totalPages, data: res.data
+    })));
+  }
   addBook(formData: FormData): Observable<BookResponse> {
     return this.http.post<BookResponse>(`${environment.base_url}/books`, formData);
   }

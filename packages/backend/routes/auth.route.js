@@ -7,6 +7,8 @@ import {
 } from "../controllers/auth.controller.js";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
 import ApiError from "../utilities/ApiErrors.js";
+import validateSchema from "../middlewares/zodValidator.middleware.js";
+import { registerValidator } from "shared/register.validator.js";
 const Router = express.Router();
 
 Router.post("/login", async (req, res, next) => {
@@ -38,7 +40,7 @@ Router.get("/me", authenticateToken, async (req, res, next) => {
   }
 });
 
-Router.post("/register", async (req, res, next) => {
+Router.post("/register",validateSchema(registerValidator), async (req, res, next) => {
   try {
     const registeredUser = await handleRegister(req.body);
     return res.status(200).json({ data: registeredUser });
