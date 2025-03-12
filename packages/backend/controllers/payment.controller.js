@@ -99,6 +99,15 @@ export const transformPayment = async (paymentId, userId) => {
         throw new Error("Payment doesn't belong to this user");
       }
 
+      if(!payment.session){
+        throw new Error("Cannot access session id")
+      }
+
+      const { payment_status, payment_intent} = await stripe.checkout.sessions.retrieve(payment.session)
+      if(payment_status !== "paid"){
+        throw new Error("Payment is not successful")
+      }
+
       await Cart.deleteOne({ user: payment.user }, { session });
 
       //TODO: find better way to do this
@@ -120,7 +129,7 @@ export const transformPayment = async (paymentId, userId) => {
         totalPrice: payment.books.reduce((total, item)=> total + (item.quantity * item.price), 0),
         items: 1,
         status: 'Pending',
-        session: payment.session
+        session: payment_intent
       }], { session });
 
       await Payment.deleteOne( {_id: payment._id }, { session })
