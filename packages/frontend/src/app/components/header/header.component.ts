@@ -53,13 +53,17 @@ export class HeaderComponent implements OnInit {
     this.sharedService.userImage$.subscribe((imageUrl) => {
       if (this.user && imageUrl) this.user.image = imageUrl;
     });
+    this.sharedService.userLogged$.subscribe((user)=> {
+      this.user = user;
+    });
   }
   onSearchChange(search: string) {}
 
   logOut() {
+    this.user = null;
     this.authService.logout().subscribe({
       error: (err) => console.error(err),
-      complete: () => this._Router.navigate(['/login']),
+      complete: () => this._Router.navigate(['/']),
     });
   }
 }
