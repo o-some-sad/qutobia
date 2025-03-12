@@ -2,3 +2,4 @@
 **/.env
 **/*.log
 **/dump.rdb
+**/package-lock.json
