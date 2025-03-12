@@ -50,7 +50,7 @@ export const handleLogin = async (email, password) => {
 
 export const handleRegister = async (body) => {
   // CHECK if ALL fields are full
-  const { email, name, password } = body;
+  const { email, password } = body;
   const isEmailRegistered = await User.exists({ email: email });
   
   if (passwordStrength(password).value === "Too weak" || passwordStrength(password).value === "Weak") {
