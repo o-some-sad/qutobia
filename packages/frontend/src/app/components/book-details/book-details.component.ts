@@ -4,7 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { BookService } from '../../services/book.service';
 import { JsonPipe, NgClass } from '@angular/common';
 import { CartService } from '../../services/cart.service';
-
+import { ReviewService } from '../../services/review.service';
+import { Review } from '../../interfaces/review.interface';
 @Component({
   selector: 'app-book-details',
   imports: [JsonPipe, NgClass],
@@ -13,16 +14,15 @@ import { CartService } from '../../services/cart.service';
 })
 export class BookDetailsComponent implements OnInit {
   book: BookItem | null = null;
-
+  reviews: Review[] | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private bookService: BookService,
-    private cartService: CartService
+    private cartService: CartService,
+    private reviewService: ReviewService
   )
-  {
-    console.log("hellllllllllllllloooooooooooooooooooo");
-  }
+  {}
 
   ngOnInit(): void {
     console.log("hellllllllllllllllllllllllllllllo");
@@ -33,8 +33,17 @@ export class BookDetailsComponent implements OnInit {
         this.book = res.data;
         console.log(this.book);
       });
+      this.reviewService.getReviewsByBookId(bookId).subscribe(
+        (reviews) => {
+          this.reviews = reviews;
+        },
+        (error) => {
+          console.error('Error fetching reviews:', error);
+        }
+      );
     }
   }
+
   addToCart(book: string){
     console.log("Pressed: ", book);
     this.cartService.addBook(book);
