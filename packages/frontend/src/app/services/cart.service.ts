@@ -17,6 +17,7 @@ export class CartService {
 
   async fetchCart() {
     this.loading.set(true)
+    this.error$.next(null)
     const observable = this.http.get("/api/cart")
       .pipe(map(unsafe => CartPopulatedValidator.parse(unsafe)))
       .pipe(catchError(this.errorHandler.bind(this)))
