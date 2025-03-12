@@ -9,16 +9,19 @@ import { UserRegister } from '../interfaces/user-register';
   providedIn: 'root'
 })
 export class AuthService {
+  userId:string='';
   user?:User;
   constructor(private http: HttpClient) {
     this.me().subscribe({
       next:(value)=>{
-        this.user=value
+        this.userId=value._id;
+        
       }
     })
-  }
-  login(user:User): Observable<{ user: User, token: string }>{
-    return this.http.post<{ user: User, token: string }>(`${environment.base_url}/auth/login`,user);
+   }
+  login(user:User): Observable<User>{
+    return this.
+    http.post<User>(`${environment.base_url}/auth/login`,user);
   }
   register(user:UserRegister):Observable<User>{
     return this.http.post<User>(`${environment.base_url}/auth/register`,user);

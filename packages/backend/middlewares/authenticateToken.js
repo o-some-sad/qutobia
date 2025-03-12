@@ -9,6 +9,7 @@ export const authenticateToken = async (req, res, next) => {
     req.user = verified.user;
     next();
   } catch {
+    res.clearCookie("token", { httpOnly: true, secure: true });
     next(new ApiError("Invalid token", 401))
   }
 };
