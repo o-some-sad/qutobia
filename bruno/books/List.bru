@@ -1,0 +1,15 @@
+meta {
+  name: List
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{KOTOBIA_URL}}/api/books?name=CHANGE_ME
+  body: none
+  auth: none
+}
+
+params:query {
+  name: CHANGE_ME
+}

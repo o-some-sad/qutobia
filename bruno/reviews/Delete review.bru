@@ -1,0 +1,15 @@
+meta {
+  name: Delete review
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{KOTOBIA_URL}}/api/reviews/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}

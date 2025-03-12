@@ -1,0 +1,15 @@
+meta {
+  name: Get one
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{KOTOBIA_URL}}/api/books/:id
+  body: multipartForm
+  auth: none
+}
+
+params:path {
+  id: 
+}

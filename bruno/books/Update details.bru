@@ -1,13 +1,17 @@
 meta {
-  name: updateBookDetails
+  name: Update details
   type: http
   seq: 5
 }
 
 patch {
-  url: {{KOTOBIA_URL}}/api/books/67c76924f55ba44213cb6965
+  url: {{KOTOBIA_URL}}/api/books/:id
   body: multipartForm
   auth: none
+}
+
+params:path {
+  id: 
 }
 
 body:multipart-form {

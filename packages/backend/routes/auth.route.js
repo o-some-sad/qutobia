@@ -21,10 +21,14 @@ Router.post("/login", async (req, res, next) => {
     next(err);
   }
 });
+
 Router.get("/logout", (req, res) => {
+  console.log(7531);
+  
   res.clearCookie("token", { httpOnly: true, secure: true });
   res.json({ message: "Logged out successfully!" });
 });
+
 Router.get("/me", authenticateToken, async (req, res, next) => {
   //authenticateToken should be called as a middleware
   //returns object of currently logged-in the user

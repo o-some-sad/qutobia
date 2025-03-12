@@ -1,0 +1,15 @@
+meta {
+  name: Delete book
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{KOTOBIA_URL}}/api/books/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}
