@@ -9,11 +9,12 @@ import { UserRegister } from '../interfaces/user-register';
   providedIn: 'root'
 })
 export class AuthService {
-  user?:User;
+  userId:string='';
   constructor(private http: HttpClient) {
     this.me().subscribe({
       next:(value)=>{
-        this.user=value
+        this.userId=value._id;
+        
       }
     })
    }

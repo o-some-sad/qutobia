@@ -10,8 +10,9 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './user-order.component.css',
 })
 export class UserOrderComponent {
-  userId: string | undefined = '';
+  response: any;
   orders: any;
+
   status = [
     { color: 'bg-green-500', text: 'Completed' },
     { color: 'bg-blue-500', text: 'Processing' },
@@ -22,17 +23,18 @@ export class UserOrderComponent {
     private _OrdersService: OrdersService,
     private _AuthService: AuthService
   ) {
-    this.userId = _AuthService.user?._id;
-    this.getOrder(this.userId);
+    this.getOrder(_AuthService.userId);
   }
-  user: any;
   getOrder(id: string | undefined) {
     this._OrdersService.getUserOrder(id).subscribe({
       next: (res) => {
-        this.orders = res;
+        this.response = res;
       },
       error: (err) => {
         console.error(err);
+      },
+      complete: () => {
+        this.orders = this.response.order;
       },
     });
   }

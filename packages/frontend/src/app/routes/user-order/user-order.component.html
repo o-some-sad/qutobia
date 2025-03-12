@@ -10,7 +10,7 @@
 
   <div class="flex justify-center ">
     <div class="w-9/12 ">
-      @for (order of orders.order; track order._id) {
+      @for (order of orders; track order._id) {
       <div class="bg-white p-6 rounded-lg my-5 shadow-sm border">
         <h2 class="text-xl font-semibold text-indigo-600 mb-2">
           Order ID: {{ order._id }}
