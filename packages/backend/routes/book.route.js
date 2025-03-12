@@ -12,7 +12,6 @@ import mongoose from "mongoose";
 import multer from "multer";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
-// AUTHENTICATION IS STILL NEEDED
 
 const router = express.Router();
 const upload = multer();
@@ -40,8 +39,7 @@ router.get("/", async (req, res, next) => {
   const page = +req.query.page || 1;
   const limit = +req.query.limit || 10;
   try {
-    if (req.query.title)
-      filters.title = { $regex: req.query.title, $options: "i" }; // i for case insensitive
+    if(req.query.title) filters.title = { $regex: req.query.title, $options: 'i' }; // i for case insensitive
     const books = await filterBooks(filters, page, limit);
     res.status(200).json({ totalPages: books.totalPages, data: books.data });
   } catch (err) {
