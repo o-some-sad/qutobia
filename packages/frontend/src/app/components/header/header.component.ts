@@ -8,10 +8,11 @@ import { SharedService } from '../../services/shared.service';
 import { IconsModule } from '../../modules/icons/icons.module';
 import { CartService } from '../../services/cart.service';
 import { ThemingService } from '../../services/theming.service';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [FormsModule, RouterLink, SearchComponent, IconsModule],
+  imports: [FormsModule, RouterLink, SearchComponent, IconsModule, DecimalPipe],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })

@@ -65,7 +65,7 @@
                         <td>
                             {{item.book.price | currency}} x {{item.quantity}}PCs
                             <hr class="w-1/2 text-base-300" />
-                            {{ item.book.price * item.quantity | currency }}
+                            {{ item.book.price * item.quantity | number | currency }}
                         </td>
                         <th>
                             <div class="flex gap-3 flex-wrap items-center">

@@ -22,7 +22,7 @@
     <div tabindex="0" class="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow">
       <div class="card-body">
         <span class="text-lg font-bold">{{cartQuantity}} Items</span>
-        <span class="text-info">Subtotal: ${{cartAmout}}</span>
+        <span class="text-info">Subtotal: ${{ cartAmout | number }}</span>
         <div class="card-actions">
           <a class="btn btn-primary btn-block" [routerLink]="'/cart'">View cart</a>
         </div>
@@ -45,7 +45,7 @@
       @if (user){
       <li><a routerLink='/profile'>Profile</a></li>
       @if (user.role === 'admin') {
-        <li><a routerLink='/dashboard'>Go to Dashboard</a></li>
+      <li><a routerLink='/dashboard'>Go to Dashboard</a></li>
       }
       <li>
         <div class="dropdown dropdown-hover dropdown-left">
@@ -73,7 +73,7 @@
         </div>
       </li>
       <li><a (click)="logOut()">Logout</a></li>
-    } @else {
+      } @else {
       <li><a routerLink='/login'>Login/Register</a></li>
       }
     </ul>

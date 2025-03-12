@@ -1,7 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { z } from 'zod';
 import { CartPopulatedValidator } from 'shared';
-import { AsyncPipe, CurrencyPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DecimalPipe, JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Types } from 'mongoose';
 import { toast } from 'ngx-sonner';
@@ -10,7 +10,7 @@ import { catchError, firstValueFrom, map, Observable, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
-  imports: [CurrencyPipe, AsyncPipe, JsonPipe, RouterLink],
+  imports: [CurrencyPipe, AsyncPipe, JsonPipe, RouterLink, DecimalPipe],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
   host: {
