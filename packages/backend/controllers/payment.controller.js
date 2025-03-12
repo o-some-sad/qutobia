@@ -34,11 +34,22 @@ export const createPaymentFromUserId = async (userId) => {
       {
         price: 1,
         title: 1,
+        stock: 1
       }
     ).then((d) =>
-      d.map(({ price, title, _id }) => [_id.toString(), { price, title }])
+      d.map(({ price, title, _id, stock }) => [_id.toString(), { price, title, stock }])
     )
   );
+
+  const booksWithIssues = cart.books.filter(item=>{
+    const book = books.get(item.book.toString())
+    // get books that not cannot be retrived or having stock less that enough for this order
+    return !(!book || book.stock >= item.quantity)
+  })
+
+  if(booksWithIssues.length){    
+    throw new ApiError("Please review all book issues", 401)
+  }  
 
   const payment = await Payment.create({
     user: userId,

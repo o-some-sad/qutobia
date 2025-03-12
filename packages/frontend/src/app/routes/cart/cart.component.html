@@ -80,6 +80,11 @@
                                         class="btn join-item"
                                         (click)="increaseBookQuantity(item.book._id.toString())">+</button>
                                 </div>
+                                @if(item.book.stock < item.quantity){
+                                    <div class="tooltip tooltip-bottom" data-tip="This item is not available right now">
+                                        <i-feather class="text-warning" name="alert-triangle" />
+                                      </div>
+                                }
                             </div>
                         </th>
                     </tr>

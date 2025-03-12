@@ -1,17 +1,18 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { z } from 'zod';
-import { CartPopulatedValidator, PaymentCreateResponse } from 'shared';
+import { ApiErrorValidator, CartPopulatedValidator, PaymentCreateResponse } from 'shared';
 import { AsyncPipe, CurrencyPipe, DecimalPipe, JsonPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Types } from 'mongoose';
 import { toast } from 'ngx-sonner';
 import { CartService } from '../../services/cart.service';
 import { catchError, firstValueFrom, map, Observable, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { IconsModule } from '../../modules/icons/icons.module';
 
 @Component({
   selector: 'app-cart',
-  imports: [CurrencyPipe, AsyncPipe, JsonPipe, RouterLink, DecimalPipe],
+  imports: [CurrencyPipe, AsyncPipe, JsonPipe, RouterLink, DecimalPipe, IconsModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
   host: {
@@ -80,6 +81,18 @@ export class CartComponent implements OnInit {
     this.http.post<z.infer<typeof PaymentCreateResponse>>("/api/payment/create", null).subscribe({
       next: result=>{
         window.location.href = result.url
+        this.loading = false
+      },
+      error: (error: HttpErrorResponse)=>{
+        try{
+          const apiError = ApiErrorValidator.parse(error.error)
+          toast.error(apiError.message, {})
+          this.loading = false
+          
+        }catch(error){
+          toast.error(`${error}`, {})
+          this.loading = false
+        }
         
       }
     })
