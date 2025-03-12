@@ -16,6 +16,7 @@
     "axios": "^1.8.2",
     "backend": "file:",
     "bcrypt": "^5.1.1",
+    "check-password-strength": "^3.0.0",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

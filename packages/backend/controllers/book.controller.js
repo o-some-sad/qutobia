@@ -48,6 +48,7 @@ const filterBooks = async (filters, page, limit) => {
 
 
   try {
+    console.log("FILTERS:",filters);
     const count = await Book.countDocuments(filters);
     const books = await Book.find(filters).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).exec();
     // sort --> for the newest book to be at the beginning

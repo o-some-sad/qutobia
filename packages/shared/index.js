@@ -63,4 +63,5 @@ export * from "./cart.validator.js";
 export * from "./error.validator.js";
 export * from "./review.validator.js";
 export * from "./book.validator.js";
-export * from "./payment.validator.js";
+export * from "./payment.validator.js";;
+export * from './register.validator.js'
