@@ -1,16 +1,18 @@
 import User from "../models/user.model.js";
 import Book from "../models/book.model.js";
 import { v2 as cloudinary } from 'cloudinary';
-import {uploadBookImage, uploadUserImage} from "../utilities/cloudinaryConfig.js";
+import { uploadBookImage, uploadUserImage } from "../utilities/cloudinaryConfig.js";
 //TODO: Handle limi
-export const handleImageUpload = (model)=> async (req, res, next) => {
+export const handleImageUpload = (model) => async (req, res, next) => {
   const id = req.params.id;
   switch (model) {
     case 'user':
-      const user = await User.findById(id);
-      if (!user) return res.status(404).json({ status: 'fail', message: 'User not found' });
-      await handleImage(uploadUserImage, user.image)(req, res, next);
-      break;
+      {
+        const user = await User.findById(id);
+        if (!user) return res.status(404).json({ status: 'fail', message: 'User not found' });
+        await handleImage(uploadUserImage, user.image)(req, res, next);
+        break;
+      }
 
     case 'book':
       if (!id) {
@@ -38,11 +40,7 @@ function handleImage(uploadFunction, imageUrl) {
 }
 
 async function deleteImageFromCloudinary(imageUrl) {
-  try {
-    if (!imageUrl) return;
-    const publicId = imageUrl.split('/').slice(-3).join('/').split('.')[0];
-    await cloudinary.uploader.destroy(publicId, {invalidate: true});
-  } catch (err) {
-    throw err;
-  }
+  if (!imageUrl) return;
+  const publicId = imageUrl.split('/').slice(-3).join('/').split('.')[0];
+  await cloudinary.uploader.destroy(publicId, { invalidate: true });
 }

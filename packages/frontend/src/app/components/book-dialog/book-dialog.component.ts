@@ -87,11 +87,13 @@ export class BookDialogComponent {
       book.author.forEach(a => {
         this.addAuthor(a);
       });
+      this.originalImage = book.image;
     }
   }
   closeModal() {
     this.bookForm.reset();
     this.isOpen = false;
+    this.originalImage = null;
   }
   onSubmit() {
     if (this.bookForm.valid) {
@@ -147,6 +149,7 @@ export class BookDialogComponent {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.selectedImage = e.target?.result || null;
+        if (this.mode === 'add') this.originalImage = this.selectedImage as string;
       };
       reader.readAsDataURL(this.file);
       if(this.mode === 'edit') this.uploadImage(this.file);
@@ -177,6 +180,7 @@ export class BookDialogComponent {
       },
       error: (_) => {
         toast.error('Failed to upload image', { id: toast_id });
+        this.originalImage = this.book!.image;
         this.selectedImage = this.originalImage;
         this.book!.image = this.originalImage ?? '';
       },

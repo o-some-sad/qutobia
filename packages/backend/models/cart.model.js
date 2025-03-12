@@ -1,5 +1,5 @@
 //@ts-check
-import mongoose, { Document } from 'mongoose';
+import mongoose from 'mongoose';
 
 const cartItemSchema = new mongoose.Schema({
     book: {

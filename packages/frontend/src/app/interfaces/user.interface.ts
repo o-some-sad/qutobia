@@ -4,6 +4,10 @@ export interface User {
   email: string;
   role: string;
   image: string|null;
+  contact: {
+    address: string;
+    phone: string;
+  } | null;
 }
 
 export interface UserResponse {

@@ -15,6 +15,7 @@ import {AuthService} from '../../services/auth.service';
 import {NgClass} from '@angular/common';
 import {SharedService} from '../../services/shared.service';
 import {UserInputComponent} from '../../components/user-input/user-input.component';
+import {addressPhoneValidator, phoneValidator} from '../../validations/address-phone.validator';
 
 @Component({
   selector: 'app-profile',
@@ -44,8 +45,10 @@ export class ProfileComponent implements OnInit {
   ) {
     this.profileForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]]
-    });
+      email: ['', [Validators.required, Validators.email]],
+      address: [''],
+      phone: ['']
+    }, { validators: [addressPhoneValidator, phoneValidator] });
     this.profileFormControls['email'].disable();
 
     this.passwordForm = this.fb.group({
@@ -59,7 +62,16 @@ export class ProfileComponent implements OnInit {
       this.user = res;
       this.originalName = this.user.name;
       this.originalImage = this.user.image;
-      this.profileForm.patchValue({name: this.user.name, email: this.user.email});
+      this.profileForm.patchValue({
+        name: this.user.name,
+        email: this.user.email,
+        address: this.user.contact?.address ?? '',
+        phone: this.user.contact?.phone ?? ''
+      });
+      if(this.user.contact){
+        this.profileFormControls['address']?.setValidators(Validators.required);
+        this.profileFormControls['phone']?.setValidators(Validators.required);
+      }
     });
   }
 
@@ -74,6 +86,11 @@ export class ProfileComponent implements OnInit {
     if (this.profileForm.valid){
       const updatedData = this.profileForm.value;
       updatedData._id = this.user._id;
+      updatedData.contact = updatedData.address ? {
+        address: updatedData.address,
+        phone: updatedData.phone
+      } : null;
+
       const toast_id = toast.loading('Updating name...');
       this.userService.updateUser(updatedData).subscribe({
         next: (_) => {

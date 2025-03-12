@@ -16,20 +16,20 @@ register() {
   this._Router.navigate(['register'])
 }
   isLoading:boolean=false;
- handelLogin:FormGroup=new FormGroup({
+ handlelogin:FormGroup=new FormGroup({
  email:new FormControl(null,[Validators.email,Validators.required]),
  password:new FormControl(null,[Validators.required,Validators.minLength(8)]),
  
  });
  constructor(private _authService:AuthService,private _Router:Router){
-   console.log(this.handelLogin);
+   console.log(this.handlelogin);
  }
   errMessage:string=''
  login():void{
-   this._authService.login(this.handelLogin.value).subscribe({
+   this._authService.login(this.handlelogin.value).subscribe({
     next: (value) => {
         this.isLoading=false;
-        this._Router.navigate(['/dashboard/orders'])
+        this._Router.navigate(['/'])
     },
     error: (err) => {
       this.errMessage=err.error.message;

@@ -5,9 +5,13 @@ meta {
 }
 
 post {
-  url: {{KOTOBIA_URL}}/api/payment
+  url: {{KOTOBIA_URL}}/api/payment/create?payment=67cfb1258b58c499755cee0a
   body: json
   auth: none
+}
+
+params:query {
+  payment: 67cfb1258b58c499755cee0a
 }
 
 body:json {
