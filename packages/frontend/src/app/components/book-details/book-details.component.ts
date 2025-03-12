@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { BookItem } from '../../interfaces/book.interface';
 import { ActivatedRoute } from '@angular/router';
 import { BookService } from '../../services/book.service';
-import { JsonPipe } from '@angular/common';
+import { JsonPipe, NgClass } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-book-details',
-  imports: [JsonPipe],
+  imports: [JsonPipe, NgClass],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css'
 })
