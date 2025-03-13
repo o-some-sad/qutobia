@@ -11,7 +11,7 @@ importers:
       express:
         specifier: ^4.21.2
         version: 4.21.2
-      kotobia:
+      qutobia:
         specifier: 'file:'
         version: 'file:'
       shared:
@@ -3575,7 +3575,7 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
 
-  'kotobia@file:':
+  'qutobia@file:':
     resolution: {directory: '', type: directory}
 
   kuler@2.0.0:
@@ -8854,7 +8854,7 @@ snapshots:
 
   kind-of@6.0.3: {}
 
-  'kotobia@file:':
+  'qutobia@file:':
     dependencies:
       express: 4.21.2
       shared: link:packages/shared

@@ -31,7 +31,7 @@ app.get("/", async (req, res) => {
   await redisClient.set("key", "awesome redis value");
   const value = await redisClient.get("key");
   res.end(
-    `<div style="text-align: center;"><h1>Welcome to Kotobia WebSite, value from redis: ${value}</h1></div>`
+    `<div style="text-align: center;"><h1>Welcome to qutobia WebSite, value from redis: ${value}</h1></div>`
   );
 });
 
