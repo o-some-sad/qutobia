@@ -119,6 +119,7 @@ export class BookDetailsComponent implements OnInit {
         this.newReview = { user: {} as User, book: this.newReview.book, rating: 1, review: '' }; // Reset the form
         this.fetchReviews(this.newReview.book._id);
         toast.success('review added successfully');
+        window.location.reload();
       },
       (error) => {
         toast.error("review couldn't be added");
