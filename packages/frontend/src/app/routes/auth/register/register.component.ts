@@ -9,7 +9,7 @@ import { UserRegister } from '../../../interfaces/user-register';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { any } from 'zod';
-import {toast} from 'ngx-sonner';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-register',
@@ -64,7 +64,8 @@ export class RegisterComponent {
           this._Router.navigate(['login']);
         },
         error: (err) => {
-          // this.errMessage = err.error.message;
+          this.errMessage = err.error.message;
+          toast.error(this.errMessage);
           this.isLoading = false;
           toast.warning(err.error.message, { id: toast_id });
         },

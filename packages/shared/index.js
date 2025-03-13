@@ -47,11 +47,11 @@ export const orderValidator = z.object({
     )
     .nonempty("At least one book is required"),
   totalPrice: z.number().min(0, "Total price must be a positive number"),
-  status: z.enum(['Completed' , 'Processing' , 'Pending', 'Cancelled'])
+  status: z.enum(["Completed", "Processing", "Pending", "Cancelled"]),
 });
 
 export const updateOrderValidator = z.object({
-  status: z.enum(['Completed' , 'Processing' , 'Pending', 'Cancelled'])
+  status: z.enum(["Completed", "Processing", "Pending", "Cancelled"]),
 });
 
 export const userLoginValidator = z.object({
@@ -62,5 +62,6 @@ export const userLoginValidator = z.object({
 export * from "./cart.validator.js";
 export * from "./error.validator.js";
 export * from "./review.validator.js";
-export * from './book.validator.js';
+export * from "./book.validator.js";
+export * from "./payment.validator.js";;
 export * from './register.validator.js'

@@ -2,7 +2,11 @@ import { Routes } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { UserLayoutComponent } from './layouts/user-layout/user-layout.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import {adminGuard, notLoggedGuard, userOrAdminGuard} from './guards/based-role.guard';
+import {
+  adminGuard,
+  notLoggedGuard,
+  userOrAdminGuard,
+} from './guards/based-role.guard';
 
 export const routes: Routes = [
   {
@@ -24,7 +28,15 @@ export const routes: Routes = [
             (c) => c.LoginComponent
           ),
         title: 'Log In',
-        canActivate: [notLoggedGuard]
+        canActivate: [notLoggedGuard],
+      },
+      {
+        path: 'aboutUS',
+        loadComponent: () =>
+          import('./components/about-us/about-us.component').then(
+            (c) => c.AboutUsComponent
+          ),
+        title: 'About us',
       },
       {
         path: 'order',
@@ -33,7 +45,7 @@ export const routes: Routes = [
             (c) => c.UserOrderComponent
           ),
         title: 'Orders',
-        canActivate: [userOrAdminGuard]
+        canActivate: [userOrAdminGuard],
       },
       {
         path: 'register',
@@ -42,7 +54,7 @@ export const routes: Routes = [
             (c) => c.RegisterComponent
           ),
         title: 'Register',
-        canActivate: [notLoggedGuard]
+        canActivate: [notLoggedGuard],
       },
       {
         path: 'verify/:userId',
@@ -67,16 +79,14 @@ export const routes: Routes = [
             (c) => c.ProfileComponent
           ),
         title: 'Profile',
-        canActivate: [userOrAdminGuard]
+        canActivate: [userOrAdminGuard],
       },
       {
         path: 'cart',
         loadComponent: () =>
-          import('./routes/cart/cart.component').then(
-            (c) => c.CartComponent
-          ),
+          import('./routes/cart/cart.component').then((c) => c.CartComponent),
         title: 'Cart',
-        canActivate: [userOrAdminGuard]
+        canActivate: [userOrAdminGuard],
       },
       // Add the book-details route here
       {
@@ -126,7 +136,7 @@ export const routes: Routes = [
         title: 'Orders',
       },
     ],
-    canActivate: [adminGuard]
+    canActivate: [adminGuard],
   },
   { path: '**', component: NotFoundComponent, title: 'Not Found Page' },
 ];

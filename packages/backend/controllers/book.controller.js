@@ -1,7 +1,6 @@
 import Book from "../models/book.model.js";
 import ApiError from "../utilities/ApiErrors.js";
 import redisClient from "../utilities/redisClient.js";
-import User from "../models/user.model.js";
 
 const addBook = async (formData) => {
   const book = await Book.create(formData);
@@ -10,50 +9,46 @@ const addBook = async (formData) => {
     var allBooksParsed = JSON.parse(allBooks);
     allBooksParsed.Books.push(book);
     console.log("appending to allBooks cache");
+    await redisClient.set(
+      "allBooks",
+      JSON.stringify(allBooksParsed),
+      "EX",
+      3600
+    );
+  } else {
+    console.log("creating cache for allBooks");
     await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
   }
-  // else {
-  //   console.log("creating cache for allBooks");
-  //   await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
-  // }
   console.log("caching the book individually");
-  await redisClient.set(`book:${book._id}`, JSON.stringify(book));
+  await redisClient.set(`book:${book._id}`, JSON.stringify(book), "EX", 3600);
   // console.log(typeof allBooks);
   // await redisClient.del("allBooks"); //delete the cache, to be added in the next get request
   return book;
 };
 
 const filterBooks = async (filters, page, limit) => {
-  // const cacheKey = `filtered_books:${JSON.stringify(rest)}:${skip}:${limit}`;
-  // const filter = { ...rest, deletedAt: null }; // to ensure that we get ONLY the books w/ deletedAt: null
-  // // as if I'm adding deletedAt: null in the params
-  // const cachedFilter = await redisClient.get(cacheKey);
-  // if (cachedFilter) {
-  //   console.log("fetching filtered books from Redis cache");
-  //   return JSON.parse(cachedFilter);
-  // }
-  // console.log("fetching from DB");
-  // const books = await Book.find(filter).skip(skip).limit(limit).exec();
-  // const filteredBookCount = await Book.find(filter)
-  //   .skip(skip)
-  //   .limit(limit)
-  //   .countDocuments()
-  //   .exec();
-  // const filterTotalPages = Math.ceil(filteredBookCount / 10);
-  // const result = { Total_Pages: filterTotalPages, Books: books };
-  // await redisClient.set(cacheKey, JSON.stringify(result));
-  // return result;
-
-
-
-
   try {
-    console.log("FILTERS:",filters);
+    console.log("FILTERS:", filters);
+    const key = `filteredBooks:${JSON.stringify(
+      filters
+    )}:page${page}:limit${limit}`;
+    const cachedData = await redisClient.get(key);
+    if (cachedData) {
+      console.log("Fetching filtered books from Redis cache");
+      return JSON.parse(cachedData);
+    }
+
     const count = await Book.countDocuments(filters);
-    const books = await Book.find(filters).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).exec();
+    const books = await Book.find(filters)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    const response = { totalPages: Math.ceil(count / limit), data: books };
+    await redisClient.set(key, JSON.stringify(response), "EX", 3600);
     // sort --> for the newest book to be at the beginning
     // skip logic to be handled in the client-side
-    return { totalPages: Math.ceil(count / limit), data: books };
+    return response;
   } catch {
     throw new ApiError("No books found to list!", 400);
   }
@@ -72,7 +67,7 @@ const getBookByid = async (id) => {
     throw new ApiError("No books found to list!", 400);
   }
   console.log("caching the book individually");
-  await redisClient.set(`book:${id}`, JSON.stringify(bookByid));
+  await redisClient.set(`book:${id}`, JSON.stringify(bookByid), "EX", 3600);
   return bookByid;
 };
 
@@ -84,7 +79,12 @@ const updateBookImage = async (id, filePath) => {
       { new: true }
     );
     console.log("updating the individual book cache");
-    await redisClient.set(`book:${id}`, JSON.stringify(updatedBook));
+    await redisClient.set(
+      `book:${id}`,
+      JSON.stringify(updatedBook),
+      "EX",
+      3600
+    );
     const allBooks = await redisClient.get("allBooks");
     if (allBooks) {
       let allBooksParsed = JSON.parse(allBooks);
@@ -95,7 +95,12 @@ const updateBookImage = async (id, filePath) => {
         return book;
       });
       console.log("updating allBooks cache");
-      await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
+      await redisClient.set(
+        "allBooks",
+        JSON.stringify(allBooksParsed),
+        "EX",
+        3600
+      );
       return updatedBook;
     }
   } catch {
@@ -119,7 +124,12 @@ const deleteBook = async (id) => {
       (book) => book._id !== id
     );
     console.log("deleting from allBooks cache");
-    await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
+    await redisClient.set(
+      "allBooks",
+      JSON.stringify(allBooksParsed),
+      "EX",
+      3600
+    );
   }
   console.log("deleting individual book cache");
   await redisClient.del(`book:${id}`);
@@ -146,26 +156,31 @@ const updateBookDetails = async (id, rest) => {
       }
     });
     console.log("update allBooks cache");
-    await redisClient.set("allBooks", JSON.stringify(allBooksParsed));
+    await redisClient.set(
+      "allBooks",
+      JSON.stringify(allBooksParsed),
+      "EX",
+      3600
+    );
   }
   console.log("updating the individual book cache");
-  await redisClient.set(`book:${id}`, JSON.stringify(bookUpdated));
+  await redisClient.set(`book:${id}`, JSON.stringify(bookUpdated), "EX", 3600);
   return { message: "Book updated successfully!", bookUpdated };
 };
 
 const bookFilters = async () => {
   return Book.aggregate([
     {
-      $match: {deletedAt: null}
+      $match: { deletedAt: null },
     },
     {
       $group: {
         _id: null,
-        minPrice: {$min: "$price"},
-        maxPrice: {$max: "$price"},
-        author: {$addToSet: "$author"}
-      }
-    }
+        minPrice: { $min: "$price" },
+        maxPrice: { $max: "$price" },
+        author: { $addToSet: "$author" },
+      },
+    },
   ]);
 };
 
@@ -176,5 +191,5 @@ export {
   getBookByid,
   deleteBook,
   updateBookDetails,
-  bookFilters
+  bookFilters,
 };

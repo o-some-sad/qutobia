@@ -36,18 +36,20 @@ app.get("/api/hello", (req, res) => {
   });
 });
 
-// to enforce global rate-limit across multiple servers (assuming we decide to horizontally scale our beautiful project in the future!) +++ to save the requests count in the redis server and not in-memory.
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-  standardHeaders: "draft-8",
-  legacyHeaders: false, //make true if you want the rate-limiter header to be sent in the response.
-  store: new RedisStore({
-    sendCommand: (...args) => redisClient.sendCommand(args),
-  }),
-});
+if (process.env.ENVIRONMENT === "production") {
+  // to enforce global rate-limit across multiple servers (assuming we decide to horizontally scale our beautiful project in the future!) +++ to save the requests count in the redis server and not in-memory.
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+    standardHeaders: "draft-8",
+    legacyHeaders: false, //make true if you want the rate-limiter header to be sent in the response.
+    store: new RedisStore({
+      sendCommand: (...args) => redisClient.sendCommand(args),
+    }),
+  });
 
-app.use(limiter); //Apply the rate limiting middleware to all requests.
+  app.use(limiter); //Apply the rate limiting middleware to all requests.
+}
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api", appRouter);
