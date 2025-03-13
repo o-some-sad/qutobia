@@ -14,7 +14,7 @@ import { toast } from 'ngx-sonner';
 import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-book-details',
-  imports: [JsonPipe, NgClass, FormsModule,],
+  imports: [NgClass, FormsModule,],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css'
 })

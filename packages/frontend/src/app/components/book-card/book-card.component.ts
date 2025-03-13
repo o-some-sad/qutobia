@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
-import { RouterLink } from '@angular/router';
+// import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-book-card',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.css'
 })

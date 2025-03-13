@@ -1,58 +1,65 @@
-import process from 'node:process';
-import bcrypt from 'bcrypt';
-import mongoose from 'mongoose';
+import process from "node:process";
+import bcrypt from "bcrypt";
+import mongoose from "mongoose";
 
-export const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-    minLength: 2
-  },
-  email: {
-    type: String,
-    lowercase: true,
-    unique: true,
-    required: true,
-    match: /^\S[^\s@]*@\S[^\s.]*\.\S+$/,
-    trim: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'user'],
-    default: 'user'
-  },
-  image: {
-    type: String,
-    default: null,
-    trim: true
-  },
-  contact: {
-    type: {
-      address: String,
-      phone: String
+export const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      minLength: 2,
     },
-    default: null,
+    email: {
+      type: String,
+      lowercase: true,
+      unique: true,
+      required: true,
+      match: /^\S[^\s@]*@\S[^\s.]*\.\S+$/,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
+    },
+    image: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    contact: {
+      type: {
+        address: String,
+        phone: String,
+      },
+      default: null,
+    },
+    verified: {
+      type: Boolean,
+      default: true,
+    },
   },
-  verified: {
-    type: Boolean,
-    default: true
-  }
-}, {timestamps: true});
+  { timestamps: true }
+);
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, +process.env.SALT);
   next();
 });
 
-userSchema.pre('findOneAndUpdate', async function (next) {
+userSchema.pre("findOneAndUpdate", async function (next) {
   const updatedData = this.getUpdate();
-  if (updatedData.password) updatedData.password = await bcrypt.hash(updatedData.password, +process.env.SALT);
+  if (updatedData.password)
+    updatedData.password = await bcrypt.hash(
+      updatedData.password,
+      +process.env.SALT
+    );
   this.setUpdate(updatedData);
   next();
 });
@@ -61,9 +68,16 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.set('toJSON', {
-  transform: (doc, {_id, name, email, role, image, contact}) => ({_id, name, email, role, image, contact})
+userSchema.set("toJSON", {
+  transform: (doc, { _id, name, email, role, image, contact }) => ({
+    _id,
+    name,
+    email,
+    role,
+    image,
+    contact,
+  }),
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 export default User;

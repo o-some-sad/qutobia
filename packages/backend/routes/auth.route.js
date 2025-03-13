@@ -23,8 +23,8 @@ Router.post("/login", async (req, res, next) => {
       secure: false,
       sameSite: "lax",
     });
-    redisClient.set(
-      `me:${tokenAndUser.token}`,
+    await redisClient.set(
+      `me:${tokenAndUser.user._id}`,
       JSON.stringify(tokenAndUser.user),
       "EX",
       3600
@@ -35,8 +35,9 @@ Router.post("/login", async (req, res, next) => {
   }
 });
 
-Router.get("/logout", (req, res) => {  
+Router.get("/logout", authenticateToken, async (req, res) => {
   res.clearCookie("token", { httpOnly: true, secure: true });
+  await redisClient.del(`me:${req?.user?._id}`);
   res.json({ message: "Logged out successfully!" });
 });
 
@@ -44,17 +45,43 @@ Router.get("/me", authenticateToken, async (req, res, next) => {
   //authenticateToken should be called as a middleware
   //returns object of currently logged-in the user
   try {
-    const  tokenUser = req.user;
+    const tokenUser = req.user;
     if (!tokenUser) {
       throw new ApiError("user not found", 404);
     }
-    //TODO: add cache layer for user object
-    const user = await User.findById(req.user._id);
-    if(user.role !== tokenUser.role){
-      const token = generateNewToken(user)
-      res.cookie("token", token, { httpOnly: true, secure: false,sameSite:"lax" });
+    const cachedUser = await redisClient.get(`me:${req.user._id}`);
+    if (!cachedUser) {
+      const user = await User.findById(req.user._id);
+      await redisClient.set(
+        `me:${req.user._id}`,
+        JSON.stringify(user),
+        "EX",
+        3600
+      );
+      if (user.role !== tokenUser.role) {
+        const token = generateNewToken(user);
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax",
+        });
+      }
+      res.status(200).json(user);
+      return;
     }
-    res.status(200).json(user);
+    let parsedCachedUser = JSON.parse(cachedUser);
+    if (parsedCachedUser.role !== tokenUser.role) {
+      const token = generateNewToken(parsedCachedUser);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+      });
+    }
+    res.status(200).json(parsedCachedUser);
+    return;
+
+    //TODO: add cache layer for user object
   } catch (err) {
     next(err);
   }
