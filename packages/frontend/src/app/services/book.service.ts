@@ -20,6 +20,7 @@ export class BookService {
   }
   filterBooks(search: string): Observable<BooksResponse>{
     let filterBy = `${environment.base_url}/books?author=${search}`;
+    console.log("FILTER BY: ", filterBy);
     return this.http.get<BooksResponse>(filterBy).pipe(map(res => ({
       totalPages: res.totalPages, data: res.data
     })));
