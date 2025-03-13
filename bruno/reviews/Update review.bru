@@ -1,13 +1,17 @@
 meta {
-  name: update review
+  name: Update review
   type: http
   seq: 3
 }
 
 patch {
-  url: {{KOTOBIA_URL}}/api/reviews/67c54697b27cf6baf88a120c
+  url: {{KOTOBIA_URL}}/api/reviews/:id
   body: json
   auth: none
+}
+
+params:path {
+  id: 
 }
 
 body:json {

@@ -1,13 +1,17 @@
 meta {
-  name: update user
+  name: Update user details
   type: http
   seq: 3
 }
 
 patch {
-  url: {{KOTOBIA_URL}}/api/users/67c7bbabe9f9dfcbb507f13c
+  url: {{KOTOBIA_URL}}/api/users/:id
   body: json
   auth: none
+}
+
+params:path {
+  id: 
 }
 
 body:json {

@@ -8,7 +8,8 @@ export default [
   pluginJs.configs.recommended,
   {
     rules: {
-      'no-unused-vars': ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
+      'no-unused-vars': ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+      "no-console": ["warn", {}]
     }
   }
 ];

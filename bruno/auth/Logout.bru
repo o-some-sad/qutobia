@@ -1,0 +1,11 @@
+meta {
+  name: Logout
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{KOTOBIA_URL}}/api/auth/logout
+  body: json
+  auth: none
+}

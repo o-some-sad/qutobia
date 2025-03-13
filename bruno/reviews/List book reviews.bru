@@ -1,0 +1,15 @@
+meta {
+  name: List book reviews
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{KOTOBIA_URL}}/api/reviews/:id
+  body: none
+  auth: none
+}
+
+params:path {
+  id: 
+}
