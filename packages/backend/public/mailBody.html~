@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mail body</title>
-    <link rel="stylesheet">
+    <link rel="stylesheet" href="mailBody.css">
     <style>
         #div1 {
             width: 700px;
@@ -15,11 +15,12 @@
         }
         #div2 {
             height: 400px;
+            margin: 0 auto;
             padding: 50px;
             position: relative;
             background-color: white;
             text-align: center;
-            margin: 50px auto 0;
+            margin-top: 50px;
         }
         h1 {
             color: white;
@@ -48,7 +49,7 @@
     </style>
 </head>
 <body>
-    <div id="div1"><h1>qutobia</h1><div id="div2"><h2>Verify your email address</h2>
+    <div id="div1"><h1>qutobia</h1><div id="div2">{{title}}<h2></h2>
     <h3>Welcome to qutobia! Click on the following button to verify your email address</h3>
     <a id="link" href="{{APP_URL}}/verify/{{userId}}" target="_blank">Verify email address</a><br>
     <h4>If you didn't request this email or if you think something is wrong, feel free to contact our support team at 
@@ -56,3 +57,6 @@
     </div>
 </body>
 </html>
+
+
+Verify your email address

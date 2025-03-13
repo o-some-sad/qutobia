@@ -2,50 +2,47 @@ import process from "node:process";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 
-export const userSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-      minLength: 2,
-    },
-    email: {
-      type: String,
-      lowercase: true,
-      unique: true,
-      required: true,
-      match: /^\S[^\s@]*@\S[^\s.]*\.\S+$/,
-      trim: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    role: {
-      type: String,
-      enum: ["admin", "user"],
-      default: "user",
-    },
-    image: {
-      type: String,
-      default: null,
-      trim: true,
-    },
-    contact: {
-      type: {
-        address: String,
-        phone: String,
-      },
-      default: null,
-    },
-    verified: {
-      type: Boolean,
-      default: true,
-    },
+export const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+    minLength: 2
   },
-  { timestamps: true }
-);
+  email: {
+    type: String,
+    lowercase: true,
+    unique: true,
+    required: true,
+    match: /^\S[^\s@]*@\S[^\s.]*\.\S+$/,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user'
+  },
+  image: {
+    type: String,
+    default: null,
+    trim: true
+  },
+  contact: {
+    type: {
+      address: String,
+      phone: String
+    },
+    default: null,
+  },
+  verifiedAt: {
+    type: Date,
+    default: null
+  }
+}, {timestamps: true});
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

@@ -124,6 +124,14 @@
         placeholder="Enter confirm password"
       ></app-user-input>
 
+      @if(passwordForm.hasError('NewPasswordNoMatch')) {
+        <label class="label">
+          <span class="label-text-alt text-red-600">
+            Password don't match
+          </span>
+        </label>
+      }
+
       <div class="form-control mt-6">
         <button type="submit" class="btn btn-neutral">Change Password</button>
       </div>

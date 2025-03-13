@@ -57,6 +57,22 @@ export const routes: Routes = [
         canActivate: [notLoggedGuard],
       },
       {
+        path: 'verify/:userId',
+        loadComponent: () =>
+          import('./routes/auth/verify/verify.component').then(
+            (c) => c.VerifyComponent
+          ),
+        title: 'Verify Email',
+      },
+      {
+        path: 'reset-password/:userId',
+        loadComponent: () =>
+          import('./routes/auth/reset-password/reset-password.component').then(
+            (c) => c.ResetPasswordComponent
+          ),
+        title: 'Reset Password',
+      },
+      {
         path: 'profile',
         loadComponent: () =>
           import('./routes/profile/profile.component').then(
