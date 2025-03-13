@@ -57,4 +57,9 @@ export class HomePageComponent implements OnInit {
   }
   // currentTarget is the button pressed, and blur() removes focus of it
   // (as HTMLElement is used for casting makes sure that the currentTarget is an htmlElement)
+
+  pageTop() {
+    window.location.hash = '';
+    window.location.hash = '#top'; // scroll to the divv with id="top"
+}
 }
