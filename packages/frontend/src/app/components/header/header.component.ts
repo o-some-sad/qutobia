@@ -64,9 +64,8 @@ export class HeaderComponent implements OnInit {
     this.authService.logout().subscribe({
       error: (err) => console.error(err),
       complete: () => {
-      this._Router.navigate(['/']);
-      this.cartService.fetchCart();
-    }
+        window.location.replace("/")
+      }
     });
   }
 }
