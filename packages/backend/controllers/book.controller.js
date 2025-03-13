@@ -29,15 +29,26 @@ const addBook = async (formData) => {
 const filterBooks = async (filters, page, limit) => {
   try {
     console.log("FILTERS:", filters);
+    const key = `filteredBooks:${JSON.stringify(
+      filters
+    )}:page${page}:limit${limit}`;
+    const cachedData = await redisClient.get(key);
+    if (cachedData) {
+      console.log("Fetching filtered books from Redis cache");
+      return JSON.parse(cachedData);
+    }
+
     const count = await Book.countDocuments(filters);
     const books = await Book.find(filters)
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .exec();
+    const response = { totalPages: Math.ceil(count / limit), data: books };
+    await redisClient.set(key, JSON.stringify(response), "EX", 3600);
     // sort --> for the newest book to be at the beginning
     // skip logic to be handled in the client-side
-    return { totalPages: Math.ceil(count / limit), data: books };
+    return response;
   } catch {
     throw new ApiError("No books found to list!", 400);
   }

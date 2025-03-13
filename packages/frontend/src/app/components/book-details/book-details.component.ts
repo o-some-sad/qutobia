@@ -12,6 +12,7 @@ import { Review } from '../../interfaces/review.interface';
 import { FormsModule, NgModel } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import { ChangeDetectorRef } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-book-details',
   imports: [NgClass, FormsModule,],
@@ -32,6 +33,7 @@ export class BookDetailsComponent implements OnInit {
   hasCompletedOrder: boolean = false; // Track if the user has a completed order
   isAdmin: boolean = false; // Track if the user is an admin
 
+
   constructor(
     private route: ActivatedRoute,
     private bookService: BookService,
@@ -43,21 +45,49 @@ export class BookDetailsComponent implements OnInit {
   )
   {}
 
-  ngOnInit(): void {
-    this.authService.me().subscribe((res) => {
-      this.newReview.user = res;
-      console.log(this.newReview.user);
-    });
+  async ngOnInit(){
+    this.newReview.user = await firstValueFrom(this.authService.me());
+    console.log(this.newReview.user);
+    if(this.newReview.user.role === "admin"){
+      this.isAdmin = true;
+    }
+    else{
+      this.isAdmin = false;
+    }
+
 
     const bookId = this.route.snapshot.paramMap.get('id');
     console.log(bookId);
     
     if (bookId) {
-      this.bookService.getBookById(bookId).subscribe((res) => {
+        this.bookService.getBookById(bookId).subscribe((res) => {
         this.book = res.data;
         this.newReview.book = this.book;
         console.log(this.book);
       });
+
+      
+
+      this.orderService.getUserOrder(this.newReview.user._id).subscribe((orders) => {
+        this.hasCompletedOrder = false; // Initialize to false
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!", orders);
+
+        //@ts-ignore
+        orders.order.forEach((ord) => {
+          if (ord.status === "Completed") {
+            console.log("????????????????????????????????????",ord);
+            ord.books.forEach((item: { book: {_id:string} }) => { // Explicitly type `book`
+              console.log(item);
+              if (item.book._id === bookId) {
+                this.hasCompletedOrder = true; // Set to true if the book is found
+              }
+            });
+          }
+        });
+      
+        console.log('User has completed order:', this.hasCompletedOrder);
+      });
+
    this.fetchReviews(bookId);
     }
   }
@@ -126,21 +156,42 @@ export class BookDetailsComponent implements OnInit {
 
       // Delete a review
       deleteReview(reviewId: string): void {
-        if (confirm('Are you sure you want to delete this review?')) {
-          this.reviewService.deleteReview(reviewId).subscribe(
-            () => {
-              this.reviews = this.reviews.filter((r) => r._id !== reviewId); 
-              toast.success("review deleted successfuly");
-            },
-            (error) => {
-              toast.error("review cannot be removed");
+        toast.warning("Are you sure you want to delete this review?", {
+          action: {
+            label: "yes",
+            onClick:() => {
+              try{
+                this.reviewService.deleteReview(reviewId).subscribe(
+                  () => {
+                    this.reviews = this.reviews.filter((r) => r._id !== reviewId); 
+                    toast.success("review deleted successfuly");
+                  })
+              }
+              catch(err){
+                toast.error("cannot be deleted");
+              }
             }
-          );
-        }
+          },
+          cancel: {
+            label: "no",
+            onClick:() => {
+            }
+          }
+        });
+
       }
 
   addToCart(book: string){
     console.log("Pressed: ", book);
-    this.cartService.addBook(book);
+    const toastId = toast.loading("Adding book")
+    this.cartService.addBook(book).subscribe({
+      next:()=> {
+          toast.success("Book added", { id: toastId })
+          
+      },
+      error: error=>{
+        toast.error(error.error.message, { id: toastId })
+      }
+    });
   }
 }
