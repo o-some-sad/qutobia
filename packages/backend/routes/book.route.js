@@ -40,6 +40,9 @@ router.get("/", async (req, res, next) => {
   const limit = +req.query.limit || 10;
   try {
     if(req.query.title) filters.title = { $regex: req.query.title, $options: 'i' }; // i for case insensitive
+    if(req.query.author) filters.author = { $regex: req.query.author, $options: 'i' }; // i for case insensitive
+    // lowerPrice
+    // upperPrice
     const books = await filterBooks(filters, page, limit);
     res.status(200).json({ totalPages: books.totalPages, data: books.data });
   } catch (err) {
