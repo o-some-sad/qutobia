@@ -10,7 +10,7 @@ import cookieParser from "cookie-parser";
 import "./utilities/logger.js";
 import { rateLimit } from "express-rate-limit";
 import { RedisStore } from "rate-limit-redis";
-import { WebSocketExpress, Router } from "websocket-express";
+import { WebSocketExpress } from "websocket-express";
 
 const app = new WebSocketExpress();
 
