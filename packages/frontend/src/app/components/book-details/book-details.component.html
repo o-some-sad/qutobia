@@ -110,18 +110,26 @@
               <p class="text-sm text-gray-500 mt-2">Rating: {{ review.rating }}/5</p>
               <p class="text-sm text-gray-500 mt-2">By: {{ review.user.name }}</p>
               <p class="text-sm text-gray-500 mt-2">For: {{ review.book.title }}</p>
-              <button
-                (click)="startEditReview(review)"
-                class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 mt-2"
-              >
-                Edit
-              </button>
-              <button
-                (click)="deleteReview(review._id)"
-                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mt-2 ml-2"
-              >
-                Delete
-              </button>
+              
+                <!-- show only if this review is yours -->
+                 @if(review.user._id === newReview.user._id){
+                   <button
+                     (click)="startEditReview(review)"
+                     class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 mt-2"
+                   >
+                     Edit
+                   </button>
+                 }
+              
+              @if(newReview.user.role === "admin"){
+                <!-- <script> console.log (newReview.user) </script> -->
+                <button
+                  (click)="deleteReview(review._id)"
+                  class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mt-2 ml-2"
+                >
+                  Delete
+                </button>
+              }
             }
           </div>
         }
@@ -186,6 +194,6 @@
   </div>
 } @else {
   <div class="text-center text-2xl font-semibold text-gray-600 mt-8 animate-pulse">
-    Loading...
+    Book Doesn't Exist....
   </div>
 }

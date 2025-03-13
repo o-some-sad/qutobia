@@ -12,8 +12,7 @@ export const addReview = async (userId, reviewData) => {
 export const getAllReviewsByBookId = async (bookId) => {
   const reviews = await Review.find({ book: bookId })
     .populate("user", "name")
-    .populate("book", "title")
-    .exec();
+    .populate("book", "title");
   if (reviews.length === 0) {
     throw new ApiError("review not found", 404);
   }
@@ -21,8 +20,6 @@ export const getAllReviewsByBookId = async (bookId) => {
 };
 
 export const updateReviewById = async (reviewId, updatedFields) => {
-  //authorization still nedded
-  //any extra fields will be accepted but not added to the database.
   const updatedReview = await Review.findByIdAndUpdate(
     reviewId,
     { ...updatedFields },

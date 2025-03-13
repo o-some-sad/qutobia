@@ -7,7 +7,7 @@ import { Review } from '../interfaces/review.interface';
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = `${environment.base_url}`;
+  private apiUrl = `${environment.base_url}/reviews`;
 
   constructor(private http: HttpClient) {}
  // Get all reviews for a book by book ID
@@ -17,7 +17,13 @@ export class ReviewService {
 
 // Add a new review
 addReview(userId: string, bookId: string, reviewData: Omit<Review, '_id' | 'createdAt' | 'updatedAt'>): Observable<Review> {
-  return this.http.post<Review>(`${this.apiUrl}`, { userId, bookId, ...reviewData });
+  const body = {
+    user: userId,    // Send as "user"
+    book: bookId,    // Send as "book"
+    rating: reviewData.rating,
+    review: reviewData.review
+  };
+  return this.http.post<Review>(`${this.apiUrl}`, body);
 }
 
 // Update a review

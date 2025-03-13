@@ -10,15 +10,25 @@ import { authenticateToken } from "../middlewares/authenticateToken.js";
 import ApiError from "../utilities/ApiErrors.js";
 import validateSchema from "../middlewares/zodValidator.middleware.js";
 import { registerValidator } from "shared/register.validator.js";
+import redisClient from "../utilities/redisClient.js";
+
 const Router = express.Router();
 
 Router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const tokenAndUser = await handleLogin(email, password);
-    
-    
-    res.cookie("token", tokenAndUser.token, { httpOnly: true, secure: false,sameSite:"lax" });
+    res.cookie("token", tokenAndUser.token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    redisClient.set(
+      `me:${tokenAndUser.token}`,
+      JSON.stringify(tokenAndUser.user),
+      "EX",
+      3600
+    );
     res.status(200).json(tokenAndUser); //send token and user to the clientSide
   } catch (err) {
     next(err);
@@ -50,18 +60,22 @@ Router.get("/me", authenticateToken, async (req, res, next) => {
   }
 });
 
-Router.post("/register",validateSchema(registerValidator), async (req, res, next) => {
-  try {
-    const registeredUser = await handleRegister(req.body);
-    return res.status(200).json({ data: registeredUser });
-  } catch (err) {
-    if (err instanceof mongoose.Error.ValidationError) {
-      return res
-        .status(400)
-        .json({ status: "fail", message: "Validation Error !" });
+Router.post(
+  "/register",
+  validateSchema(registerValidator),
+  async (req, res, next) => {
+    try {
+      const registeredUser = await handleRegister(req.body);
+      return res.status(200).json({ data: registeredUser });
+    } catch (err) {
+      if (err instanceof mongoose.Error.ValidationError) {
+        return res
+          .status(400)
+          .json({ status: "fail", message: "Validation Error !" });
+      }
+      next(err);
     }
-    next(err);
   }
-});
+);
 
 export default Router;

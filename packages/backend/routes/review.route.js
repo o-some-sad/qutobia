@@ -19,10 +19,12 @@ Router.post(
   validateSchema(reviewValidator),
   async (req, res, next) => {
     try {
+      console.log("hello from post router");
       const userId = req.user._id;
       const review = await addReview(userId, req.body);
       return res.status(201).json(review); //resource creation
     } catch (err) {
+      console.log("error in post router");
       next(err);
     }
   }
@@ -43,7 +45,7 @@ Router.get("/:id", async (req, res, next) => {
 Router.patch(
   "/:id",
   authenticateToken,
-  validateSchema(reviewValidator),
+  // validateSchema(reviewValidator),
   async (req, res, next) => {
     try {
       const reviewId = req.params.id;

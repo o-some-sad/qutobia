@@ -10,9 +10,11 @@ import { OrdersService } from '../../services/orders.service';
 import { AuthService } from '../../services/auth.service';
 import { Review } from '../../interfaces/review.interface';
 import { FormsModule, NgModel } from '@angular/forms';
+import { toast } from 'ngx-sonner';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-book-details',
-  imports: [JsonPipe, NgClass, FormsModule],
+  imports: [JsonPipe, NgClass, FormsModule,],
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css'
 })
@@ -36,17 +38,24 @@ export class BookDetailsComponent implements OnInit {
     private cartService: CartService,
     private reviewService: ReviewService,
     private authService: AuthService,
-    private orderService: OrdersService
+    private orderService: OrdersService,
+    private cdr: ChangeDetectorRef
   )
   {}
 
   ngOnInit(): void {
-    console.log("hellllllllllllllllllllllllllllllo");
+    this.authService.me().subscribe((res) => {
+      this.newReview.user = res;
+      console.log(this.newReview.user);
+    });
+
     const bookId = this.route.snapshot.paramMap.get('id');
     console.log(bookId);
+    
     if (bookId) {
       this.bookService.getBookById(bookId).subscribe((res) => {
         this.book = res.data;
+        this.newReview.book = this.book;
         console.log(this.book);
       });
    this.fetchReviews(bookId);
@@ -58,6 +67,7 @@ export class BookDetailsComponent implements OnInit {
     this.reviewService.getReviewsByBookId(bookId).subscribe(
       (reviews) => {
         this.reviews = reviews;
+        this.cdr.detectChanges();
       },
       (error) => {
         console.error('Error fetching reviews:', error);
@@ -68,16 +78,20 @@ export class BookDetailsComponent implements OnInit {
      // Add a new review
   addReview(): void {
     if (!this.newReview.review || !this.newReview.rating) {
-      alert('Please fill out all fields.');
+      toast.error("please fill out the fields");
       return;
     }
+    console.log('Adding review:', this.newReview);
 
     this.reviewService.addReview(this.newReview.user._id, this.newReview.book._id, this.newReview).subscribe(
       (review) => {
         this.reviews.push(review); // Add the new review to the list
         this.newReview = { user: {} as User, book: this.newReview.book, rating: 1, review: '' }; // Reset the form
+        this.fetchReviews(this.newReview.book._id);
+        toast.success('review added successfully');
       },
       (error) => {
+        toast.error("review couldn't be added");
         console.error('Error adding review:', error);
       }
     );
@@ -90,17 +104,22 @@ export class BookDetailsComponent implements OnInit {
 
     updateReview(): void {
       if (!this.editingReview) return;
-
+      console.log(this.editingReview);
+      const toast_id = toast.loading('Editing Review...');
       this.reviewService.updateReview(this.editingReview._id, this.editingReview).subscribe(
         (updatedReview) => {
           const index = this.reviews.findIndex((r) => r._id === updatedReview._id);
           if (index !== -1) {
             this.reviews[index] = updatedReview; // Update the review in the list
           }
-          this.editingReview = null; // Stop editing
+          if(this.editingReview?.book._id){
+            this.fetchReviews(this.editingReview.book._id);
+            this.editingReview = null; // Stop editing
+            toast.success('Updated Successfully', { id: toast_id });
+          }
         },
         (error) => {
-          console.error('Error updating review:', error);
+          toast.error("failed to update the review", { id: toast_id });
         }
       );
     }
@@ -110,10 +129,11 @@ export class BookDetailsComponent implements OnInit {
         if (confirm('Are you sure you want to delete this review?')) {
           this.reviewService.deleteReview(reviewId).subscribe(
             () => {
-              this.reviews = this.reviews.filter((r) => r._id !== reviewId); // Remove the review from the list
+              this.reviews = this.reviews.filter((r) => r._id !== reviewId); 
+              toast.success("review deleted successfuly");
             },
             (error) => {
-              console.error('Error deleting review:', error);
+              toast.error("review cannot be removed");
             }
           );
         }
