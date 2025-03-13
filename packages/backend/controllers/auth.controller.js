@@ -73,4 +73,8 @@ export const handleRegister = async (body) => {
   return await User.create(body);
 };
 
+export const generateNewToken = (user)=>{
+  return jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1d" });
+}
+
 export const handleMe = async () => {}; //not needed, logic handled entirely in the router.

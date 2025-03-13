@@ -15,7 +15,7 @@ export class AuthService {
     this.me().subscribe({
       next:(value)=>{
         this.userId=value._id;
-        
+        this.user=value;
       }
     })
    }

@@ -1,0 +1,48 @@
+<div class="container mx-auto py-10">
+  <div class="w-8/12 mx-auto ">
+    @for (contributor of contributors; track $index) {
+    <div class="flex max-w-2xl w-full rounded overflow-hidden mb-5 shadow-lg mx-auto">
+      <div class="w-1/3 relative">
+        <img
+          class="w-full h-auto max-h-56 peer-checked:max-h-full object-cover transition-all duration-300 ease-in-out"
+          [src]="contributor.img"
+          alt="Profile Image"
+        />
+      </div>
+      <div class="w-2/3 px-6 py-4">
+        <div class="font-bold text-xl mb-2">{{ contributor.name }}</div>
+        <ul class="text-gray-700 text-base space-y-2">
+            <li class="flex items-center">
+              <i class="fas fa-envelope text-gray-600 w-5 h-5 mr-2"></i> {{contributor.email}}
+            </li>
+            <li class="flex items-center">
+              <i class="fab fa-linkedin text-blue-600 w-5 h-5 mr-2"></i><a class="text-blue-600" target="_blank" [href]="contributor.linkedin">Linked in</a>
+            </li>
+            <li class="flex items-center">
+              <i class="fab fa-github text-black w-5 h-5 mr-2"></i><a class="text-blue-600" target="_blank" [href]="contributor.github">GitHub in</a> 
+            </li>
+          </ul>
+
+        <div class="pt-4">
+          <input type="checkbox" id="expand" class="hidden peer" />
+          <article
+            class="overflow-hidden max-h-24 peer-checked:max-h-full peer-checked:overflow-visible transition-all duration-300"
+          >
+            {{ contributor.desc }}
+          </article>
+          <label
+            for="expand"
+            class="text-blue-500 cursor-pointer block mt-2 peer-checked:hidden"
+            >See More</label
+          >
+          <label
+            for="expand"
+            class="text-blue-500 cursor-pointer block mt-2 hidden peer-checked:block"
+            >See Less</label
+          >
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

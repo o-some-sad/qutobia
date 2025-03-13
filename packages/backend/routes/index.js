@@ -7,6 +7,7 @@ import orderRouter from "./order.route.js";
 import cartRouter from "./cart.route.js";
 import adminRouter from "./admin.route.js";
 import authRouter from "./auth.route.js";
+import { paymentRouter } from "./payment.route.js";
 
 const Router = express.Router();
 Router.use("/", adminRouter);
@@ -16,6 +17,7 @@ Router.use("/users", userRouter);
 Router.use("/reviews", reviewRouter);
 Router.use("/cart", cartRouter);
 Router.use("/auth",authRouter);
+Router.use("/payment", paymentRouter);
 Router.all("*", (req, res) => {
   res.status(404).json({ status: "fail", message: "Route not found" });
 });

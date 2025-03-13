@@ -1,7 +1,11 @@
 import express from "express";
 import User from "../models/user.model.js";
 import mongoose from "mongoose";
-import { handleLogin, handleRegister } from "../controllers/auth.controller.js";
+import {
+  generateNewToken,
+  handleLogin,
+  handleRegister,
+} from "../controllers/auth.controller.js";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
 import ApiError from "../utilities/ApiErrors.js";
 import validateSchema from "../middlewares/zodValidator.middleware.js";
@@ -31,9 +35,7 @@ Router.post("/login", async (req, res, next) => {
   }
 });
 
-Router.get("/logout", (req, res) => {
-  console.log(7531);
-
+Router.get("/logout", (req, res) => {  
   res.clearCookie("token", { httpOnly: true, secure: true });
   res.json({ message: "Logged out successfully!" });
 });
@@ -42,11 +44,16 @@ Router.get("/me", authenticateToken, async (req, res, next) => {
   //authenticateToken should be called as a middleware
   //returns object of currently logged-in the user
   try {
-    let user = req.user;
-    if (!user) {
+    const  tokenUser = req.user;
+    if (!tokenUser) {
       throw new ApiError("user not found", 404);
     }
-    user = await User.findById(req.user._id);
+    //TODO: add cache layer for user object
+    const user = await User.findById(req.user._id);
+    if(user.role !== tokenUser.role){
+      const token = generateNewToken(user)
+      res.cookie("token", token, { httpOnly: true, secure: false,sameSite:"lax" });
+    }
     res.status(200).json(user);
   } catch (err) {
     next(err);
