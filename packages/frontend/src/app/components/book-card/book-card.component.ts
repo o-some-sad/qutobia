@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
+import { toast } from 'ngx-sonner';
 // import { RouterLink } from '@angular/router';
 
 @Component({
@@ -18,6 +19,15 @@ export class BookCardComponent {
 
   addToCart(book: string){
     console.log("Pressed: ", book);
-    this.cartService.addBook(book);
+    const toastId = toast.loading("Adding book")
+    this.cartService.addBook(book).subscribe({
+      next:()=> {
+          toast.success("Book added", { id: toastId })
+          
+      },
+      error: error=>{
+        toast.error(error.error.message, { id: toastId })
+      }
+    });
   }
 }
