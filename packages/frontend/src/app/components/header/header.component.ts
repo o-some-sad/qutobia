@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { SearchComponent } from '../search/search.component';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user.interface';
 import { SharedService } from '../../services/shared.service';
@@ -12,7 +11,7 @@ import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [FormsModule, RouterLink, SearchComponent, IconsModule, DecimalPipe],
+  imports: [FormsModule, RouterLink, IconsModule, DecimalPipe],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -67,7 +66,7 @@ export class HeaderComponent implements OnInit {
       complete: () => {
       this._Router.navigate(['/']);
       this.cartService.fetchCart();
-    }  
+    }
     });
   }
 }
