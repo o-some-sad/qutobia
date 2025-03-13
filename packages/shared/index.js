@@ -26,7 +26,7 @@ export const updateUserValidator = userValidator.partial({
 
 export const userPasswordValidator = z
   .object({
-    oldPassword: z.string().min(8),
+    currentPassword: z.string().min(8),
     newPassword: z.string().min(8),
     confirmPassword: z.string().min(8),
   })

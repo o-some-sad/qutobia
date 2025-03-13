@@ -19,7 +19,7 @@ export const updateUserPassword = async (id, userData) => {
   await userPasswordValidator.parseAsync(userData);
   const user = await User.findById(id);
   if (!user) throw new Error('User not found');
-  if (!await user.comparePassword(userData.oldPassword)) throw new Error('Old password is incorrect');
+  if (!await user.comparePassword(userData.currentPassword)) throw new Error('current password is incorrect');
   user.password = userData.newPassword;
   await user.save();
   return user;
