@@ -14,7 +14,7 @@ cloudinary.config({
 const userStorage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'kotobia/users',
+    folder: 'qutobia/users',
     allowed_formats: ['jpg', 'png', 'jpeg'],
     overwrite: true
   }
@@ -23,7 +23,7 @@ const userStorage = new CloudinaryStorage({
 const bookStorage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'kotobia/books',
+    folder: 'qutobia/books',
     allowed_formats: ['jpg', 'png', 'jpeg'],
     overwrite: true
   }

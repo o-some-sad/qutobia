@@ -5,6 +5,8 @@ import axios from "axios";
 import dotenv from "dotenv";
 import fs from "fs";
 import ApiError from "../utilities/ApiErrors.js";
+import { passwordStrength } from 'check-password-strength'
+
 
 dotenv.config();
 const ZEROBOUNCE_API_KEY = process.env.ZEROBOUNCE_API_KEY;
@@ -48,19 +50,16 @@ export const handleLogin = async (email, password) => {
 
 export const handleRegister = async (body) => {
   // CHECK if ALL fields are full
-  const { email, name, password } = body;
-  const isEmailRegistered = await User.exists({ email: email });
-  // const isUsernameRegistered = await User.exists({ name: name });
-
-  // CHECK if the username is taken
-  if (name === undefined || email === undefined || password === undefined) {
-    //TODO: use schema validator
-    throw new ApiError("Username, email and password are required !");
+  const { email, password } = body;
+  
+  if (passwordStrength(password).value === "Too weak" || passwordStrength(password).value === "Weak") {
+    throw new ApiError("password is weak!", 400);
   }
+  const isEmailRegistered = await User.exists({ email: email });
   // CHECK if the user's email is taken
   if (isEmailRegistered !== null) {
     throw new ApiError("This email is already in use. Please use a different email or log in.");
-  }
+  } // can make it in the ZOD validator
   if (process.env.ENVIORNMENT === "production") {
     const isEmailValid = await validateEmail(email);
     if (!isEmailValid) {
@@ -73,5 +72,9 @@ export const handleRegister = async (body) => {
   sendMail(email, "Email Verification", msg);
   return await User.create(body);
 };
+
+export const generateNewToken = (user)=>{
+  return jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1d" });
+}
 
 export const handleMe = async () => {}; //not needed, logic handled entirely in the router.

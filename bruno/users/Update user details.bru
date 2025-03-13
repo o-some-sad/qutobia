@@ -1,0 +1,22 @@
+meta {
+  name: Update user details
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{KOTOBIA_URL}}/api/users/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 67ca5eb96a7792bd2a614610
+}
+
+body:json {
+  {
+      "role": "user"
+  }
+                                                                                                                                                                                                                                                                                                                                                                                   
+}

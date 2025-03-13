@@ -1,0 +1,19 @@
+meta {
+  name: Update details
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{KOTOBIA_URL}}/api/books/:id
+  body: multipartForm
+  auth: none
+}
+
+params:path {
+  id: 
+}
+
+body:multipart-form {
+  title: PostgreSQL: From basics to expert
+}

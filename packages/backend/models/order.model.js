@@ -26,27 +26,26 @@ const orderSchema = new mongoose.Schema(
             }],
             required: true,
         },
-        totalPrice: {
-            type: Number,
-            required: true,
-            min: 0,
-        },
-        items:{
-            type: Number,
-            required: true,
-            min: 0,
-        },
         status: {
             type: String,
             enum: ['Completed' , 'Processing' , 'Pending' , 'Cancelled'],
-            default: 'pending',
+            default: 'Pending',
         },
-        session:{
+        session: {
             type: String,
             required: true,
         }
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+orderSchema.virtual('totalPrice').get(function () {
+    return this.books.reduce((total, book) => total + book.price * book.quantity, 0);
+});
+
+orderSchema.virtual('items').get(function () {
+    return this.books.reduce((total, book) => total + book.quantity, 0);
+});
+
 const Order = mongoose.model('Order', orderSchema);
 export default Order;

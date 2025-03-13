@@ -28,7 +28,7 @@ const cartSchema = new mongoose.Schema({
         required: true,
         default: [],
     }
-})
+}, {timestamps: true})
 
 cartSchema.post('findOneAndUpdate', 
     /**

@@ -1,7 +1,7 @@
 <div class="py-20 sm:px-10 md:px-20 w-full max-w-[4000px] mx-auto">
-  <form id="div1" [formGroup]="handlelogin" class="max-w-2xl flex flex-row p-10 mx-auto" (ngSubmit)="login()">
-    <div class="flex flex-col items-center justify-center">
-      <div id="div2" class="bg-black h-[450px] w-[400px] text-white flex flex-col items-center justify-center">
+  <form id="div1" [formGroup]="handellogin" class="max-w-2xl flex flex-col-reverse  md:flex-row p-10 mx-auto" (ngSubmit)="login()">
+    <div class="flex flex-col shadow-xl items-center justify-center">
+      <div id="div2" class="bg-black w-[400px] text-white flex flex-col items-center justify-center py-10">
         <h1 class="text-2xl text-center">Log-In</h1>
     <div class="mb-5"><br>
       <label
@@ -14,12 +14,12 @@
         type="email"
         name="email"
         id="email"
-        class="bg-white border border-white text-black text-sm rounded focus:ring-white focus:border-white block h-[30px] w-[200px] p-2.5 dark:bg-white dark:border-white dark:placeholder-white dark:text-white dark:focus:ring-white dark:focus:border-white"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-72 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-blue-500"
         placeholder="domain@example.com"
         required
       />
     </div>
-    @if (handlelogin.get('email')?.touched && handlelogin.get('email')?.errors) {
+    @if (handellogin.get('email')?.touched && handellogin.get('email')?.errors) {
     <div
       class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-white dark:text-red-400"
       role="alert"
@@ -39,11 +39,11 @@
         name="password"
         id="password"
         placeholder="*******"
-        class="bg-white border border-white text-black text-sm rounded focus:ring-white focus:border-white block h-[30px] w-[200px] p-2.5 dark:bg-white dark:border-white dark:placeholder-white dark:text-white dark:focus:ring-white dark:focus:border-white"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-72 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-blue-500"
         required/>
     </div>
-    @if (handlelogin.get('password')?.touched &&
-    handlelogin.get('password')?.errors) {
+    @if (handellogin.get('password')?.touched &&
+    handellogin.get('password')?.errors) {
     <div
       class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-white dark:text-red-400"
       role="alert"
@@ -59,26 +59,18 @@
     <button
       type="submit"
       (click)="login()"
-      class="text-black bg-white hover:bg-cyan-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded text-sm h-[30px] w-[200px] px-20.5 text-center dark:bg-gray-600 dark:focus:ring-gray-800"
-      [disabled]="handlelogin.invalid">
+      class="text-black bg-white hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-72  px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+      [disabled]="handellogin.invalid">
       Login
     </button>
     }
     <span class="block py-5 ">Don't have an account ? <span (click)="register()" class="text-sm underline cursor-pointer">Register</span></span>
   </div>
 </div>
-<div id="div3" class="bg-white shadow-xl w-[200px] h-[450px] text-black p-5 flex items-center justify-center">
+<div id="div3" class="bg-white shadow-xl w-[200px] text-black mb-5 md:mb-0 mx-auto p-5 flex items-center justify-center">
   <img src="https://img.freepik.com/free-vector/book-icon_632498-3791.jpg?semt=ais_hybrid" alt="login_book_img" class="w-full h-auto flex flex-col items-center justify-center">
-  <div class="pt-50 font-mono absolute">Qutobia</div>
+  <div class="pt-48 font-mono absolute">Qutobia</div>
 </div>
 </form>
-  @if (errMessage) {
-  <div
-    class="p-4 mb-4 text-sm text-red-800 text-center mt-10 rounded-lg bg-red-50 dark:bg-gray-800 w-1/4 mx-auto dark:text-red-400"
-    role="alert"
-  >
-    Invalid Data.
-  </div>
-  }
 </div>
 

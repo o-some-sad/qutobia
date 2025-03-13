@@ -1,0 +1,22 @@
+meta {
+  name: Update review
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{KOTOBIA_URL}}/api/reviews/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "rating": 5,
+    "review": "updated review"
+  }
+}

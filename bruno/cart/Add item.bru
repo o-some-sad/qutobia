@@ -1,0 +1,17 @@
+meta {
+  name: Add item
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{KOTOBIA_URL}}/api/cart
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "book": "67c359755a8a772646358df1"
+  }
+}
