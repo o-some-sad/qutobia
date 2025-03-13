@@ -3,8 +3,8 @@ import { BookItem } from "./book.interface";
 
 export interface Review {
   _id: string,
-  user: User,
-  book: BookItem,
+  user: User, //User or String?
+  book: BookItem, //BookItem or String?
   rating: Number,
   review: string,
   createdAt?: string; // "?" cuz optional
