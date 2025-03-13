@@ -25,7 +25,7 @@ importers:
         version: 1.8.2
       backend:
         specifier: 'file:'
-        version: 'link:'
+        version: file:packages/backend(encoding@0.1.13)(socks@2.8.4)
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1(encoding@0.1.13)
@@ -47,9 +47,9 @@ importers:
       express:
         specifier: ^4.21.2
         version: 4.21.2
-      express-rate-limiter:
-        specifier: ^1.3.1
-        version: 1.3.1
+      express-rate-limit:
+        specifier: ^7.5.0
+        version: 7.5.0(express@4.21.2)
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -2332,6 +2332,9 @@ packages:
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
+  backend@file:packages/backend:
+    resolution: {directory: packages/backend, type: directory}
+
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
@@ -3590,9 +3593,6 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
 
-  'qutobia@file:':
-    resolution: {directory: '', type: directory}
-
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
 
@@ -4414,6 +4414,9 @@ packages:
 
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+
+  'qutobia@file:':
+    resolution: {directory: '', type: directory}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -7437,7 +7440,7 @@ snapshots:
 
   axios@1.8.2:
     dependencies:
-      follow-redirects: 1.15.9(debug@4.4.0)
+      follow-redirects: 1.15.9
       form-data: 4.0.2
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -7480,6 +7483,39 @@ snapshots:
       '@babel/core': 7.26.9
       '@babel/helper-define-polyfill-provider': 0.6.3(@babel/core@7.26.9)
     transitivePeerDependencies:
+      - supports-color
+
+  backend@file:packages/backend(encoding@0.1.13)(socks@2.8.4):
+    dependencies:
+      axios: 1.8.2
+      bcrypt: 5.1.1(encoding@0.1.13)
+      check-password-strength: 3.0.0
+      cloudinary: 2.5.1
+      cookie-parser: 1.4.7
+      cors: 2.8.5
+      dotenv: 16.4.7
+      express: 4.21.2
+      express-rate-limit: 7.5.0(express@4.21.2)
+      express-rate-limiter: 1.3.1
+      jsonwebtoken: 9.0.2
+      mongoose: 8.11.0(socks@2.8.4)
+      multer: 1.4.5-lts.1
+      multer-storage-cloudinary: 4.0.0(cloudinary@2.5.1)
+      nodemailer: 6.10.0
+      rate-limit-redis: 4.2.0(express-rate-limit@7.5.0(express@4.21.2))
+      redis: 4.7.0
+      winston: 3.17.0
+      zod: 3.24.2
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-providers'
+      - '@mongodb-js/zstd'
+      - debug
+      - encoding
+      - gcp-metadata
+      - kerberos
+      - mongodb-client-encryption
+      - snappy
+      - socks
       - supports-color
 
   balanced-match@1.0.2: {}
@@ -8322,6 +8358,8 @@ snapshots:
 
   fn.name@1.1.0: {}
 
+  follow-redirects@1.15.9: {}
+
   follow-redirects@1.15.9(debug@4.4.0):
     optionalDependencies:
       debug: 4.4.0(supports-color@5.5.0)
@@ -8880,13 +8918,6 @@ snapshots:
       json-buffer: 3.0.1
 
   kind-of@6.0.3: {}
-
-  'qutobia@file:':
-    dependencies:
-      express: 4.21.2
-      shared: link:packages/shared
-    transitivePeerDependencies:
-      - supports-color
 
   kuler@2.0.0: {}
 
@@ -9712,6 +9743,13 @@ snapshots:
       side-channel: 1.1.0
 
   queue-microtask@1.2.3: {}
+
+  'qutobia@file:':
+    dependencies:
+      express: 4.21.2
+      shared: link:packages/shared
+    transitivePeerDependencies:
+      - supports-color
 
   randombytes@2.1.0:
     dependencies:

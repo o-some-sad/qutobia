@@ -43,8 +43,7 @@ const limiter = rateLimit({
   standardHeaders: "draft-8",
   legacyHeaders: false, //make true if you want the rate-limiter header to be sent in the response.
   store: new RedisStore({
-    sendCommand: (...args) => redisClient.sendCommand(...args),
-    //key is stored as rate-limit:<ip-address> in redis
+    sendCommand: (...args) => redisClient.sendCommand(args),
   }),
 });
 
