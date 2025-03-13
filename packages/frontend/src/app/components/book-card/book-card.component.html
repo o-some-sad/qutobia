@@ -2,6 +2,8 @@
   <div class="relative grid max-h-[300px] overflow-hidden">
     <img [src]="BookItem.image" class="brightness-50 object-cover group-hover:scale-125 transition-all duration-500" alt=""/>
     <div class="absolute bottom-5 left-5">
+      <!-- REMOVE PRICE ! -->
+      <p class="text-xl font-bold text-white">{{ BookItem.price }}</p>
       <p class="text-xl font-bold text-white">{{ BookItem.title }}</p>
       <p class="text-white">{{ BookItem.author.join(", ") }}</p>
     </div>

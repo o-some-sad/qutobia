@@ -65,13 +65,14 @@ export class CartComponent implements OnInit {
     );
   }
   async ngOnInit() {
-    this.cartService.fetchCart();
-    this.cartService.error$.subscribe((error) => {
-      if (error) {
-        toast.error(error.error.message);
-        this.error = error.error.message;
+    this.cartService.fetchCart().subscribe({
+      //? why no next?
+      //? we already waiting the values from cartService.cart$ below
+      error: error=>{
+        this.error = error.error.message
       }
     });
+    
     this.cartService.cart$
       .pipe(
         catchError((error) => {
@@ -91,11 +92,29 @@ export class CartComponent implements OnInit {
   }
 
   increaseBookQuantity(id: string) {
-    this.cartService.addBook(id);
+    const toastId = toast.loading("Adding book")
+    this.cartService.addBook(id).subscribe({
+      next:()=> {
+          toast.success("Book added", { id: toastId })
+          
+      },
+      error: error=>{
+        toast.error(error.error.message, { id: toastId })
+      }
+    });
   }
 
   async decreaseBookQuantity(id: string) {
-    this.cartService.removeBook(id);
+    const toastId = toast.loading("Removing book")
+    this.cartService.removeBook(id).subscribe({
+      next:()=> {
+        toast.info("Book removed", { id: toastId })
+        
+    },
+    error: error=>{
+      toast.error(error.error.message, { id: toastId })
+    }
+    });
   }
 
   async startCheckout() {

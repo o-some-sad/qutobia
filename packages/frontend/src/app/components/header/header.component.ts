@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
     this.authService.me().subscribe({
       next: (res) => {
         this.user = res;
-        this.cartService.fetchCart();
+        this.cartService.fetchCart().subscribe();
       },
       error: (_) => {
         this.user = null;

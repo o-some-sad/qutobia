@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment.development';
-import { Observable, map } from 'rxjs';
+import { Observable, map, max } from 'rxjs';
 import {BookItem, BookResponse, BooksResponse} from '../interfaces/book.interface';
 
 
@@ -11,10 +11,12 @@ import {BookItem, BookResponse, BooksResponse} from '../interfaces/book.interfac
 export class BookService {
 
   constructor(private http: HttpClient) { }
-  getBooks(page: number, limit: number, search: string, author: string = ""): Observable<BooksResponse>{
+  getBooks(page: number, limit: number, search: string, author: string = "", minPrice: number = 0, maxPrice: number = 0): Observable<BooksResponse>{
     let url = `${environment.base_url}/books?page=${page}&limit=${limit}`;
     if(search) url+=`&title=${search}`; // to filter books according to the title the user inputs
     if(author) url+=`&author=${author}`;
+    if(minPrice) url+=`&lowerPrice=${minPrice}`;
+    if(maxPrice) url+=`&upperPrice=${maxPrice}`;
     return this.http.get<BooksResponse>(url).pipe(map(res => ({
       totalPages: res.totalPages, data: res.data
     })));

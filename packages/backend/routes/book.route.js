@@ -42,8 +42,13 @@ router.get("/", async (req, res, next) => {
   try {
     if(req.query.title) filters.title = { $regex: req.query.title, $options: 'i' }; // i for case insensitive
     if(req.query.author) filters.author = { $regex: req.query.author, $options: 'i' }; // i for case insensitive
-    if(req.query.lowerPrice) filters.price = { $gte: req.query.lowerPrice };
-    if(req.query.upperPrice) filters.price = { $lte: req.query.upperPrice };
+    if(req.query.lowerPrice && req.query.upperPrice) {
+      filters.price = { $gte: req.query.lowerPrice, $lte: req.query.upperPrice };
+    } else if(req.query.lowerPrice) {
+      filters.price = { $gte: req.query.lowerPrice };
+    } else if(req.query.upperPrice) {
+      filters.price = { $lte: req.query.upperPrice };
+    }
     const books = await filterBooks(filters, page, limit);
     res.status(200).json({ totalPages: books.totalPages, data: books.data });
   } catch (err) {
