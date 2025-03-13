@@ -49,4 +49,10 @@ export class HomePageComponent implements OnInit {
     this.selectedAuthor = "";
     this.loadBooks(1);
   }
+
+  removePopUp(e: Event) {
+    (e.currentTarget as HTMLElement).blur();
+  }
+  // currentTarget is the button pressed, and blur() removes focus of it
+  // (as HTMLElement is used for casting makes sure that the currentTarget is an htmlElement)
 }

@@ -5,7 +5,7 @@ export interface Review {
   _id: string,
   user: User, //User or String?
   book: BookItem, //BookItem or String?
-  rating: Number,
+  rating: number,
   review: string,
   createdAt?: string; // "?" cuz optional
   updatedAt?: string;

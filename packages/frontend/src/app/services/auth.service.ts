@@ -20,17 +20,25 @@ export class AuthService {
     })
    }
   login(user:User): Observable<{user:User,token:string}>{
-    return this.
-    http.post<{user:User,token:string}>(`${environment.base_url}/auth/login`,user);
+    return this.http.post<{user:User,token:string}>(`${environment.base_url}/auth/login`, user);
   }
   register(user:UserRegister):Observable<User>{
-    return this.http.post<User>(`${environment.base_url}/auth/register`,user);
+    return this.http.post<User>(`${environment.base_url}/auth/register`, user);
   }
   me(): Observable<User>{
     return this.http.get<User>(`${environment.base_url}/auth/me`, { withCredentials: true });
   }
   logout(){
     return this.http.get(`${environment.base_url}/auth/logout`);
+  }
+  verifyEmail(userId: string): Observable<User>{
+    return this.http.post<User>(`${environment.base_url}/auth/verify`, { userId: userId });
+  }
+  forgetPassword(email: string): Observable<void>{
+    return this.http.post<void>(`${environment.base_url}/auth/forget-password`, { email: email });
+  }
+  resetPassword(userId: string, password: string): Observable<User>{
+    return this.http.post<User>(`${environment.base_url}/auth/reset-password`, {userId: userId, password: password});
   }
 
   userRole(): Observable<string|null>{

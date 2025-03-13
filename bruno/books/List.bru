@@ -5,11 +5,12 @@ meta {
 }
 
 get {
-  url: {{KOTOBIA_URL}}/api/books?name=CHANGE_ME
+  url: {{KOTOBIA_URL}}/api/books?lowerPrice=30&upperPrice=40
   body: none
   auth: none
 }
 
 params:query {
-  name: CHANGE_ME
+  lowerPrice: 30
+  upperPrice: 40
 }

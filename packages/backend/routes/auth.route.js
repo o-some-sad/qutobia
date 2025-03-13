@@ -2,9 +2,10 @@ import express from "express";
 import User from "../models/user.model.js";
 import mongoose from "mongoose";
 import {
+  handleForgetPassword,
   generateNewToken,
   handleLogin,
-  handleRegister,
+  handleRegister, handleResetPassword, handleVerifyEmail,
 } from "../controllers/auth.controller.js";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
 import ApiError from "../utilities/ApiErrors.js";
@@ -104,5 +105,33 @@ Router.post(
     }
   }
 );
+
+Router.post("/verify", async (req, res, next) => {
+  try {
+    const tokenAndUser = await handleVerifyEmail(req.body.userId);
+    res.cookie("token", tokenAndUser.token, { httpOnly: true, secure: false, sameSite:"lax" });
+    return res.status(200).json({ message: "Email verified successfully", data: tokenAndUser.user });
+  } catch (err) {
+    next(err);
+  }
+});
+
+Router.post('/forget-password', async (req, res, next) => {
+  try {
+    await handleForgetPassword(req.body.email);
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (err) {
+    next(err);
+  }
+});
+
+Router.post("/reset-password", async (req, res, next) => {
+  try {
+    const user = await handleResetPassword(req.body);
+    return res.status(200).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default Router;

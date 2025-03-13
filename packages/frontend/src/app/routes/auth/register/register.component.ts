@@ -50,6 +50,7 @@ export class RegisterComponent {
 
   register() {
     this.isLoading = true;
+    const toast_id = toast.loading('Registering...');
     this._AuthService
       .register({
         name: this.handleRegister.value.name,
@@ -59,12 +60,14 @@ export class RegisterComponent {
       .subscribe({
         next: (value) => {
           this.isLoading = false;
+          toast.success('Registered successfully, please check your email to verify your account', { id: toast_id });
           this._Router.navigate(['login']);
         },
         error: (err) => {
           this.errMessage = err.error.message;
           toast.error(this.errMessage);
           this.isLoading = false;
+          toast.warning(err.error.message, { id: toast_id });
         },
         complete: () => {},
       });

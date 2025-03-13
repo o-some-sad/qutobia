@@ -1,0 +1,17 @@
+meta {
+  name: Verify E-mail
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{KOTOBIA_URL}}/api/auth/verify
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "userId": "67c2ddbc036f7cae384d9894"
+  }
+}
