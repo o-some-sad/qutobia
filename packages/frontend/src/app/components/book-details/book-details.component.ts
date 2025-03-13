@@ -46,8 +46,15 @@ export class BookDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.authService.me().subscribe((res) => {
       this.newReview.user = res;
+      if(res.role === "admin"){
+        this.isAdmin = true;
+      }
+      else{
+        this.isAdmin = false;
+      }
       console.log(this.newReview.user);
     });
+
 
     const bookId = this.route.snapshot.paramMap.get('id');
     console.log(bookId);
@@ -126,17 +133,29 @@ export class BookDetailsComponent implements OnInit {
 
       // Delete a review
       deleteReview(reviewId: string): void {
-        if (confirm('Are you sure you want to delete this review?')) {
-          this.reviewService.deleteReview(reviewId).subscribe(
-            () => {
-              this.reviews = this.reviews.filter((r) => r._id !== reviewId); 
-              toast.success("review deleted successfuly");
-            },
-            (error) => {
-              toast.error("review cannot be removed");
+        toast.warning("Are you sure you want to delete this review?", {
+          action: {
+            label: "yes",
+            onClick:() => {
+              try{
+                this.reviewService.deleteReview(reviewId).subscribe(
+                  () => {
+                    this.reviews = this.reviews.filter((r) => r._id !== reviewId); 
+                    toast.success("review deleted successfuly");
+                  })
+              }
+              catch(err){
+                toast.error("cannot be deleted");
+              }
             }
-          );
-        }
+          },
+          cancel: {
+            label: "no",
+            onClick:() => {
+            }
+          }
+        });
+
       }
 
   addToCart(book: string){
