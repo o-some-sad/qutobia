@@ -18,19 +18,24 @@ export class HomePageComponent implements OnInit {
   totalPages: number = 1;
   selectedAuthor: string = ""; // DEFAULT VALUE
   authors : string[] = [];
+  minPrice : number = 0;
+  maxPrice : number = 0;
   constructor(private bookService : BookService){} // injecting the book service
 
   ngOnInit(): void {
     this.loadBooks(this.currPage);
-    this.bookService.bookFilter().subscribe(res => {this.authors = res.author});
-    console.log("AUTHORS: ", this.authors);
+    this.bookService.bookFilter().subscribe(res => {
+      this.authors = res.author;
+      this.minPrice = res.price[0];
+      this.maxPrice = res.price[1];
+    })
   }
   goToPage(page: number) {
     this.currPage = page;
     this.loadBooks(page);
   }
   loadBooks(page: number){
-    this.bookService.getBooks(page,12,"", this.selectedAuthor).subscribe(res => {
+    this.bookService.getBooks(page, 12, "", this.selectedAuthor, this.minPrice, this.maxPrice).subscribe(res => {
       this.books = res.data; // populate books array with API response , got all book objects
       this.totalPages = res.totalPages; // totalPages from the server-side
     })

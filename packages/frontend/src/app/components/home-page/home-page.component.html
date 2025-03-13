@@ -70,19 +70,41 @@
       <div tabindex="0" role="button" class="btn m-1 bg-gray-300"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 14">
         <path d="M16 2H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 0 1 0 2Z"/>
     </svg></div>
-      <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-        <div>Author/s: </div>
+      <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-sm">
+        <!-- <div id="filters"> -->
+        <div id="authors" class="h-[70px] overflow-y-auto">
+          <div class="flex justify-center items-center text-xl font-mono font-bold">Author </div>
         @for(author of authors ; track $index){
-          <li><a><input type="radio" [(ngModel)]="selectedAuthor" name="author" class="radio radio-xs radio-error" [value]="author"/>{{author}}</a></li>
+          <li><label><input type="radio" [(ngModel)]="selectedAuthor" name="author" class="radio radio-xs radio-error" [value]="author"/>{{author}}</label></li>
         }
-    <div class="flex flex-col"></div>
+      </div>
+        <br>
+        <div class="flex justify-center items-center text-xl font-mono font-bold">Price range </div>
+        <!-- MIN-PRICE MUST BE 20.99 && MUST NOT BE > MAX  -->
+        <!-- MAX-PRICE MUST BE 49.0 -->
+        <div class="flex flex-row gap-5 items-center justify-center">
+        <div class="flex flex-col gap-2">
+          <div class="text-gray-500">Min</div>
+          <div><input type="number" class="bg-gray-200 w-[60px] border-black text-center" placeholder="20.99$" [(ngModel)]="minPrice" min="20.99" max="50.00"></div>
+        </div>
+        <div class="flex flex-col gap-2">
+          <div class="text-gray-500">Max</div>
+          <div><input type="number" placeholder="49.00$" class="bg-gray-200 w-[60px] border-black text-center " [(ngModel)]="maxPrice" min="20.99" max="50.00"></div>
+        </div>
+        </div><br>
+        <!-- <button (click)="filterByPrice()">Apply</button> -->
+      <!-- </div>  -->
+      <!-- div for id="filters" ^^ -->
+    <div class="flex flex-row gap-5 items-center justify-center">
     <!-- used 2-way binding to access the value of the radio button and pass it as a param. to the method -->
-    <button class="btn btn-neutral" (click)="filterByAuthor()">Apply</button><br>
-    <button class="btn btn-error" (click)="resetAuthor()">Reset</button>
+  <div><button class="btn btn-neutral hover:bg-white hover:text-black hover:border-black" (click)="filterByAuthor()">Apply</button><br></div>
+  <div><button class="btn btn-error hover:bg-red hover:text-white hover:border-black" (click)="resetAuthor()">Reset</button></div>
+  </div>
     <!-- reset button should call getBooks -->
   </ul>
     </div>
   </div>
+
 
 
 
