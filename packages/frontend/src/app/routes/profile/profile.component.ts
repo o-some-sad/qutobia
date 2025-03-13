@@ -21,6 +21,7 @@ import {
 } from '../../validations/address-phone.validator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { set } from 'mongoose';
 
 @Component({
   selector: 'app-profile',
@@ -121,7 +122,9 @@ export class ProfileComponent implements OnInit {
             res.data.contact?.address &&
             res.data.contact?.phone
           ) {
-            this.router.navigate(['/cart']);
+            
+              window.location.replace('/cart');
+            
           }
         },
         error: (_) => {
