@@ -1,0 +1,4 @@
+.drawer:has(#drawer:checked) #admin-header{
+    z-index: initial;
+ }
+

@@ -1,14 +1,15 @@
-<div class="drawer">
+<div class="xd drawer md:drawer-open">
   <input id="drawer" type="checkbox" class="drawer-toggle" />
   <div class="drawer-content">
     <div
-      class="border-b border-base-300 shadow-sm p-3 flex items-center justify-between gap-3"
+      id="admin-header"
+      class="border-b border-base-300 shadow-sm p-3 flex items-center justify-between gap-3 sticky top-0 z-10 bg-base-100"
     >
       <div class="flex items-center gap-1">
           <label
           tabindex="0"
           for="drawer"
-          class="btn btn-sm btn-outline btn-primary"
+          class="btn btn-sm btn-outline btn-primary md:hidden"
           >
           <i-feather name="menu"></i-feather>
         </label>
@@ -16,16 +17,16 @@
         <ng-container *ngTemplateOutlet="portal"></ng-container>
         }
       </div>
-      <ul class="menu bg-base-200 menu-horizontal rounded-box">
+      <ul class="menu bg-base-200 menu-horizontal menu-xs rounded-box flex-nowrap">
         <li>
-          <a routerLink="/profile">
-            <i-feather name="user" />
-            <span class="hidden md:inline">Profile</span>
+          <a routerLink="/profile" class="flex items-center gap-2">
+            <i-feather style="width: 16px; display: flex;" name="user" />
+            <span class="hidden lg:inline">Profile</span>
           </a>
         </li>
         <li>
           <a>
-            <i-feather name="bell" />
+            <i-feather style="width: 16px; display: flex;" name="bell" />
           </a>
         </li>
       </ul>
@@ -39,7 +40,7 @@
       class="drawer-overlay"
     ></label>
     <ul
-      class="menu bg-base-200 text-base-content min-h-full w-80 p-4 flex flex-col gap-3"
+      class="menu z-[999] bg-base-200 text-base-content min-h-full w-80 p-4 flex flex-col gap-3 pt-10"
     >
       <!-- Sidebar content here -->
       <span class="text-xl">Welcome Buddy</span>
