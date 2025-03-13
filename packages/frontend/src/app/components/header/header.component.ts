@@ -64,7 +64,10 @@ export class HeaderComponent implements OnInit {
     this.user = null;
     this.authService.logout().subscribe({
       error: (err) => console.error(err),
-      complete: () => this._Router.navigate(['/']),
+      complete: () => {
+      this._Router.navigate(['/']);
+      this.cartService.fetchCart();
+    }  
     });
   }
 }
