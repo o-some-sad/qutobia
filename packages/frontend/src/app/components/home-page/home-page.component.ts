@@ -16,6 +16,7 @@ export class HomePageComponent implements OnInit {
   books : BookItem[] = [];
   currPage: number = 1;
   totalPages: number = 1;
+  searchedTitle: string = "";
   selectedAuthor: string = ""; // DEFAULT VALUE
   authors : string[] = [];
   minPrice : number = 0;
@@ -35,7 +36,7 @@ export class HomePageComponent implements OnInit {
     this.loadBooks(page);
   }
   loadBooks(page: number){
-    this.bookService.getBooks(page, 12, "", this.selectedAuthor, this.minPrice, this.maxPrice).subscribe(res => {
+    this.bookService.getBooks(page, 12, this.searchedTitle, this.selectedAuthor, this.minPrice, this.maxPrice).subscribe(res => {
       this.books = res.data; // populate books array with API response , got all book objects
       this.totalPages = res.totalPages; // totalPages from the server-side
     })
