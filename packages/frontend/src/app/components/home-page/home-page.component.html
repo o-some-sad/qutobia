@@ -53,9 +53,21 @@
   
     <!-- FLEX-ROW including search bar & filter -->
     <div class="flex flex-row gap-14 justify-center items-center">
-    <div>SEARCH BAR</div>
+    <div>
+      <form class="max-w-md mx-auto">   
+        <label for="default-search" class="mx-auto text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <div class="relative">
+            <input type="search" id="default-search" class="block w-full p-4 ps-10 pr-12 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-gray-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search" required />
+            <button type="submit" class="absolute inset-y-1.5 end-1.5 bg-gray-300 hover:bg-blue-800 hover:scale-x-125 hover:scale-y-125 focus:outline-none font-medium rounded-full text-sm p-3 dark:bg-white dark:hover:bg-black dark:focus:ring-blue-800 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </button>
+        </div>
+    </form>    
+      </div>
     <div class="dropdown dropdown-bottom dropdown-center">
-      <div tabindex="0" role="button" class="btn m-1"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 14">
+      <div tabindex="0" role="button" class="btn m-1 bg-gray-300"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 14">
         <path d="M16 2H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 0 1 0 2Z"/>
     </svg></div>
       <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
