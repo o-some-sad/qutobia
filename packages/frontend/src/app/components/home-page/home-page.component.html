@@ -60,13 +60,13 @@
     </svg></div>
       <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
         <div>Author/s: </div>
-    <li><a><input type="radio" [(ngModel)]="selectedAuthor" name="author" class="radio radio-xs radio-error" checked="checked" value="Osama"/>Osama</a></li>
-    <li><a><input type="radio" [(ngModel)]="selectedAuthor" name="author" class="radio radio-xs radio-error" value="Jana">Jana</a></li>
-    <li><a><input type="radio" [(ngModel)]="selectedAuthor" name="author" class="radio radio-xs radio-error" value="Mohammed Amr">Mohammed Amr</a></li>
+        @for(author of authors ; track $index){
+          <li><a><input type="radio" [(ngModel)]="selectedAuthor" name="author" class="radio radio-xs radio-error" [value]="author"/>{{author}}</a></li>
+        }
     <div class="flex flex-col"></div>
     <!-- used 2-way binding to access the value of the radio button and pass it as a param. to the method -->
-    <button class="btn btn-neutral" (click)="filterByAuthor(selectedAuthor)">Apply</button><br>
-    <button class="btn btn-error" (click)="loadBooks(1)">Reset</button>
+    <button class="btn btn-neutral" (click)="filterByAuthor()">Apply</button><br>
+    <button class="btn btn-error" (click)="resetAuthor()">Reset</button>
     <!-- reset button should call getBooks -->
   </ul>
     </div>

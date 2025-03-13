@@ -153,12 +153,20 @@ const updateBookDetails = async (id, rest) => {
   return { message: "Book updated successfully!", bookUpdated };
 };
 
-/********************************************************************************/
-const getAllBooks = async (filters, page, limit) => {
-  const count = await User.countDocuments(filters);
-  const books = await Book.find(filters).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).exec();
-  console.log(count)
-  return { totalPages: Math.ceil(count / limit), data: books };
+const bookFilters = async () => {
+  return Book.aggregate([
+    {
+      $match: {deletedAt: null}
+    },
+    {
+      $group: {
+        _id: null,
+        minPrice: {$min: "$price"},
+        maxPrice: {$max: "$price"},
+        author: {$addToSet: "$author"}
+      }
+    }
+  ]);
 };
 
 export {
@@ -168,5 +176,5 @@ export {
   getBookByid,
   deleteBook,
   updateBookDetails,
-  getAllBooks
+  bookFilters
 };

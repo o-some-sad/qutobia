@@ -6,6 +6,7 @@ import {
   getBookByid,
   deleteBook,
   updateBookDetails,
+  bookFilters
 } from "../controllers/book.controller.js";
 import { handleImageUpload } from "../middlewares/uploadImage.middleware.js";
 import mongoose from "mongoose";
@@ -41,10 +42,25 @@ router.get("/", async (req, res, next) => {
   try {
     if(req.query.title) filters.title = { $regex: req.query.title, $options: 'i' }; // i for case insensitive
     if(req.query.author) filters.author = { $regex: req.query.author, $options: 'i' }; // i for case insensitive
-    // lowerPrice
-    // upperPrice
+    if(req.query.lowerPrice) filters.price = { $gte: req.query.lowerPrice };
+    if(req.query.upperPrice) filters.price = { $lte: req.query.upperPrice };
     const books = await filterBooks(filters, page, limit);
     res.status(200).json({ totalPages: books.totalPages, data: books.data });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/filters', async (req, res, next) => {
+  try {
+    const result = await bookFilters();
+    if (result.length > 0) {
+      const author = result[0].author.reduce((a, b) => [...a, ...b], []);
+      const setAuthor = new Set(author);
+      return res.status(200).json({ author: Array.from(setAuthor), price: [result[0].minPrice, result[0].maxPrice ]});
+    } else {
+      return res.status(200).json({ author: [], price: [0, 0] });
+    }
   } catch (err) {
     next(err);
   }
