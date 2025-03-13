@@ -5,10 +5,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { UserRegister } from '../../../interfaces/user-register';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
-import { any } from 'zod';
 import { toast } from 'ngx-sonner';
 
 @Component({
@@ -58,14 +56,13 @@ export class RegisterComponent {
         password: this.handleRegister.value.password,
       })
       .subscribe({
-        next: (value) => {
+        next: (_) => {
           this.isLoading = false;
           toast.success('Registered successfully, please check your email to verify your account', { id: toast_id });
           this._Router.navigate(['login']);
         },
         error: (err) => {
-          this.errMessage = err.error.message;
-          toast.error(this.errMessage);
+          // this.errMessage = err.error.message;
           this.isLoading = false;
           toast.warning(err.error.message, { id: toast_id });
         },
