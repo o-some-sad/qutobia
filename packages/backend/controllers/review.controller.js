@@ -13,9 +13,6 @@ export const getAllReviewsByBookId = async (bookId) => {
   const reviews = await Review.find({ book: bookId })
     .populate("user", "name")
     .populate("book", "title");
-  if (reviews.length === 0) {
-    throw new ApiError("review not found", 404);
-  }
   return reviews;
 };
 

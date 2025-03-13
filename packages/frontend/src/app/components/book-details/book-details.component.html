@@ -141,7 +141,7 @@
     }
 
     <!-- Add Review Button (Visible if no reviews or when not editing) -->
-    @if (!editingReview && !isAdmin) {
+    @if (!editingReview && !isAdmin && hasCompletedOrder) {
       <button
         (click)="showAddReviewForm = true"
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
