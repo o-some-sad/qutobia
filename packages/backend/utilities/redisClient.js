@@ -24,7 +24,7 @@ await redisClient.connect();
     .exec();
   const totalPages = Math.ceil(bookCount / 10);
   const allBooks = { Total_Pages: totalPages, Books: books };
-  redisClient.set("allBooks", JSON.stringify(allBooks));
+  redisClient.set("allBooks", JSON.stringify(allBooks), "EX", 3600);
 })();
 
 console.log("redis up and running");
