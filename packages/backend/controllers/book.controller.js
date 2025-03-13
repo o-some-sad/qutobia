@@ -1,7 +1,6 @@
 import Book from "../models/book.model.js";
 import ApiError from "../utilities/ApiErrors.js";
 import redisClient from "../utilities/redisClient.js";
-import User from "../models/user.model.js";
 
 const addBook = async (formData) => {
   const book = await Book.create(formData);
@@ -44,13 +43,14 @@ const filterBooks = async (filters, page, limit) => {
   // await redisClient.set(cacheKey, JSON.stringify(result));
   // return result;
 
-
-
-
   try {
-    console.log("FILTERS:",filters);
+    console.log("FILTERS:", filters);
     const count = await Book.countDocuments(filters);
-    const books = await Book.find(filters).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).exec();
+    const books = await Book.find(filters)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
     // sort --> for the newest book to be at the beginning
     // skip logic to be handled in the client-side
     return { totalPages: Math.ceil(count / limit), data: books };
@@ -156,16 +156,16 @@ const updateBookDetails = async (id, rest) => {
 const bookFilters = async () => {
   return Book.aggregate([
     {
-      $match: {deletedAt: null}
+      $match: { deletedAt: null },
     },
     {
       $group: {
         _id: null,
-        minPrice: {$min: "$price"},
-        maxPrice: {$max: "$price"},
-        author: {$addToSet: "$author"}
-      }
-    }
+        minPrice: { $min: "$price" },
+        maxPrice: { $max: "$price" },
+        author: { $addToSet: "$author" },
+      },
+    },
   ]);
 };
 
@@ -176,5 +176,5 @@ export {
   getBookByid,
   deleteBook,
   updateBookDetails,
-  bookFilters
+  bookFilters,
 };
