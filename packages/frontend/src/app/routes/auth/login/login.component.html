@@ -58,13 +58,13 @@
     }@else{
     <button
       type="submit"
-      (click)="login()"
       class="text-black bg-white hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-72  px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
       [disabled]="handellogin.invalid">
       Login
     </button>
     }
-    <span class="block py-5 ">Don't have an account ? <span (click)="register()" class="text-sm underline cursor-pointer">Register</span></span>
+    <span class="block py-2">Forgot password ? <span (click)="forgotPassword()" class="text-sm underline cursor-pointer">Reset</span></span>
+    <span class="block pb-5">Don't have an account ? <span (click)="register()" class="text-sm underline cursor-pointer">Register</span></span>
   </div>
 </div>
 <div id="div3" class="bg-white shadow-xl w-[200px] text-black mb-5 md:mb-0 mx-auto p-5 flex items-center justify-center">
@@ -82,3 +82,4 @@
   }
 </div>
 
+<app-forgot-password-dialog></app-forgot-password-dialog>

@@ -9,6 +9,7 @@ import { passwordStrength } from 'check-password-strength'
 
 
 dotenv.config();
+const APP_URL = process.env.APP_URL;
 const ZEROBOUNCE_API_KEY = process.env.ZEROBOUNCE_API_KEY;
 
 const validateEmail = async (email) => {
@@ -35,12 +36,19 @@ export const handleLogin = async (email, password) => {
   }
   const user = await User.findOne({ email: email });
   if (!user) {
-    throw new ApiError("user not found", 404);
+    throw new ApiError("user or password are invalid", 404);
   }
   const isValidPass = await user.comparePassword(password);
   if (!isValidPass) {
     throw new ApiError("user or password are invalid", 400);
   }
+  if (user.role === 'user' && !user.verifiedAt) {
+    let msg = fs.readFileSync("public/mailBody.html", "utf-8");
+    msg = msg.replace("{{APP_URL}}", APP_URL).replace("{{userId}}", user._id);
+    sendMail(email, "Email Verification", msg);
+    throw new ApiError("Email is not verified, please check your email", 400);
+  }
+
   const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1d" });
   return {
     token,
@@ -51,15 +59,15 @@ export const handleLogin = async (email, password) => {
 export const handleRegister = async (body) => {
   // CHECK if ALL fields are full
   const { email, password } = body;
-  
-  if (passwordStrength(password).value === "Too weak" || passwordStrength(password).value === "Weak") {
-    throw new ApiError("password is weak!", 400);
-  }
+
   const isEmailRegistered = await User.exists({ email: email });
   // CHECK if the user's email is taken
   if (isEmailRegistered !== null) {
     throw new ApiError("This email is already in use. Please use a different email or log in.");
   } // can make it in the ZOD validator
+  if (passwordStrength(password).value === "Too weak" || passwordStrength(password).value === "Weak") {
+    throw new ApiError("password is weak!", 400);
+  }
   if (process.env.ENVIORNMENT === "production") {
     const isEmailValid = await validateEmail(email);
     if (!isEmailValid) {
@@ -68,9 +76,50 @@ export const handleRegister = async (body) => {
   }
   // If the user's email/username is unavailable --> create user
   // call node-mailer
-  const msg = fs.readFileSync("public/mailBody.html", "utf-8");
+  const user = await User.create(body);
+  let msg = fs.readFileSync("public/mailBody.html", "utf-8");
+  msg = msg.replace("{{APP_URL}}", APP_URL).replace("{{userId}}", user._id);
   sendMail(email, "Email Verification", msg);
-  return await User.create(body);
+  return user;
+};
+
+export const handleVerifyEmail = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError("user not found", 404);
+  }
+  user.verifiedAt = Date.now();
+  await user.save();
+
+  const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: "1d" });
+  return {
+    token,
+    user,
+  };
+};
+
+export const handleForgetPassword = async (email) => {
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    throw new ApiError("user not found", 404);
+  }
+  let msg = fs.readFileSync("public/forgetPasswordMail.html", "utf-8");
+  msg = msg.replace("{{APP_URL}}", APP_URL).replace("{{userId}}", user._id);
+  sendMail(email, "Password Reset", msg);
+};
+
+export const handleResetPassword = async (body) => {
+  const { userId, password } = body;
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError("user not found", 404);
+  }
+  if (passwordStrength(password).value === "Too weak" || passwordStrength(password).value === "Weak") {
+    throw new ApiError("password is weak!", 400);
+  }
+  user.password = password;
+  await user.save();
+  return user;
 };
 
 export const handleMe = async () => {}; //not needed, logic handled entirely in the router.

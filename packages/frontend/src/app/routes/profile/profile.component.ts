@@ -54,7 +54,7 @@ export class ProfileComponent implements OnInit {
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]],
-      confirmPassword: ['', Validators.required],
+      confirmPassword: [''],
     }, { validators: confirmPasswordValidator });
   }
   ngOnInit(): void {

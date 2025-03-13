@@ -38,9 +38,9 @@ export const userSchema = new mongoose.Schema({
     },
     default: null,
   },
-  verified: {
-    type: Boolean,
-    default: true
+  verifiedAt: {
+    type: Date,
+    default: null
   }
 }, {timestamps: true});
 

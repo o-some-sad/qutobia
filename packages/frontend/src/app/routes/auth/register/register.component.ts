@@ -9,6 +9,7 @@ import { UserRegister } from '../../../interfaces/user-register';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { any } from 'zod';
+import {toast} from 'ngx-sonner';
 
 @Component({
   selector: 'app-register',
@@ -49,6 +50,7 @@ export class RegisterComponent {
 
   register() {
     this.isLoading = true;
+    const toast_id = toast.loading('Registering...');
     this._AuthService
       .register({
         name: this.handleRegister.value.name,
@@ -58,11 +60,13 @@ export class RegisterComponent {
       .subscribe({
         next: (value) => {
           this.isLoading = false;
+          toast.success('Registered successfully, please check your email to verify your account', { id: toast_id });
           this._Router.navigate(['login']);
         },
         error: (err) => {
-          this.errMessage = err.error.message;
+          // this.errMessage = err.error.message;
           this.isLoading = false;
+          toast.warning(err.error.message, { id: toast_id });
         },
         complete: () => {},
       });
