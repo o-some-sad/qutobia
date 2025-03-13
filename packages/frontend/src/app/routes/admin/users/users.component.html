@@ -1,9 +1,14 @@
+<ng-template #headerPortal>
+  <app-search (searchChange)="onSearchChange($event)"></app-search>
+</ng-template>
+
+
 <div class="container mx-auto p-4" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
      xmlns="http://www.w3.org/1999/html">
 
   <h1 class="text-2xl font-bold">User List</h1>
   <div class="flex items-center justify-between mb-4">
-    <app-search (searchChange)="onSearchChange($event)"></app-search>
+    
 
     <div class="flex items-center gap-4">
       <app-radio-button
