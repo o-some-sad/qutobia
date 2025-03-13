@@ -29,8 +29,8 @@ Router.get("/", authenticateToken, isAdmin, async (req, res, next) => {
 
 Router.patch("/:id", authenticateToken, async (req, res, next) => {
   const [id, userData] = [req.params.id, req.body];
-  //TODO!! check admin role
   try {
+    if(req.user?.role === "user") delete userData.role;
     const updatedUser = await updateUser(id, userData);
     if (!updatedUser)
       return res.status(404).json({ message: "User not found" });
@@ -44,6 +44,7 @@ Router.patch("/:id", authenticateToken, async (req, res, next) => {
 Router.patch("/:id/password", authenticateToken, async (req, res, next) => {
   const [id, userData] = [req.params.id, req.body];
   try {
+    if(req.user?._id !== id) return res.status(401).json({ message: "Unauthorized to change password for another user" });
     const updatedUser = await updateUserPassword(id, userData);
     await redisClient.del(`me:${id}`);
     res.status(200).json({ status: "success", data: updatedUser });

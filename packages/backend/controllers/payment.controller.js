@@ -7,6 +7,7 @@ import Order from "../models/order.model.js";
 import ApiError from "../utilities/apiError.js";
 import { Stripe } from "stripe";
 import _ from "lodash";
+import { notifier } from "../utilities/notifier.js";
 
 //TODO: create a function ensures that specefic env vars are present
 const STRIPE_SECRET = process.env.STRIPE_SECRET;
@@ -34,22 +35,25 @@ export const createPaymentFromUserId = async (userId) => {
       {
         price: 1,
         title: 1,
-        stock: 1
+        stock: 1,
       }
     ).then((d) =>
-      d.map(({ price, title, _id, stock }) => [_id.toString(), { price, title, stock }])
+      d.map(({ price, title, _id, stock }) => [
+        _id.toString(),
+        { price, title, stock },
+      ])
     )
   );
 
-  const booksWithIssues = cart.books.filter(item=>{
-    const book = books.get(item.book.toString())
+  const booksWithIssues = cart.books.filter((item) => {
+    const book = books.get(item.book.toString());
     // get books that not cannot be retrived or having stock less that enough for this order
-    return !(!book || book.stock >= item.quantity)
-  })
+    return !(!book || book.stock >= item.quantity);
+  });
 
-  if(booksWithIssues.length){    
-    throw new ApiError("Please review all book issues", 401)
-  }  
+  if (booksWithIssues.length) {
+    throw new ApiError("Please review all book issues", 401);
+  }
 
   const payment = await Payment.create({
     user: userId,
@@ -110,13 +114,14 @@ export const transformPayment = async (paymentId, userId) => {
         throw new Error("Payment doesn't belong to this user");
       }
 
-      if(!payment.session){
-        throw new Error("Cannot access session id")
+      if (!payment.session) {
+        throw new Error("Cannot access session id");
       }
 
-      const { payment_status, payment_intent} = await stripe.checkout.sessions.retrieve(payment.session)
-      if(payment_status !== "paid"){
-        throw new Error("Payment is not successful")
+      const { payment_status, payment_intent } =
+        await stripe.checkout.sessions.retrieve(payment.session);
+      if (payment_status !== "paid") {
+        throw new Error("Payment is not successful");
       }
 
       await Cart.deleteOne({ user: payment.user }, { session });
@@ -134,18 +139,29 @@ export const transformPayment = async (paymentId, userId) => {
         );
       }
 
-      await Order.create([{
-        user: new mongoose.Types.ObjectId(payment.user.toString()),
-        books: payment.books.map((book) => _.pick(book.toJSON(), ["book", "quantity", "price"])),
-        totalPrice: payment.books.reduce((total, item)=> total + (item.quantity * item.price), 0),
-        items: 1,
-        status: 'Pending',
-        session: payment_intent
-      }], { session });
+      const order = await Order.create(
+        [
+          {
+            user: new mongoose.Types.ObjectId(payment.user.toString()),
+            books: payment.books.map((book) =>
+              _.pick(book.toJSON(), ["book", "quantity", "price"])
+            ),
+            totalPrice: payment.books.reduce(
+              (total, item) => total + item.quantity * item.price,
+              0
+            ),
+            items: 1,
+            status: "Pending",
+            session: payment_intent,
+          },
+        ],
+        { session }
+      );
 
-      await Payment.deleteOne( {_id: payment._id }, { session })
+      await Payment.deleteOne({ _id: payment._id }, { session });
 
       await session.commitTransaction();
+      notifier.emit("order", order);
     });
   } catch (error) {
     console.error("Transaction failed:", error);

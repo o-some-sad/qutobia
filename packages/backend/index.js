@@ -10,8 +10,10 @@ import cookieParser from "cookie-parser";
 import "./utilities/logger.js";
 import { rateLimit } from "express-rate-limit";
 import { RedisStore } from "rate-limit-redis";
+import { WebSocketExpress, Router } from "websocket-express";
 
-const app = express();
+const app = new WebSocketExpress();
+
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URL);
