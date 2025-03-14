@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+export default `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -55,4 +55,4 @@
         hello@qutobia.com. We're here to help!</h4></div>
     </div>
 </body>
-</html>
+</html>`

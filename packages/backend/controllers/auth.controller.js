@@ -3,9 +3,11 @@ import jwt from "jsonwebtoken";
 import { sendMail } from "./mail.controller.js";
 import axios from "axios";
 import dotenv from "dotenv";
-import fs from "fs";
 import ApiError from "../utilities/ApiErrors.js";
 import { passwordStrength } from 'check-password-strength'
+
+import mailBody from "../public/mailBody.js";
+import forgetPasswordMail from "../public/forgetPasswordMail.js";
 
 
 dotenv.config();
@@ -43,7 +45,7 @@ export const handleLogin = async (email, password) => {
     throw new ApiError("user or password are invalid", 400);
   }
   if (user.role === 'user' && !user.verifiedAt) {
-    let msg = fs.readFileSync("public/mailBody.html", "utf-8");
+    let msg = mailBody //fs.readFileSync("public/mailBody.html", "utf-8");
     msg = msg.replace("{{APP_URL}}", APP_URL).replace("{{userId}}", user._id);
     sendMail(email, "Email Verification", msg);
     throw new ApiError("Email is not verified, please check your email", 400);
@@ -77,7 +79,7 @@ export const handleRegister = async (body) => {
   // If the user's email/username is unavailable --> create user
   // call node-mailer
   const user = await User.create(body);
-  let msg = fs.readFileSync("public/mailBody.html", "utf-8");
+  let msg = mailBody //fs.readFileSync("public/mailBody.html", "utf-8");
   msg = msg.replace("{{APP_URL}}", APP_URL).replace("{{userId}}", user._id);
   sendMail(email, "Email Verification", msg);
   return user;
@@ -103,7 +105,7 @@ export const handleForgetPassword = async (email) => {
   if (!user) {
     throw new ApiError("user not found", 404);
   }
-  let msg = fs.readFileSync("public/forgetPasswordMail.html", "utf-8");
+  let msg = forgetPasswordMail //fs.readFileSync("public/forgetPasswordMail.html", "utf-8");
   msg = msg.replace("{{APP_URL}}", APP_URL).replace("{{userId}}", user._id);
   sendMail(email, "Password Reset", msg);
 };

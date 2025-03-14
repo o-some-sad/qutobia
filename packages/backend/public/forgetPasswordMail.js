@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+export default `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mail body</title>
-    <link rel="stylesheet" href="mailBody.css">
+    <link rel="stylesheet">
     <style>
         #div1 {
             width: 700px;
@@ -15,12 +15,11 @@
         }
         #div2 {
             height: 400px;
-            margin: 0 auto;
             padding: 50px;
             position: relative;
             background-color: white;
             text-align: center;
-            margin-top: 50px;
+            margin: 50px auto 0;
         }
         h1 {
             color: white;
@@ -49,14 +48,11 @@
     </style>
 </head>
 <body>
-    <div id="div1"><h1>qutobia</h1><div id="div2">{{title}}<h2></h2>
-    <h3>Welcome to qutobia! Click on the following button to verify your email address</h3>
-    <a id="link" href="{{APP_URL}}/verify/{{userId}}" target="_blank">Verify email address</a><br>
-    <h4>If you didn't request this email or if you think something is wrong, feel free to contact our support team at 
+<div id="div1"><h1>qutobia</h1><div id="div2"><h2>Reset Your Password Now</h2>
+    <h3>Welcome to qutobia! Click on the following button to reset your password</h3>
+    <a id="link" href="{{APP_URL}}/reset-password/{{userId}}" target="_blank">Reset Password</a><br>
+    <h4>If you didn't request this email or if you think something is wrong, feel free to contact our support team at
         hello@qutobia.com. We're here to help!</h4></div>
-    </div>
+</div>
 </body>
-</html>
-
-
-Verify your email address
+</html>`
