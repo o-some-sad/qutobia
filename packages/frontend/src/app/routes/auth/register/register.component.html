@@ -11,7 +11,7 @@
         <h1 class="text-2xl text-center">sign-up 🔐</h1>
         <div class="mb-5">
           <label for="name" class="block mb-2 text-sm font-medium text-white"
-            >Your name</label
+            >Name</label
           >
           <input
             formControlName="name"
@@ -19,7 +19,7 @@
             name="name"
             id="name"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-72 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-            placeholder="Your Name"
+            placeholder="John Doe"
             required
           />
         </div>
@@ -36,7 +36,7 @@
           <label
             for="password"
             class="block mb-2 text-sm font-medium text-white"
-            >Your email</label
+            >Email</label
           >
           <input
             formControlName="email"
@@ -61,7 +61,7 @@
           <label
             for="password"
             class="block mb-2 text-sm font-medium text-white"
-            >Your password</label
+            >Password</label
           >
           <input
             formControlName="password"
@@ -86,7 +86,7 @@
           <label
             for="passwordConfirm"
             class="block mb-2 text-sm font-medium text-white"
-            >Your re-password</label
+            >Confirm password</label
           >
           <input
             formControlName="passwordConfirm"
@@ -105,7 +105,7 @@
           class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
           role="alert"
         >
-          password don't matches.
+          passwords don't match.
         </div>
         } @if (isLoading) {
 
@@ -117,16 +117,16 @@
         }@else{
         <button
           type="submit"
-          class="text-black bg-white hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-72 px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+          class="text-black bg-white hover:bg-gray-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-72 px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
           [disabled]="handleRegister.invalid"
         >
-          Submit
+          Register
         </button>
         }
         <span class="block py-5"
-          >Already have account
+          >Already have an account ?
           <span (click)="login()" class="text-sm underline cursor-pointer"
-            >log-in</span
+            >Log-in</span
           ></span
         >
       </div>
