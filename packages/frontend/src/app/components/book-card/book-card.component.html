@@ -1,5 +1,5 @@
-<div class="m-3 grid w-fit overflow-hidden rounded-xl border-2 group">
-  <div class="relative grid max-h-[300px] overflow-hidden">
+<div class="m-3 flex flex-col w-fit overflow-hidden rounded-xl max-w- border-2 group max-w-[240px]">
+  <div class="relative flex-1 grid max-h-[300px] overflow-hidden">
     @if(BookItem.stock === 0){
       <img [src]="BookItem.image" class="grayscale object-cover group-hover:scale-125 transition-all duration-500" alt=""/>
       <div class="absolute top-5 right-5">
@@ -7,14 +7,14 @@
       </div>
     }
     @else{
-    <img [src]="BookItem.image" class="brightness-50 object-cover group-hover:scale-125 transition-all duration-500" alt=""/>
+    <img [src]="BookItem.image" class="brightness-50 h-full w-full object-cover group-hover:scale-125 transition-all duration-500" alt=""/>
     }
     <div class="absolute bottom-5 left-5">
       <p class="text-xl font-bold text-white">{{ BookItem.title }}</p>
       <p class="text-white">{{ BookItem.author.join(", ") }}</p>
     </div>
   </div>
-  <div class="flex">
+  <div class="flex h-[48px]">
     <!-- [ngClass]="BookItem.stock = 0 ? 'outOfStock': 'inStock'" -->
     <button (click)="addToCart(BookItem._id); $event.stopPropagation()"  [ngClass]="{ 'opacity-50 cursor-not-allowed': BookItem.stock === 0 }" [disabled]="BookItem.stock === 0" class="flex-2/3 bg-primary text-primary-content p-2 flex items-center justify-center">Add to cart</button>
     <a [href]="['/book', BookItem._id].join('/')"

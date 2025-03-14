@@ -1,5 +1,5 @@
 //@ts-check
-import { WebSocketExpress, Router } from "websocket-express";
+import {  Router } from "websocket-express";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 import { notifier } from "../utilities/notifier.js";
@@ -14,7 +14,11 @@ notifier.on("order", (value) => {
   });
 });
 
-router.ws("/", authenticateToken, isAdmin, async (req, res) => {
+router.ws("/",authenticateToken.noClear, isAdmin,  async (req, res) => {
+ 
+    
+  
+  
   const ws = await res.accept();
   clients.add(ws);
 

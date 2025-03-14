@@ -22,6 +22,14 @@ export const routes: Routes = [
         title: 'Home Page',
       },
       {
+        path: 'about',
+        loadComponent: () =>
+          import('./components/about-us/about-us.component').then(
+            (c) => c.AboutUsComponent
+          ),
+        title: 'About us',
+      },
+      {
         path: 'login',
         loadComponent: () =>
           import('./routes/auth/login/login.component').then(
@@ -29,14 +37,6 @@ export const routes: Routes = [
           ),
         title: 'Log In',
         canActivate: [notLoggedGuard],
-      },
-      {
-        path: 'aboutUS',
-        loadComponent: () =>
-          import('./components/about-us/about-us.component').then(
-            (c) => c.AboutUsComponent
-          ),
-        title: 'About us',
       },
       {
         path: 'order',

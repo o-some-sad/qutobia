@@ -1,18 +1,22 @@
 {
-  "name": "qutobia",
+  "name": "Quotobia",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "rm -rf _PUBLIC_ && mkdir -p _PUBLIC_",
+    "build:frontend": "cd packages/frontend && pnpm run build && mv dist/frontend/browser/* ../../_PUBLIC_",
+    "build": "pnpm run prebuild && pnpm run build:frontend",
+    "start": "node packages/backend/index.js"
   },
   "workspaces": [
     "packages/**"
   ],
   "dependencies": {
     "express": "^4.21.2",
-    "qutobia": "file:",
+    "Quotobia": "file:",
     "shared": "workspace:*"
   },
   "keywords": [],

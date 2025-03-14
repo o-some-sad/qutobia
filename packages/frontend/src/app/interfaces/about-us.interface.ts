@@ -4,5 +4,6 @@ export interface aboutUS {
   email: string,
   linkedin: string,
   github: string,
-  desc: string
+  desc: string,
+  title: string;
 }

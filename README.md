@@ -1,8 +1,8 @@
-# Qutobia - Online Bookstore System
+# Quotobia - Online Bookstore System
 
 ## Overview
 
-Qutobia is an **online bookstore system** built using the **MEAN** stack **Node.js, Express, MongoDB, and Angular**. It allows users to browse books, add them to their cart, place orders, and receive real-time updates on order status and notifications.
+Quotobia is an **online bookstore system** built using the **MEAN** stack **Node.js, Express, MongoDB, and Angular**. It allows users to browse books, add them to their cart, place orders, and receive real-time updates on order status and notifications.
 
 ## Features
 
@@ -30,27 +30,32 @@ Qutobia is an **online bookstore system** built using the **MEAN** stack **Node.
 
 ### WebSocket Integration
 
-- WebSockets are used so that admins are alerted with **real-time notifications whenever a new order is placed.** 
+- WebSockets are used so that admins are alerted with **real-time notifications whenever a new order is placed.**
 
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request with your improvements.
 
-
 # Development instructions
+
 > [!IMPORTANT]  
 > Please read this section carefully
 
 1. run this command to ensure running pre-commit hooks
+
 ```sh
 git config --local core.hooksPath .githooks/
 ```
+
 2. install required packages  
-_if you don't have pnpm installed on your system please follow [this guide](https://pnpm.io/installation)_
+   _if you don't have pnpm installed on your system please follow [this guide](https://pnpm.io/installation)_
+
 ```sh
 pnpm install
 ```
+
 3. run both backend and frontend server
+
 ```sh
 # back
 cd packages/backend

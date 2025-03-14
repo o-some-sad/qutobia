@@ -1,19 +1,22 @@
+import process, { cwd } from "node:process";
 import dotenv from "dotenv";
-dotenv.config();
-import process from "node:process";
 import express from "express";
 import mongoose from "mongoose";
 import appRouter from "./routes/index.js";
 import { handleErrorMiddleware } from "./middlewares/handleError.middleware.js";
-import redisClient from "./utilities/redisClient.js";
 import cookieParser from "cookie-parser";
 import "./utilities/logger.js";
 import { rateLimit } from "express-rate-limit";
 import { RedisStore } from "rate-limit-redis";
-import { WebSocketExpress, Router } from "websocket-express";
+import { WebSocketExpress } from "websocket-express";
 
 const app = new WebSocketExpress();
+import path from "node:path";
+import redisClient from "./utilities/redisClient.js";
 
+dotenv.config({
+  path: path.join(cwd(), ".env"),
+});
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URL);
@@ -24,19 +27,16 @@ const connectDB = async () => {
   }
 };
 
-app.get("/", async (req, res) => {
-  await redisClient.set("key", "awesome redis value");
-  const value = await redisClient.get("key");
-  res.end(
-    `<div style="text-align: center;"><h1>Welcome to qutobia WebSite, value from redis: ${value}</h1></div>`
-  );
-});
-
 app.get("/api/hello", (req, res) => {
   res.json({
     ok: true,
   });
 });
+
+const public_dir = path.join(cwd(), "_PUBLIC_");
+
+app.use(express.static(public_dir));
+
 
 if (process.env.ENVIRONMENT === "production") {
   // to enforce global rate-limit across multiple servers (assuming we decide to horizontally scale our beautiful project in the future!) +++ to save the requests count in the redis server and not in-memory.
@@ -56,6 +56,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api", appRouter);
 app.use(handleErrorMiddleware);
+
+app.get('*', (req, res
+) => {
+  res.sendFile(path.join(public_dir, 'index.html'));
+})
+
 
 app.listen(process.env.PORT, async () => {
   await connectDB();

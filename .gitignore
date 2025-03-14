@@ -1,5 +1,6 @@
 **/node_modules
 **/.env
+_PUBLIC_
 **/*.log
 **/dump.rdb
 **/package-lock.json

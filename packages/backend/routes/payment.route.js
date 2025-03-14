@@ -41,5 +41,5 @@ paymentRouter.get("/success", authenticateToken, async (req, res, next) => {
 paymentRouter.get("/cancel", (req, res) => {
   console.log("CANCEL", req.query);
 
-  res.redirect("/");
+  res.redirect("/order");
 });
