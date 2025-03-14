@@ -12,6 +12,7 @@ import { WebSocketExpress } from "websocket-express";
 
 const app = new WebSocketExpress();
 import path from "node:path";
+import redisClient from "./utilities/redisClient.js";
 
 dotenv.config({
   path: path.join(cwd(), ".env"),
