@@ -3,7 +3,7 @@ import { IconsModule } from '../../modules/icons/icons.module';
 import { aboutUS } from '../../interfaces/about-us.interface';
 import _ from 'lodash';
 
-const contributors: aboutUS[] = [
+const contributors: aboutUS[]  = [
   {
     name: 'Ahmed Ramadan',
     img: '/AhmedRamadan.jpeg',
@@ -24,12 +24,12 @@ const contributors: aboutUS[] = [
   },
   {
     name: 'Jana Hazem',
-    img: 'https://unsplash.it/360/360?2',
-    email: '',
-    github: '',
-    linkedin: '',
+    img: '/JanaHazem.jpeg',
+    email: 'jana.hazem.abbass@gmail.com',
+    github: 'https://github.com/JanaHazem12',
+    linkedin: 'https://www.linkedin.com/in/jana-hazem-047186279/',
     title: 'The Pixel Perfectionist',
-    desc: `When she's not crafting sleek user interfaces, she's probably redesigning her wardrobe. Passionate about frontend design and fashion, she believes that both code and couture should be clean, elegant, and delicate.`,
+    desc: `When Jana is not crafting sleek user interfaces, she's probably redesigning her wardrobe. Passionate about frontend design and fashion, she believes that both code and couture should be clean, elegant, and delicate.`,
   },
   {
     name: 'Mohammed Amr',
@@ -38,16 +38,16 @@ const contributors: aboutUS[] = [
     github: 'https://github.com/ilawy',
     linkedin: 'https://www.linkedin.com/in/ilawy/',
     title: 'The Mastermind',
-    desc: `The team's technical guru and go-to problem solver. He knows everything… and if he doesn’t, he’ll find out before you finish your sentence. Just don’t ask him the same question twice unless you enjoy watching someone suppress their rage in real-time.`,
+    desc: `Mohammed is the team's technical guru and go-to problem solver. He knows everything… and if he doesn’t, he’ll find out before you finish your sentence. Just don’t ask him the same question twice unless you enjoy watching someone suppress their rage in real-time.`,
   },
   {
     name: 'Osama Ismail',
-    img: 'https://unsplash.it/360/360',
-    email: '',
-    github: '',
-    linkedin: '',
-    title: 'The Sleeping Coder',
-    desc: `He operates in two states: writing code or recharging in deep sleep mode. If you see him awake, it's either a bug kept him up, or he’s just deployed something that "should work fine in production" (fingers crossed).`,
+    img: '/OsamaIsmail.jpg',
+    email: 'osama.m.esmael999@gmail.com',
+    github: 'https://github.com/OIsmail99',
+    linkedin: 'https://www.linkedin.com/in/osama-ismail999/',
+    title: 'The Big O',
+    desc: `Osama usually operates in two states: writing code or recharging in deep sleep mode. If you see him awake, it's either a bug kept him up, or he’s just deployed something that "should work fine in production" (fingers crossed).`,
   },
 ];
 
@@ -58,7 +58,5 @@ const contributors: aboutUS[] = [
   styleUrl: './about-us.component.css',
 })
 export class AboutUsComponent {
-  get contributors() {
-    return _.chunk(contributors, 2);
-  }
+ contributors = contributors;
 }
