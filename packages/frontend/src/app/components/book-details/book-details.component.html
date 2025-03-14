@@ -49,8 +49,15 @@
         <button
           (click)="addToCart(book._id)"
           class="bg-gradient-to-r from-blue-500 to-blue-700 text-white text-lg font-medium px-6 py-3 rounded-lg shadow-md transition-all duration-300 hover:from-blue-600 hover:to-blue-800 hover:shadow-lg active:scale-95"
+          [disabled]="!isLoggedIn"
+          [class.opacity-50]="!isLoggedIn"
+          [title]="isLoggedIn ? 'Add to Cart' : 'Please log in to add to cart'"
         >
-          Add to Cart
+          @if(isLoggedIn) {
+            Add to Cart
+          } @else {
+            Login to Add to Cart
+          }
         </button>
       }
     </div>
@@ -158,25 +165,27 @@
                 </div>
               </div>
   
-              <!-- Action Buttons -->
-              <div class="mt-4 flex gap-2">
-                @if (review.user._id === newReview.user._id) {
-                  <button
-                    (click)="startEditReview(review)"
-                    class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
-                  >
-                    Edit
-                  </button>
-                }
-                @if (newReview.user.role === "admin") {
-                  <button
-                    (click)="deleteReview(review._id)"
-                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-                  >
-                    Delete
-                  </button>
-                }
-              </div>
+              <!-- Action Buttons - Only show for logged-in users -->
+              @if (isLoggedIn) {
+                <div class="mt-4 flex gap-2">
+                  @if (review.user._id === newReview.user._id) {
+                    <button
+                      (click)="startEditReview(review)"
+                      class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+                    >
+                      Edit
+                    </button>
+                  }
+                  @if (newReview.user.role === "admin") {
+                    <button
+                      (click)="deleteReview(review._id)"
+                      class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  }
+                </div>
+              }
             }
           </div>
         }
@@ -187,7 +196,7 @@
     }
   
     <!-- Add Review Button (Visible if no reviews or when not editing) -->
-    @if (!editingReview && !isAdmin && hasCompletedOrder) {
+    @if (!editingReview && !isAdmin && hasCompletedOrder && isLoggedIn) {
       <br>
       <button
         (click)="showAddReviewForm = true"
@@ -203,23 +212,31 @@
         <h3 class="text-2xl font-bold text-gray-900 mb-4">Add Your Review</h3>
         <form (ngSubmit)="addReview()">
           <div class="mb-4">
-            <label class="block text-gray-700 font-medium mb-2">Rating</label>
+            <label class="block text-gray-700 dark:text-gray-700 font-medium mb-2">Rating</label>
             <input
               type="number"
               [(ngModel)]="newReview.rating"
               name="rating"
               min="1"
               max="5"
-              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Rate from 1-5"
+              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 
+                     bg-white dark:bg-gray-800 
+                     text-gray-900 dark:text-gray-100
+                     placeholder:text-gray-500 dark:placeholder:text-gray-400"
               required
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 font-medium mb-2">Review</label>
+            <label class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Review</label>
             <textarea
               [(ngModel)]="newReview.review"
               name="review"
-              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Write your review here..."
+              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500
+                     bg-white dark:bg-gray-800 
+                     text-gray-900 dark:text-gray-100
+                     placeholder:text-gray-500 dark:placeholder:text-gray-400"
               required
             ></textarea>
           </div>

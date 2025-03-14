@@ -32,6 +32,7 @@ export class BookDetailsComponent implements OnInit {
   showAddReviewForm: boolean = false; // Controls visibility of the "Add Review" form
   hasCompletedOrder: boolean = false; // Track if the user has a completed order
   isAdmin: boolean = false; // Track if the user is an admin
+  isLoggedIn: boolean = false;
 
 
   constructor(
@@ -45,50 +46,51 @@ export class BookDetailsComponent implements OnInit {
   )
   {}
 
-  async ngOnInit(){
-    this.newReview.user = await firstValueFrom(this.authService.me());
-    console.log(this.newReview.user);
-    if(this.newReview.user.role === "admin"){
-      this.isAdmin = true;
-    }
-    else{
-      this.isAdmin = false;
-    }
-
-
-    const bookId = this.route.snapshot.paramMap.get('id');
-    console.log(bookId);
-    
-    if (bookId) {
-        this.bookService.getBookById(bookId).subscribe((res) => {
-        this.book = res.data;
-        this.newReview.book = this.book;
-        console.log(this.book);
-      });
-
-      
-
-      this.orderService.getUserOrder(this.newReview.user._id).subscribe((orders) => {
-        this.hasCompletedOrder = false; // Initialize to false
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!", orders);
-
-        //@ts-ignore
-        orders.order.forEach((ord) => {
-          if (ord.status === "Completed") {
-            console.log("????????????????????????????????????",ord);
-            ord.books.forEach((item: { book: {_id:string} }) => { // Explicitly type `book`
-              console.log(item);
-              if (item.book._id === bookId) {
-                this.hasCompletedOrder = true; // Set to true if the book is found
+  async ngOnInit() {
+    // Try to get logged-in user, handle case where user isn't logged in
+    this.authService.me().subscribe({
+      next: (user) => {
+        this.newReview.user = user;
+        this.isLoggedIn = true;
+        this.isAdmin = user.role === "admin";
+        
+        // Only check for completed orders if user is logged in
+        const bookId = this.route.snapshot.paramMap.get('id');
+        if (bookId) {
+          this.orderService.getUserOrder(user._id).subscribe((orders) => {
+            this.hasCompletedOrder = false;
+            //@ts-ignore
+            orders.order.forEach((ord) => {
+              if (ord.status === "Completed") {
+                ord.books.forEach((item: { book: {_id:string} }) => {
+                  console.log(bookId);
+                  console.log("*************");
+                  console.log(item.book._id);
+                  if (item.book._id === bookId) {
+                    console.log("COMPLEEEEEEETEEEEEEEEEEED");
+                    this.hasCompletedOrder = true;
+                  }
+                });
               }
             });
-          }
-        });
-      
-        console.log('User has completed order:', this.hasCompletedOrder);
+          });
+        }
+      },
+      error: () => {
+        this.isLoggedIn = false;
+        this.isAdmin = false;
+      }
+    });
+
+    // Get book details and reviews regardless of login status
+    const bookId = this.route.snapshot.paramMap.get('id');
+    if (bookId) {
+      this.bookService.getBookById(bookId).subscribe((res) => {
+        this.book = res.data;
+        this.newReview.book = this.book;
       });
 
-   this.fetchReviews(bookId);
+      this.fetchReviews(bookId);
     }
   }
 
@@ -182,17 +184,17 @@ export class BookDetailsComponent implements OnInit {
 
       }
 
-  addToCart(book: string){
-    console.log("Pressed: ", book);
-    const toastId = toast.loading("Adding book")
-    this.cartService.addBook(book).subscribe({
-      next:()=> {
-          toast.success("Book added", { id: toastId })
-          
-      },
-      error: error=>{
-        toast.error(error.error.message, { id: toastId })
+      addToCart(book: string){
+        console.log("Pressed: ", book);
+        const toastId = toast.loading("Adding book")
+        this.cartService.addBook(book).subscribe({
+          next:()=> {
+              toast.success("Book added", { id: toastId })
+              
+          },
+          error: error=>{
+            toast.error(error.error.message, { id: toastId })
+          }
+        });
       }
-    });
-  }
 }
