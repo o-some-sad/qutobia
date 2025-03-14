@@ -119,6 +119,7 @@ export class CartComponent implements OnInit {
 
   async startCheckout() {
     if (this._authService.user?.contact === null) {
+      toast.warning("Please add contact info")
       this.router
         .navigate(['/profile'], { queryParams: { preOrder: '' } })
         .then();
