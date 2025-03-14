@@ -1,5 +1,5 @@
 {
-  "name": "qutobia",
+  "name": "Quotobia",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "express": "^4.21.2",
-    "qutobia": "file:",
+    "Quotobia": "file:",
     "shared": "workspace:*"
   },
   "keywords": [],
