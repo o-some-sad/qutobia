@@ -48,11 +48,11 @@ export default `<!DOCTYPE html>
     </style>
 </head>
 <body>
-<div id="div1"><h1>qutobia</h1><div id="div2"><h2>Reset Your Password Now</h2>
-    <h3>Welcome to qutobia! Click on the following button to reset your password</h3>
+<div id="div1"><h1>Quotobia</h1><div id="div2"><h2>Reset Your Password Now</h2>
+    <h3>Welcome to Quotobia! Click on the following button to reset your password</h3>
     <a id="link" href="{{APP_URL}}/reset-password/{{userId}}" target="_blank">Reset Password</a><br>
     <h4>If you didn't request this email or if you think something is wrong, feel free to contact our support team at
-        hello@qutobia.com. We're here to help!</h4></div>
+        hello@Quotobia.com. We're here to help!</h4></div>
 </div>
 </body>
 </html>`
