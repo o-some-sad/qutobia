@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { Observable} from 'rxjs';
+import { catchError, map, Observable, of} from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../interfaces/user.interface';
 import { UserRegister } from '../interfaces/user-register';
@@ -9,25 +9,43 @@ import { UserRegister } from '../interfaces/user-register';
   providedIn: 'root'
 })
 export class AuthService {
+  userId:string='';
   user?:User;
   constructor(private http: HttpClient) {
     this.me().subscribe({
       next:(value)=>{
-        this.user=value
+        this.userId=value._id;
+        this.user=value;
       }
     })
    }
-  login(user:User): Observable<User>{
-    return this.
-    http.post<User>(`${environment.base_url}/auth/login`,user);
+  login(user:User): Observable<{user:User,token:string}>{
+    return this.http.post<{user:User,token:string}>(`${environment.base_url}/auth/login`, user);
   }
   register(user:UserRegister):Observable<User>{
-    return this.http.post<User>(`${environment.base_url}/auth/register`,user);
+    return this.http.post<User>(`${environment.base_url}/auth/register`, user);
   }
   me(): Observable<User>{
     return this.http.get<User>(`${environment.base_url}/auth/me`, { withCredentials: true });
   }
   logout(){
     return this.http.get(`${environment.base_url}/auth/logout`);
+  }
+  verifyEmail(userId: string): Observable<User>{
+    return this.http.post<User>(`${environment.base_url}/auth/verify`, { userId: userId });
+  }
+  forgetPassword(email: string): Observable<void>{
+    return this.http.post<void>(`${environment.base_url}/auth/forget-password`, { email: email });
+  }
+  resetPassword(userId: string, password: string): Observable<User>{
+    return this.http.post<User>(`${environment.base_url}/auth/reset-password`, {userId: userId, password: password});
+  }
+
+  userRole(): Observable<string|null>{
+    if(this.user) return of<string>(this.user.role);
+    else {
+      console.log("from auth service");
+      return this.me().pipe(map(user=> user.role), catchError(() => of(null)));
+    }
   }
 }

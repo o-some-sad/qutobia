@@ -1,32 +1,33 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
-import {User} from '../../interfaces/user.interface';
-import {confirmPasswordValidator} from '../../validations/confirm-password.validator';
-import {UserService} from '../../services/user.service';
-import {toast} from 'ngx-sonner';
-import {AuthService} from '../../services/auth.service';
-import {NgClass} from '@angular/common';
-import {SharedService} from '../../services/shared.service';
-import {UserInputComponent} from '../../components/user-input/user-input.component';
-import {addressPhoneValidator, phoneValidator} from '../../validations/address-phone.validator';
+import { User } from '../../interfaces/user.interface';
+import { confirmPasswordValidator } from '../../validations/confirm-password.validator';
+import { UserService } from '../../services/user.service';
+import { toast } from 'ngx-sonner';
+import { AuthService } from '../../services/auth.service';
+import { NgClass } from '@angular/common';
+import { SharedService } from '../../services/shared.service';
+import { UserInputComponent } from '../../components/user-input/user-input.component';
+import {
+  addressPhoneValidator,
+  phoneValidator,
+} from '../../validations/address-phone.validator';
+import { ActivatedRoute, Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { set } from 'mongoose';
 
 @Component({
   selector: 'app-profile',
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    NgClass,
-    UserInputComponent
-  ],
+  imports: [FormsModule, ReactiveFormsModule, NgClass, UserInputComponent],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
   user: User = {} as User;
@@ -38,27 +39,43 @@ export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
   passwordForm: FormGroup;
   constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
     private userService: UserService,
     private authService: AuthService,
     private sharedService: SharedService
   ) {
-    this.profileForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      address: [''],
-      phone: ['']
-    }, { validators: [addressPhoneValidator, phoneValidator] });
+    this.profileForm = this.fb.group(
+      {
+        name: ['', [Validators.required, Validators.minLength(2)]],
+        email: ['', [Validators.required, Validators.email]],
+        address: [''],
+        phone: [''],
+      },
+      { validators: [addressPhoneValidator, phoneValidator] }
+    );
     this.profileFormControls['email'].disable();
 
-    this.passwordForm = this.fb.group({
-      currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]],
-      confirmPassword: ['', Validators.required],
-    }, { validators: confirmPasswordValidator });
+    this.passwordForm = this.fb.group(
+      {
+        currentPassword: ['', Validators.required],
+        newPassword: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern(
+              '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$'
+            ),
+          ],
+        ],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: confirmPasswordValidator }
+    );
   }
   ngOnInit(): void {
-    this.authService.me().subscribe(res=>{
+    this.authService.me().subscribe((res) => {
       this.user = res;
       this.originalName = this.user.name;
       this.originalImage = this.user.image;
@@ -66,40 +83,54 @@ export class ProfileComponent implements OnInit {
         name: this.user.name,
         email: this.user.email,
         address: this.user.contact?.address ?? '',
-        phone: this.user.contact?.phone ?? ''
+        phone: this.user.contact?.phone ?? '',
       });
-      if(this.user.contact){
+      if (this.user.contact) {
         this.profileFormControls['address']?.setValidators(Validators.required);
         this.profileFormControls['phone']?.setValidators(Validators.required);
       }
     });
   }
 
-  get profileFormControls():{ [key: string]: FormControl } {
+  get profileFormControls(): { [key: string]: FormControl } {
     return this.profileForm.controls as { [key: string]: FormControl };
   }
-  get passwordFormControls():{ [key: string]: FormControl } {
+  get passwordFormControls(): { [key: string]: FormControl } {
     return this.passwordForm.controls as { [key: string]: FormControl };
   }
 
   updateProfile() {
-    if (this.profileForm.valid){
+    if (this.profileForm.valid) {
       const updatedData = this.profileForm.value;
       updatedData._id = this.user._id;
-      updatedData.contact = updatedData.address ? {
-        address: updatedData.address,
-        phone: updatedData.phone
-      } : null;
+      updatedData.contact = updatedData.address
+        ? {
+            address: updatedData.address,
+            phone: updatedData.phone,
+          }
+        : null;
 
       const toast_id = toast.loading('Updating name...');
       this.userService.updateUser(updatedData).subscribe({
-        next: (_) => {
+        next: async (res) => {
           toast.success('Profile updated successfully', { id: toast_id });
+          const queryMap = await firstValueFrom(
+            this.activatedRoute.queryParamMap
+          );
+          if (
+            queryMap.has('preOrder') &&
+            res.data.contact?.address &&
+            res.data.contact?.phone
+          ) {
+            
+              window.location.replace('/cart');
+            
+          }
         },
         error: (_) => {
           toast.error('Failed to update profile', { id: toast_id });
           this.profileForm.reset({ name: this.originalName });
-        }
+        },
       });
     } else {
       this.profileForm.markAllAsTouched();
@@ -118,7 +149,7 @@ export class ProfileComponent implements OnInit {
         error: (err) => {
           toast.error(err.error.message, { id: toast_id });
           this.passwordForm.reset();
-        }
+        },
       });
     } else {
       this.passwordForm.markAllAsTouched();
@@ -134,11 +165,13 @@ export class ProfileComponent implements OnInit {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       const fileExtension = file.name.split('.').pop()?.toLowerCase();
-      if(!fileExtension || !this.allowedExtensions.includes(fileExtension)){
-        toast.warning('Invalid file format. Please upload a JPG, PNG, or JPEG file.');
+      if (!fileExtension || !this.allowedExtensions.includes(fileExtension)) {
+        toast.warning(
+          'Invalid file format. Please upload a JPG, PNG, or JPEG file.'
+        );
         return;
       }
-      if(file.size>this.maxFileSize){
+      if (file.size > this.maxFileSize) {
         toast.warning('File size should be less than 1MB');
         return;
       }

@@ -1,0 +1,249 @@
+<!-- <p>
+  book-details works! whoooooooohooooooooooooo!
+</p> -->
+
+@if (book) {
+  <div class="mt-13 flex flex-col md:flex-row gap-14 p-10 max-w-6xl mx-auto bg-gray-200 shadow-2xl rounded-3xl overflow-hidden border border-gray-200">
+    <div class="flex-shrink-0 mx-auto md:mx-0">
+      <img
+        [src]="book.image"
+        [alt]="book.title"
+        class="w-80 h-auto rounded-xl shadow-lg transition-transform duration-300 hover:scale-105"
+      />
+    </div>
+
+    <div class="flex-1 p-6 space-y-6">
+      <h1 class="text-5xl font-extrabold text-gray-900 tracking-tight border-b-2 border-black-300 pb-2">
+        {{ book.title }}
+      </h1>
+
+      <p class="text-lg text-black font-semibold flex items-center gap-2">
+        <span>Author(s): <span>{{ book.author.join(', ') }}</span></span>
+      </p>
+      
+            <p class="text-base text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-lg border-l-4 border-gray-400 shadow-sm">
+              {{ book.description }}
+            </p>
+
+      <p class="text-lg">
+        <strong class="text-gray-800 font-medium"></strong>
+        <span class="text-green-600 text-2xl font-bold tracking-wide">
+          ${{ book.price }}
+        </span>
+      </p>
+
+      <!-- TODO!!  -->
+      <!-- make out of stock in red, text should be in BLACK -->
+      <p class="text-lg flex items-center gap-2">
+        <strong class="text-gray-800"></strong>
+        <span
+          [class.text-red-600]="book.stock <= 0"
+          [class.text-green-600]="book.stock > 0"
+          class="text-xl font-semibold px-3 py-1 rounded-md"
+          [ngClass]="{ 'bg-red-100': book.stock <= 0, 'bg-green-100': book.stock > 0 }"
+        >
+          {{ book.stock > 0 ? "In Stock" : 'Out of Stock' }}
+        </span>
+      </p>
+      @if(book.stock > 0){
+        <button
+          (click)="addToCart(book._id)"
+          class="bg-gradient-to-r from-blue-500 to-blue-700 text-white text-lg font-medium px-6 py-3 rounded-lg shadow-md transition-all duration-300 hover:from-blue-600 hover:to-blue-800 hover:shadow-lg active:scale-95"
+        >
+          Add to Cart
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Reviews Section -->
+  <div class="mt-8 max-w-6xl mx-auto p-10 bg-gray-100 rounded-3xl shadow-lg">
+    <h2 class="text-3xl font-bold text-gray-900 mb-6">Reviews</h2>
+  
+    @if (reviews.length > 0) {
+      <div class="space-y-6">
+        @for (review of reviews; track review._id) {
+          <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            @if (editingReview && editingReview._id === review._id) {
+              <!-- Edit Review Form -->
+              <form (ngSubmit)="updateReview()">
+                <div class="mb-4">
+                  <label class="block text-gray-700 font-medium mb-2">Rating</label>
+                  <input
+                    type="number"
+                    [(ngModel)]="editingReview.rating"
+                    name="rating"
+                    min="1"
+                    max="5"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div class="mb-4">
+                  <label class="block text-gray-700 font-medium mb-2">Review</label>
+                  <textarea
+                    [(ngModel)]="editingReview.review"
+                    name="review"
+                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  ></textarea>
+                </div>
+                <div class="flex gap-2">
+                  <button
+                    type="submit"
+                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    type="button"
+                    (click)="editingReview = null"
+                    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            } @else {
+              <!-- Display Review -->
+              <div class="space-y-4">
+                <p class="text-gray-700 text-lg">{{ review.review }}</p>
+                <div class="flex items-center gap-2">
+                  <!-- Star Rating -->
+                  <div class="flex">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                      <svg
+                        [ngClass]="{
+                          'text-yellow-400': star <= review.rating,
+                          'text-gray-300': star > review.rating
+                        }"
+                        class="w-5 h-5 fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                        />
+                      </svg>
+                    }
+                  </div>
+                </div>
+  
+                <!-- By and For Sections -->
+                <div class="mt-4 space-y-2">
+                  <div class="flex items-center gap-2 text-sm text-gray-600">
+                    <svg
+                      class="w-4 h-4 fill-current text-gray-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        d="M5 5a5 5 0 0 1 10 0v2A5 5 0 0 1 5 7V5zM0 16.68A19.9 19.9 0 0 1 10 14c3.64 0 7.06.97 10 2.68V20H0v-3.32z"
+                      />
+                    </svg>
+                    <span>By: <span class="font-medium text-gray-800">{{ review.user.name }}</span></span>
+                  </div>
+                  <div class="flex items-center gap-2 text-sm text-gray-600">
+                    <svg
+                      class="w-4 h-4 fill-current text-gray-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        d="M18 3a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h16zm-1 2H3v10h14V5zM6 7h8v2H6V7zm0 4h8v2H6v-2z"
+                      />
+                    </svg>
+                    <span>For: <span class="font-medium text-gray-800">{{ review.book.title }}</span></span>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Action Buttons -->
+              <div class="mt-4 flex gap-2">
+                @if (review.user._id === newReview.user._id) {
+                  <button
+                    (click)="startEditReview(review)"
+                    class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+                  >
+                    Edit
+                  </button>
+                }
+                @if (newReview.user.role === "admin") {
+                  <button
+                    (click)="deleteReview(review._id)"
+                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                  >
+                    Delete
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- No Reviews Message -->
+      <p class="text-gray-600 mb-4">No reviews yet.</p>
+    }
+  
+    <!-- Add Review Button (Visible if no reviews or when not editing) -->
+    @if (!editingReview && !isAdmin && hasCompletedOrder) {
+      <br>
+      <button
+        (click)="showAddReviewForm = true"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+      >
+        Add a Review
+      </button>
+    }
+  
+    <!-- Add Review Form (Visible when showAddReviewForm is true) -->
+    @if (showAddReviewForm) {
+      <div class="mt-6">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Add Your Review</h3>
+        <form (ngSubmit)="addReview()">
+          <div class="mb-4">
+            <label class="block text-gray-700 font-medium mb-2">Rating</label>
+            <input
+              type="number"
+              [(ngModel)]="newReview.rating"
+              name="rating"
+              min="1"
+              max="5"
+              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 font-medium mb-2">Review</label>
+            <textarea
+              [(ngModel)]="newReview.review"
+              name="review"
+              class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            ></textarea>
+          </div>
+          <div class="flex gap-2">
+            <button
+              type="submit"
+              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+            >
+              Submit Review
+            </button>
+            <button
+              type="button"
+              (click)="showAddReviewForm = false"
+              class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="text-center text-2xl font-semibold text-gray-600 mt-8 animate-pulse">
+    .......
+  </div>
+}

@@ -1,10 +1,16 @@
-<div class=" py-20">
-    <form  [formGroup]="handleRegister" class="max-w-md p-10 border-0 rounded-2xl shadow mx-auto bg-slate-100 " (ngSubmit)="register()">
+<div class="py-20 sm:px-10 md:px-20 w-full max-w-[4000px] mx-auto">
+  <form
+    [formGroup]="handleRegister"
+    class="max-w-2xl flex flex-col-reverse md:flex-row p-10 mx-auto"
+    (ngSubmit)="register()"
+  >
+    <div class="flex flex-col shadow-xl items-center justify-center">
+      <div
+        class="bg-black p-10 w-[400px] text-white flex flex-col items-center justify-center"
+      >
         <h1 class="text-2xl text-center">sign-up 🔐</h1>
-        <div class="mb-5 ">
-          <label
-            for="name"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        <div class="mb-5">
+          <label for="name" class="block mb-2 text-sm font-medium text-white"
             >Your name</label
           >
           <input
@@ -12,36 +18,38 @@
             type="name"
             name="name"
             id="name"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-72 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="Your Name"
             required
           />
         </div>
-        @if (handleRegister.get('name')?.touched && handleRegister.get('name')?.errors) {
-            <div
-              class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-              role="alert"
-            >
-              Invalid name format.
-            </div>
-            }
-        <div class="mb-5 ">
-            <label
-              for="password"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Your email</label
-            >
-            <input
-              formControlName="email"
-              type="email"
-              name="email"
-              id="email"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
-              placeholder="domain@example.com"
-              required
-            />
-          </div>
-        @if (handleRegister.get('email')?.touched && handleRegister.get('email')?.errors) {
+        @if (handleRegister.get('name')?.touched &&
+        handleRegister.get('name')?.errors) {
+        <div
+          class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+          role="alert"
+        >
+          Invalid name format.
+        </div>
+        }
+        <div class="mb-5">
+          <label
+            for="password"
+            class="block mb-2 text-sm font-medium text-white"
+            >Your email</label
+          >
+          <input
+            formControlName="email"
+            type="email"
+            name="email"
+            id="email"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-72 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+            placeholder="domain@example.com"
+            required
+          />
+        </div>
+        @if (handleRegister.get('email')?.touched &&
+        handleRegister.get('email')?.errors) {
         <div
           class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
           role="alert"
@@ -52,15 +60,16 @@
         <div class="mb-5">
           <label
             for="password"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            class="block mb-2 text-sm font-medium text-white"
             >Your password</label
           >
           <input
             formControlName="password"
             type="password"
             name="password"
+            placeholder="********"
             id="password"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-blue-500"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-72 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-blue-500"
             required
           />
         </div>
@@ -74,62 +83,72 @@
         </div>
         }
         <div class="mb-5">
-            <label
-              for="passwordConfirm"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >Your re-password</label
-            >
-            <input
-              formControlName="passwordConfirm"
-              type="password"
-              name="passwordConfirm"
-              id="passwordConfirm"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-blue-500"
-              required
-            />
-          </div>
-          
-          @if (handleRegister.get('passwordConfirm')?.touched &&
-          handleRegister.get('passwordConfirm')?.errors) {
-          <div
-            class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-            role="alert"
+          <label
+            for="passwordConfirm"
+            class="block mb-2 text-sm font-medium text-white"
+            >Your re-password</label
           >
-            password don't matches.
-          </div>
-          }
-        @if (isLoading) {
-          
-          <button
-          
-          
-          class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-         
+          <input
+            formControlName="passwordConfirm"
+            type="password"
+            name="passwordConfirm"
+            id="passwordConfirm"
+            placeholder="********"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-72 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+
+        @if (handleRegister.get('passwordConfirm')?.touched &&
+        handleRegister.get('passwordConfirm')?.errors) {
+        <div
+          class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+          role="alert"
         >
-        <span class="loading loading-spinner loading-md"></span>
-         
+          password don't matches.
+        </div>
+        } @if (isLoading) {
+
+        <button
+          class="text-white bg-wh hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-72 px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+        >
+          <span class="loading loading-spinner loading-md"></span>
         </button>
         }@else{
-          <button
+        <button
           type="submit"
-          (click)="register()"
-          class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+          class="text-black bg-white hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-72 px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
           [disabled]="handleRegister.invalid"
         >
           Submit
-         
         </button>
         }
-        <span class="block py-5 ">Already have account <span (click)="login()" class="text-xl font-bold  text-sky-600 cursor-pointer">log-in</span></span>
-       
-      </form>
-      @if (errMessage) {
-        <div
-          class="p-4 mb-4 text-sm text-red-800 text-center mt-10 rounded-lg bg-red-50 dark:bg-gray-800 w-1/4 mx-auto dark:text-red-400"
-          role="alert"
+        <span class="block py-5"
+          >Already have account
+          <span (click)="login()" class="text-sm underline cursor-pointer"
+            >log-in</span
+          ></span
         >
-          Invalid Data.
-        </div>
-      }
-      
+      </div>
+    </div>
+    <div
+      id="div3"
+      class="bg-white shadow-xl w-[200px] text-black mb-5 md:mb-0 mx-auto p-5 flex items-center justify-center"
+    >
+      <img
+        src="https://img.freepik.com/free-vector/book-icon_632498-3791.jpg?semt=ais_hybrid"
+        alt="login_book_img"
+        class="w-full h-auto flex flex-col items-center justify-center"
+      />
+      <div class="pt-48 font-mono absolute">Qutobia</div>
+    </div>
+  </form>
+  @if (errMessage) {
+  <div
+    class="p-4 mb-4 text-sm text-red-800 text-center mt-10 rounded-lg bg-red-50 dark:bg-gray-800 w-1/4 mx-auto dark:text-red-400"
+    role="alert"
+  >
+    Invalid Data.
+  </div>
+  }
 </div>

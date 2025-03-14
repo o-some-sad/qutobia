@@ -1,0 +1,16 @@
+meta {
+  name: List
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{KOTOBIA_URL}}/api/books?lowerPrice=30&upperPrice=40
+  body: none
+  auth: none
+}
+
+params:query {
+  lowerPrice: 30
+  upperPrice: 40
+}

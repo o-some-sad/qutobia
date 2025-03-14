@@ -1,0 +1,18 @@
+meta {
+  name: Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{KOTOBIA_URL}}/api/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "ahmedzaki789123@gmail.com",
+    "password": "Ahmed$12345"
+  }
+}

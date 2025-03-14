@@ -1,9 +1,12 @@
-import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
-import { PreviewComponent } from './routes/preview/preview.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { UserLayoutComponent } from './layouts/user-layout/user-layout.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import {
+  adminGuard,
+  notLoggedGuard,
+  userOrAdminGuard,
+} from './guards/based-role.guard';
 
 export const routes: Routes = [
   {
@@ -19,12 +22,21 @@ export const routes: Routes = [
         title: 'Home Page',
       },
       {
+        path: 'about',
+        loadComponent: () =>
+          import('./components/about-us/about-us.component').then(
+            (c) => c.AboutUsComponent
+          ),
+        title: 'About us',
+      },
+      {
         path: 'login',
         loadComponent: () =>
           import('./routes/auth/login/login.component').then(
             (c) => c.LoginComponent
           ),
         title: 'Log In',
+        canActivate: [notLoggedGuard],
       },
       {
         path: 'order',
@@ -33,6 +45,7 @@ export const routes: Routes = [
             (c) => c.UserOrderComponent
           ),
         title: 'Orders',
+        canActivate: [userOrAdminGuard],
       },
       {
         path: 'register',
@@ -41,6 +54,23 @@ export const routes: Routes = [
             (c) => c.RegisterComponent
           ),
         title: 'Register',
+        canActivate: [notLoggedGuard],
+      },
+      {
+        path: 'verify/:userId',
+        loadComponent: () =>
+          import('./routes/auth/verify/verify.component').then(
+            (c) => c.VerifyComponent
+          ),
+        title: 'Verify Email',
+      },
+      {
+        path: 'reset-password/:userId',
+        loadComponent: () =>
+          import('./routes/auth/reset-password/reset-password.component').then(
+            (c) => c.ResetPasswordComponent
+          ),
+        title: 'Reset Password',
       },
       {
         path: 'profile',
@@ -49,12 +79,23 @@ export const routes: Routes = [
             (c) => c.ProfileComponent
           ),
         title: 'Profile',
+        canActivate: [userOrAdminGuard],
       },
       {
         path: 'cart',
         loadComponent: () =>
           import('./routes/cart/cart.component').then((c) => c.CartComponent),
         title: 'Cart',
+        canActivate: [userOrAdminGuard],
+      },
+      // Add the book-details route here
+      {
+        path: 'book/:id',
+        loadComponent: () =>
+          import('./components/book-details/book-details.component').then(
+            (c) => c.BookDetailsComponent
+          ),
+        title: 'Book Details',
       },
     ],
   },
@@ -95,6 +136,7 @@ export const routes: Routes = [
         title: 'Orders',
       },
     ],
+    canActivate: [adminGuard],
   },
   { path: '**', component: NotFoundComponent, title: 'Not Found Page' },
 ];

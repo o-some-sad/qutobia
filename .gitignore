@@ -3,3 +3,4 @@
 _PUBLIC_
 **/*.log
 **/dump.rdb
+**/package-lock.json

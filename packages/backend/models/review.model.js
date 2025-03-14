@@ -61,12 +61,17 @@ reviewSchema.pre("save", async function (next) {
 });
 
 reviewSchema.pre("save", async function (next) {
+  console.log("Checking if user owns the book...");
+  console.log("User ID:", this.user);
+  console.log("Book ID:", this.book);
   const ownBook = await Order.findOne({
     user: this.user,
     "books.book": this.book,
-    status: "completed",
+    status: "Completed",
   });
+  console.log("Order found:", ownBook);
   if (!ownBook) {
+    console.log("Order not found:");
     return next(new Error("User doesn't own the book to review it"));
   }
   next();
