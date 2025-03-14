@@ -77,5 +77,7 @@ reviewSchema.pre("save", async function (next) {
   next();
 });
 
+reviewSchema.index({ user: 1, book: 1 });
+
 const Review = mongoose.model("Review", reviewSchema);
 export default Review;
