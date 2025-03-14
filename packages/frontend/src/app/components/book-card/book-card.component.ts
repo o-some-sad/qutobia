@@ -2,11 +2,12 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { toast } from 'ngx-sonner';
+import { IconsModule } from '../../modules/icons/icons.module';
 // import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-book-card',
-  imports: [CommonModule],
+  imports: [CommonModule, IconsModule],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.css'
 })

@@ -8,6 +8,7 @@ import { IconsModule } from '../../modules/icons/icons.module';
 import { CartService } from '../../services/cart.service';
 import { ThemingService } from '../../services/theming.service';
 import { DecimalPipe } from '@angular/common';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-header',
@@ -64,9 +65,11 @@ export class HeaderComponent implements OnInit {
     this.authService.logout().subscribe({
       error: (err) => console.error(err),
       complete: () => {
-      this._Router.navigate(['/']);
-      this.cartService.fetchCart();
-    }
+        toast.success("Logged out successfully, redirecting...")
+        setTimeout(() => {
+          window.location.replace("/")
+        }, 1000);
+      }
     });
   }
 }

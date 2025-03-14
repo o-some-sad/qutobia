@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {map, Observable} from 'rxjs';
 import {User, UserPassword, UserResponse, UsersResponse} from '../interfaces/user.interface';
-import {environment} from '../../environments/environment.development';
+import {environment} from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable({

@@ -109,7 +109,7 @@
   
 <div class="mainDiv">
     @for (book of books; track book._id) {
-        <div class="booksDiv"><app-book-card [BookItem]="book"></app-book-card></div>
+      <app-book-card style="display: contents;" [BookItem]="book"></app-book-card>
     }
 </div>
   <!-- Pagination -->
