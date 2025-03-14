@@ -62,4 +62,10 @@ export class HomePageComponent implements OnInit {
     window.location.hash = '';
     window.location.hash = '#top'; // scroll to the divv with id="top"
 }
+
+  arrowBtn(){
+    window.location.hash = '';
+    window.location.hash = '#moveArrow';
+
+  }
 }

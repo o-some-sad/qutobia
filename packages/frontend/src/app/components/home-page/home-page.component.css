@@ -1,21 +1,21 @@
 .halfbkg {
-    height: 400px;
-    background-image: url(../../../assets/photo-1457369804613-52c61a468e7d.jpeg);
-    /* background-image: url(../../../assets/background.png); */
+    /* height: 800px; */
+    /* background-image: url(../../../assets/photo-1457369804613-52c61a468e7d.jpeg); */
+    background-image: url(../../../assets/background.png);
     background-size: cover;
     background-position: center right;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     /* gap: 5px; */
-    justify-content: center;
+    /* justify-content: center;
     padding: 20px;
-    width: auto;
-    margin: 0 auto;
+    /* width: auto; */
+    /* margin: 0 auto; */
 }
 
 @media screen and (max-width: 600px) {
     .halfbkg {
-        height: 150px; 
+        min-height: 100vh;
         background-position: center center;
         padding: 10px;
         width: auto;
@@ -50,8 +50,8 @@ img {
 }
 
 .carousel-item img {  
-    width: 200px;
-    height: 200px;
+    width: 195px;
+    height: 210px;
     border: 1px solid black; 
     border-radius: 5px;
 }

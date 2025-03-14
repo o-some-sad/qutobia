@@ -1,5 +1,19 @@
-<div class="halfbkg"></div><br>
-<span class="bg-gradient-to-t from-yellow-300 to-yellow-500 py-2 bg-clip-text text-transparent text-7xl animate-bounce flex items-center justify-center w-full text-center">Coming Soon !</span><br>
+<div class="relative w-full">
+  <div class="halfbkg w-full h-[600px] relative"></div>
+  <button (click)="arrowBtn()" 
+      class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-12 h-12 flex items-center justify-center">
+      <div class="w-10 h-10 p-1 hover:bg-white rounded-full border border-gray-500 bg-red-500 flex items-center justify-center">
+        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5m0 14-4-4m4 4 4-4"/>
+        </svg>
+      </div>
+  </button>
+</div>
+<br>
+<br>
+
+
+<span id="moveArrow" class="bg-gradient-to-t from-blue-400 to-blue-900 font-bold underline py-2 bg-clip-text text-transparent text-7xl animate-bounce flex items-center justify-center w-full text-center">Coming Soon !</span><br>
 <div class="carousel carousel-center">
     <div class="carousel-item">
       <img src="https://bpbonline.com/cdn/shop/products/1021_Front.jpg?v=1735891300" alt="JAVA" />
